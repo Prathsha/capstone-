@@ -1,70 +1,98 @@
-# Getting Started with Create React App
+# IBM Client Intelligence Agent
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A seller productivity tool that aggregates account intelligence, quota tracking, and market signals into a single dashboard — built with React + FastAPI, following IBM Design Language guidelines.
 
-## Available Scripts
+## Architecture
 
-In the project directory, you can run:
+```
+basic-react-app/
+├── src/                        # React frontend
+│   ├── App.js                  # Root: routing, account selector, state
+│   ├── styles/global.css       # IBM Design Language color system + components
+│   ├── services/api.js         # Axios API client
+│   ├── components/
+│   │   ├── Topbar.js           # IBM header bar
+│   │   ├── Sidebar.js          # Navigation sidebar
+│   │   └── Helpers.js          # Shared UI components + utils
+│   └── pages/
+│       ├── Dashboard.js        # Quota progress + action items
+│       └── MarketIntelligence.js # News, financial news, stock data
+│
+└── backend/
+    ├── main.py                 # FastAPI app (accounts, news, financial endpoints)
+    ├── accounts.json           # Seed data: 9 accounts + seller profile
+    └── requirements.txt        # Python dependencies
+```
 
-### `npm start`
+## Quick Start
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 1. Backend (FastAPI)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```bash
+cd backend
+pip install -r requirements.txt
+uvicorn main:app --reload
+# → http://localhost:8000
+# → API docs: http://localhost:8000/docs
+```
 
-### `npm test`
+### 2. Frontend (React)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+# from project root
+npm start
+# → http://localhost:3000
+```
 
-### `npm run build`
+## API Keys
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Open [`backend/main.py`](backend/main.py) and replace the placeholder values:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+| Variable | Service | Get Key |
+|---|---|---|
+| `NEWS_API_KEY` | NewsAPI | https://newsapi.org |
+| `FINNHUB_API_KEY` | Finnhub | https://finnhub.io |
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+> **yfinance** requires no API key — stock data is fetched directly.  
+> Without keys, the app shows realistic mock data with a warning banner.
 
-### `npm run eject`
+## Features
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Dashboard (`/`)
+- **Quota progress bar** — closed won + pipeline overlay against total quota
+- **KPI tiles** — closed amount, pipeline, pending actions count, AI suggestion count
+- **Pending Action Items** — prioritized (critical → high → medium) with due dates
+- **AI-Suggested Actions** — ranked by confidence score with visual confidence bars
+- **Per-account attainment table** — health score, tier, and quota % per account
+- **Account selector** — view all accounts, a tier group (Premier / Strategic), or one account
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Market Intelligence (`/intelligence`)
+- **General News tab** — NewsAPI with precise, disambiguated company queries  
+  (e.g. `"Lincoln National" (insurance OR financial OR LNC)` — no Abraham Lincoln articles)
+- **Financial News tab** — Finnhub company news for publicly traded accounts
+- **Stock & Financials tab** — yfinance: price, market cap, P/E, analyst target, 90-day chart
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## IBM Design Language
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Colors follow the official IBM color system: https://www.ibm.com/design/language/color/
 
-## Learn More
+- **Primary action:** IBM Blue 60 (`#0f62fe`)
+- **Success:** Green 50 (`#24a148`)
+- **Warning:** Yellow 30 (`#f1c21b`)
+- **Error/Critical:** Red 60 (`#da1e28`)
+- **Sidebar:** Cool Gray 100 (`#161616`)
+- **Typography:** IBM Plex Sans (300/400/600/700) + IBM Plex Mono
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Sample Accounts
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+| Account | Ticker | Tier |
+|---|---|---|
+| Quest Diagnostics | DGX | Strategic |
+| The Lincoln National Life Insurance Company | LNC | Strategic |
+| Siemens | SIEGY | Premier |
+| SEI Investments | SEIC | Strategic |
+| Independence BlueCross | — | Strategic |
+| SunGard Data Systems | — | Standard |
+| Select Medical Corp | SEM | Standard |
+| Ricoh | RICOY | Standard |
+| Sagent M&C LLC | — | Standard |
