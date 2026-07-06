@@ -27,13 +27,15 @@ function PendingActionItem({ item }) {
 
 // ── Suggested action item ─────────────────────────────────────────────────────
 function SuggestedActionItem({ item }) {
+  const isFromChat = item.source === 'gemini';
   return (
-    <div className="action-item">
-      <div className="action-item__priority-bar" style={{ background: 'var(--ibm-blue-50)' }} />
+    <div className={`action-item${isFromChat ? ' action-item--chat' : ''}`}>
+      <div className="action-item__priority-bar" style={{ background: isFromChat ? 'var(--ibm-purple-50)' : 'var(--ibm-blue-50)' }} />
       <div className="action-item__body">
         <div className="action-item__header">
           <span className="action-item__account">{item.account_name}</span>
-          <Tag color="blue">{item.type}</Tag>
+          <Tag color={isFromChat ? 'purple' : 'blue'}>{item.type}</Tag>
+          {isFromChat && <Tag color="purple">Chat</Tag>}
         </div>
         <div className="action-item__description">{item.description}</div>
         <div className="action-item__meta">

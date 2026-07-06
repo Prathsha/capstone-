@@ -25,6 +25,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from config import settings
 from routers.accounts import router as accounts_router
 from routers.news import router as news_router
+from routers.chat import router as chat_router
 
 app = FastAPI(
     title="IBM Client Intelligence Agent API",
@@ -42,3 +43,4 @@ app.add_middleware(
 
 app.include_router(accounts_router)
 app.include_router(news_router)
+app.include_router(chat_router)

@@ -1,12 +1,15 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './styles/global.css';
 import { fetchAccounts, fetchDashboard } from './services/api';
+import { useState, useEffect, useCallback } from 'react';
 import Topbar from './components/Topbar';
 import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
 import MarketIntelligence from './pages/MarketIntelligence';
+import ChatPage from './pages/Chat';
 import { Spinner, ErrorBlock } from './components/Helpers';
+import { ChatProvider, useChatContext } from './context/ChatContext';
 
 // ── Account Selector Bar ──────────────────────────────────────────────────────
 function AccountSelectorBar({ accounts, selectedIds, onChange }) {
@@ -73,7 +76,7 @@ function AccountSelectorBar({ accounts, selectedIds, onChange }) {
 }
 
 // ════════════════════════════════════════════════════════════════════════════
-// App Root
+// App Inner (needs ChatContext already mounted)
 // ════════════════════════════════════════════════════════════════════════════
 function AppInner() {
   const [accounts, setAccounts]           = useState([]);
@@ -84,6 +87,8 @@ function AppInner() {
   const [dashboardLoading, setDashLoading] = useState(false);
   const [error, setError]                 = useState(null);
   const [dashboardError, setDashError]    = useState(null);
+
+  const { pinnedActions } = useChatContext();
 
   // ── Initial load: accounts ────────────────────────────────────────────────
   useEffect(() => {
@@ -118,7 +123,7 @@ function AppInner() {
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <div className="app-body">
         <Topbar seller={null} />
         <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <Spinner />
@@ -129,7 +134,7 @@ function AppInner() {
 
   if (error) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <div className="app-body">
         <Topbar seller={null} />
         <div style={{ padding: 40 }}>
           <ErrorBlock message={error} />
@@ -146,8 +151,21 @@ function AppInner() {
     );
   }
 
+  // Merge backend suggested_actions with chat-pinned actions for the dashboard
+  const mergedDashboard = dashboardData ? {
+    ...dashboardData,
+    suggested_actions: [
+      ...pinnedActions.map(a => ({
+        ...a,
+        // Normalise field names to match existing SuggestedActionItem shape
+        account_name: a.account_name,
+      })),
+      ...(dashboardData.suggested_actions || []),
+    ],
+  } : null;
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <div className="app-body">
       <Topbar seller={seller} />
       <div className="app-shell">
         <Sidebar seller={seller} />
@@ -165,7 +183,7 @@ function AppInner() {
                   accounts={accounts}
                   seller={seller}
                   selectedIds={selectedIds}
-                  dashboardData={dashboardData}
+                  dashboardData={mergedDashboard}
                   dashboardLoading={dashboardLoading}
                   dashboardError={dashboardError}
                 />
@@ -174,6 +192,10 @@ function AppInner() {
             <Route
               path="/intelligence"
               element={<MarketIntelligence accounts={accounts} />}
+            />
+            <Route
+              path="/chat"
+              element={<ChatPage accounts={accounts} seller={seller} />}
             />
           </Routes>
         </div>
@@ -185,7 +207,9 @@ function AppInner() {
 export default function App() {
   return (
     <Router>
-      <AppInner />
+      <ChatProvider>
+        <AppInner />
+      </ChatProvider>
     </Router>
   );
 }
