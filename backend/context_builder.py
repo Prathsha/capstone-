@@ -12,16 +12,37 @@ HOW TO ADD A NEW DATA SOURCE
 3. Format its output into a readable section inside `_format_account_block()`.
 
 The rest of the chat endpoint requires no changes.
+
+STATIC FILE LOADERS
+--------------------
+_load_ibm_entitlements(), _load_competitive_installs(), _load_pipeline_opps(),
+and _load_pptx_summary() read the EPM CSV files and the Data Platform PPTX from
+backend/data/ and append their output to the context string unconditionally.
+All loaders degrade gracefully — any missing file or library returns "".
 """
 
 import asyncio
+import os
 from datetime import datetime, timedelta
+from pathlib import Path
 
 import httpx
 
 from config import settings
 from data import ACCOUNTS, SELLER
 from queries import news_query
+
+# ── Path constants ────────────────────────────────────────────────────────────
+
+_DATA_DIR = Path(__file__).resolve().parent / "data"
+_ACCOUNT_DIR = _DATA_DIR / "account"
+_DOCS_DIR = _DATA_DIR / "docs"
+
+_IBM_CSV      = _ACCOUNT_DIR / "US - HRZ - SEI INVESTMENTS_EPM_IBM_20260714.csv"
+_COMP_CSV     = _ACCOUNT_DIR / "US - HRZ - SEI INVESTMENTS_EPM_Competitive_20260714.csv"
+_OPP_CQ_CSV   = _ACCOUNT_DIR / "US - HRZ - SEI INVESTMENTS_EPM_Opportunity_CQ_20260714.csv"
+_OPP_NQ_CSV   = _ACCOUNT_DIR / "US - HRZ - SEI INVESTMENTS_EPM_Opportunity_NQ_20260714.csv"
+_PPTX_FILE    = _DOCS_DIR / "Data Platform 101.pptx"
 
 
 # ── Per-account data fetchers ────────────────────────────────────────────────
@@ -77,6 +98,124 @@ async def _fetch_stock(account: dict, client: httpx.AsyncClient) -> dict | None:
         }
     except Exception:
         return None
+
+
+# ── Static file loaders ──────────────────────────────────────────────────────
+
+def _load_ibm_entitlements() -> str:
+    """Return a formatted section of IBM products installed at the account (from EPM CSV)."""
+    try:
+        import pandas as pd
+        if not _IBM_CSV.exists():
+            return ""
+        df = pd.read_csv(_IBM_CSV, encoding="utf-16", sep="\t")
+        col = "UT Lvl 30 Name"
+        if col not in df.columns:
+            return ""
+        products = sorted(df[col].dropna().unique().tolist())
+        if not products:
+            return ""
+        lines = ["## IBM Installed Base (from EPM)"]
+        for p in products:
+            lines.append(f"- {p}")
+        return "\n".join(lines)
+    except Exception:
+        return ""
+
+
+def _load_competitive_installs() -> str:
+    """Return a formatted section of competitive products installed at the account."""
+    try:
+        import pandas as pd
+        if not _COMP_CSV.exists():
+            return ""
+        df = pd.read_csv(_COMP_CSV, encoding="utf-16", sep="\t")
+        if "Competitor Name" not in df.columns or "Competitor Product Name" not in df.columns:
+            return ""
+        # Deduplicate by vendor + product
+        pairs = (
+            df[["Competitor Name", "Competitor Product Name"]]
+            .dropna()
+            .drop_duplicates()
+            .sort_values(["Competitor Name", "Competitor Product Name"])
+        )
+        if pairs.empty:
+            return ""
+        # Cap at 50 most relevant entries to stay within token budget
+        pairs = pairs.head(50)
+        lines = ["## Competitive Installs"]
+        for _, row in pairs.iterrows():
+            lines.append(f"- {row['Competitor Name']}: {row['Competitor Product Name']}")
+        return "\n".join(lines)
+    except Exception:
+        return ""
+
+
+def _load_pipeline_opps() -> str:
+    """Return formatted pipeline opportunities from both CQ and NQ CSV files."""
+    key_cols = [
+        "Opp Name", "Oppty Value", "ISC Sales Stage Name",
+        "Sales Forecast Category Shortname", "Reporting Product Family",
+        "UT Lvl 30 Name Dynamic", "Opp Next Step (P2P)",
+    ]
+
+    def _parse_opps(path: Path, label: str) -> str:
+        try:
+            import pandas as pd
+            if not path.exists():
+                return ""
+            df = pd.read_csv(path, encoding="utf-16", sep="\t")
+            existing = [c for c in key_cols if c in df.columns]
+            if "Opp Name" not in existing:
+                return ""
+            df = df[existing].dropna(subset=["Opp Name"]).drop_duplicates(subset=["Opp Name"])
+            lines = [f"## Pipeline Opportunities ({label})"]
+            for _, row in df.iterrows():
+                value = f"${int(row['Oppty Value']):,}" if "Oppty Value" in row and not pd.isna(row["Oppty Value"]) else "N/A"
+                stage = row.get("ISC Sales Stage Name", "")
+                forecast = row.get("Sales Forecast Category Shortname", "")
+                product = row.get("UT Lvl 30 Name Dynamic", row.get("Reporting Product Family", ""))
+                notes = row.get("Opp Next Step (P2P)", "")
+                notes_str = f" | Notes: {str(notes).strip()}" if notes and str(notes) != "nan" else ""
+                lines.append(
+                    f"- {row['Opp Name']} | {value} | Stage: {stage} | "
+                    f"Forecast: {forecast} | Product: {product}{notes_str}"
+                )
+            return "\n".join(lines)
+        except Exception:
+            return ""
+
+    cq = _parse_opps(_OPP_CQ_CSV, "CQ")
+    nq = _parse_opps(_OPP_NQ_CSV, "NQ")
+    parts = [p for p in [cq, nq] if p]
+    return "\n\n".join(parts)
+
+
+def _load_pptx_summary() -> str:
+    """Return a capped text summary of the Data Platform 101 PPTX."""
+    try:
+        from pptx import Presentation
+    except ImportError:
+        return ""
+    try:
+        if not _PPTX_FILE.exists():
+            return ""
+        prs = Presentation(str(_PPTX_FILE))
+        texts: list[str] = []
+        for slide in prs.slides:
+            for shape in slide.shapes:
+                if shape.has_text_frame:
+                    for para in shape.text_frame.paragraphs:
+                        t = para.text.strip()
+                        if t:
+                            texts.append(t)
+        full_text = "\n".join(texts)
+        # Cap at 2000 characters to stay within token budget
+        if len(full_text) > 2000:
+            full_text = full_text[:2000] + "\n... [truncated]"
+        return f"## IBM Data Platform Product Reference\n{full_text}"
+    except Exception:
+        return ""
 
 
 # ── Format helpers ───────────────────────────────────────────────────────────
@@ -183,4 +322,14 @@ async def build_context(account_ids: list[str] | None = None) -> str:
         f"- YTD Target: {round(SELLER['ytd_target_pct']*100)}%",
     ]
 
-    return "\n\n".join(["\n".join(seller_lines)] + account_blocks)
+    # Static file sections (EPM CSVs + PPTX) — account-agnostic, always appended
+    static_sections = [
+        _load_ibm_entitlements(),
+        _load_competitive_installs(),
+        _load_pipeline_opps(),
+        _load_pptx_summary(),
+    ]
+    static_parts = [s for s in static_sections if s]
+
+    all_parts = ["\n".join(seller_lines)] + account_blocks + static_parts
+    return "\n\n".join(all_parts)

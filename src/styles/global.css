@@ -1267,6 +1267,34 @@ a:hover { color: var(--color-interactive-hover); text-decoration: underline; }
   color: #fff;
 }
 
+/* ── Export button ──────────────────────────────────────────────────────── */
+.chat-export {
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.chat-export-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--ibm-blue-60);
+  background: none;
+  color: var(--ibm-blue-60);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.1s, color 0.1s;
+}
+
+.chat-export-btn:hover {
+  background: var(--ibm-blue-60);
+  color: #fff;
+}
+
 /* ── Input bar ──────────────────────────────────────────────────────────── */
 .chat-input-bar {
   flex-shrink: 0;

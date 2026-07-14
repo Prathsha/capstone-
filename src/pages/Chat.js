@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { sendChatMessage } from '../services/api';
+import { sendChatMessage, exportDocx } from '../services/api';
 import { useChatContext } from '../context/ChatContext';
 import { Spinner } from '../components/Helpers';
 
 // ── Message bubble ────────────────────────────────────────────────────────────
-function MessageBubble({ message, onPinAction }) {
+function MessageBubble({ message, onPinAction, accounts, contextIds }) {
   const isUser = message.role === 'user';
 
   // Render model replies with simple markdown-style formatting
@@ -51,6 +51,24 @@ function MessageBubble({ message, onPinAction }) {
               </button>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Export button for structured documents */}
+      {!isUser && message.docType && (
+        <div className="chat-export">
+          <button
+            className="chat-export-btn"
+            onClick={() => {
+              const accountName = contextIds && accounts
+                ? (accounts.find(a => a.id === contextIds[0])?.name || 'Account')
+                : 'Account';
+              exportDocx(message.content, message.docType, accountName);
+            }}
+            title="Download this document as a Word file"
+          >
+            ⬇ Export as Word
+          </button>
         </div>
       )}
     </div>
@@ -129,6 +147,7 @@ export default function ChatPage({ accounts, seller }) {
           role: 'model',
           content: data.reply,
           suggestedActions: data.suggested_actions || [],
+          docType: data.doc_type || null,
         },
       ]);
     } catch (err) {
@@ -219,6 +238,8 @@ export default function ChatPage({ accounts, seller }) {
             key={i}
             message={msg}
             onPinAction={handlePinAction}
+            accounts={accounts}
+            contextIds={contextIds}
           />
         ))}
 

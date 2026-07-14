@@ -5,7 +5,7 @@ Chat endpoint powered by Google Gemini.
 
 POST /api/chat
   Body: { messages: [{role, content}], account_ids?: [str] }
-  Returns: { reply: str, suggested_actions?: [...] }
+  Returns: { reply: str, suggested_actions?: [...], doc_type?: str }
 
 The endpoint:
   1. Assembles live account + market data via context_builder.
@@ -14,6 +14,10 @@ The endpoint:
      across turns (the client owns the history; we just re-send it each call).
   4. Parses any action items the model flags with a special marker and returns
      them as structured objects the frontend can pin to the dashboard.
+  5. Detects intent keywords in the last user message to switch between:
+     - General seller chat (_SYSTEM_PREAMBLE, temp 0.4)
+     - Client Technical Strategy document (_TECH_STRATEGY_PROMPT, temp 0.2)
+     - Sales Play suggestions (_SALES_PLAY_PROMPT, temp 0.2)
 
 CONVERSATION MEMORY
 -------------------
@@ -31,7 +35,7 @@ The endpoint strips these lines from the visible reply and returns them in
 
 import json
 import re
-from typing import Any
+from typing import Any, Optional
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
@@ -65,9 +69,10 @@ class SuggestedAction(BaseModel):
 class ChatResponse(BaseModel):
     reply: str
     suggested_actions: list[SuggestedAction] = []
+    doc_type: Optional[str] = None
 
 
-# ── System prompt ────────────────────────────────────────────────────────────
+# ── System prompts ───────────────────────────────────────────────────────────
 
 _SYSTEM_PREAMBLE = """You are an IBM seller intelligence assistant embedded in the Client Intelligence Agent (CIA) dashboard.
 Your sole purpose is to help the seller close deals, protect renewals, and hit their quota.
@@ -83,6 +88,82 @@ PRIORITIES (in order):
 
 CURRENT DATA SNAPSHOT:
 {context}
+"""
+
+_TECH_STRATEGY_PROMPT = """You are an IBM seller intelligence assistant. Your task is to generate a complete Client Technical Strategy document.
+
+You MUST populate every section below. Do not omit any section. Use ONLY data provided in the context — do not fabricate numbers, dates, or product names. If a data point is not available in the context, write "Not available in current data."
+
+CURRENT DATA SNAPSHOT:
+{context}
+
+Output the document in this exact structure:
+
+## Client Technical Strategy: [CLIENT NAME from context]
+**Prepared by:** [SELLER NAME from context] | **Date:** {today}
+
+### 1. Executive Summary
+(2–3 sentences: client's strategic situation and IBM's primary opportunity, grounded in the pipeline and installed base data above)
+
+### 2. Client Profile
+- Industry: [from context]
+- Region: [from context]
+- Tier: [from context]
+- Health Score: [from context]
+- Key business priorities: (infer from news headlines and active pipeline opportunities in the context)
+
+### 3. IBM Installed Base
+(List all products from the IBM Installed Base (from EPM) section of the context, grouped by product family. Use the UT Lvl 15/17/20/30 hierarchy visible in the data.)
+
+### 4. Competitive Landscape
+(List all competitive products from the Competitive Installs section of the context. For each entry note:)
+- Vendor: Product | Displacement Risk: [High/Medium/Low] | IBM Replacement: [which IBM product could replace it]
+
+### 5. Active Opportunities
+| Opportunity | Value | Stage | Forecast | Product | Key Notes |
+|---|---|---|---|---|---|
+(Populate every row from the Pipeline Opportunities (CQ) and Pipeline Opportunities (NQ) sections of the context. Do not leave this table empty.)
+
+### 6. Strategic Recommendations
+(Minimum 3 recommendations. For each, use this exact format:)
+
+**Recommendation [N]: [Short Title]**
+- Rationale: (cite the specific data point from the context that justifies this recommendation)
+- IBM Product: (specific product name from the installed base or Data Platform reference)
+- Estimated Dollar Value: (reference a specific pipeline value from the context, or estimate based on installed base)
+- Next Step: (one concrete action the seller should take this week)
+
+### 7. Proposed Next Steps — 30/60/90 Day Plan
+- 30 days: (immediate actions grounded in the highest-priority pipeline items)
+- 60 days: (follow-on actions)
+- 90 days: (strategic actions)
+"""
+
+_SALES_PLAY_PROMPT = """You are an IBM seller intelligence assistant. Your task is to suggest specific, data-grounded sales plays for the account.
+
+Rules:
+- Generate a minimum of 3 and maximum of 6 plays.
+- Every play MUST cite a specific data point from the context (a named pipeline opportunity, a named competitive product installed, a specific news headline, or a specific IBM installed product with quantity).
+- Do not suggest products that are already closed/won unless recommending expansion or upsell.
+- Ground all product messaging in the IBM Data Platform Product Reference section of the context.
+- Be specific: name the IBM product, the competitor to displace (if any), and the exact next action.
+
+CURRENT DATA SNAPSHOT:
+{context}
+
+Output the plays in this exact structure:
+
+## Sales Play Recommendations: [CLIENT NAME from context]
+
+### Play 1: [PLAY NAME]
+- **Trigger:** (the specific signal from the context data that justifies this play — quote it directly)
+- **IBM Product:** (specific product name from the Data Platform reference or installed base)
+- **Competitive Displacement Opportunity:** (name the competitor product to displace, or "N/A — expansion play")
+- **Estimated Value:** (reference a specific dollar value from the pipeline, or size the opportunity from installed quantities in the context)
+- **Key Message:** (1–2 sentences drawn directly from the IBM Data Platform Product Reference section)
+- **Recommended Action:** (the single most important next step for the seller, including who to contact and by when)
+
+(Repeat the Play structure for each subsequent play, incrementing the play number.)
 """
 
 # ── Action item extraction ───────────────────────────────────────────────────
@@ -151,7 +232,27 @@ async def chat(req: ChatRequest):
 
     # Build live context (concurrent data fetches)
     context = await build_context(req.account_ids)
-    system_prompt = _SYSTEM_PREAMBLE.format(context=context)
+
+    # ── Intent detection: choose prompt + temperature based on last user message ──
+    last_msg = req.messages[-1].content.lower() if req.messages else ""
+    from datetime import date as _date
+    today_str = _date.today().strftime("%B %d, %Y")
+
+    _STRATEGY_KEYWORDS = {"technical strategy", "strategy document", "tech strategy", "client strategy"}
+    _SALES_PLAY_KEYWORDS = {"sales play", "sales plays", "suggest plays", "recommend plays"}
+
+    if any(kw in last_msg for kw in _STRATEGY_KEYWORDS):
+        system_prompt = _TECH_STRATEGY_PROMPT.format(context=context, today=today_str)
+        temperature = 0.2
+        doc_type = "strategy"
+    elif any(kw in last_msg for kw in _SALES_PLAY_KEYWORDS):
+        system_prompt = _SALES_PLAY_PROMPT.format(context=context)
+        temperature = 0.2
+        doc_type = "sales_play"
+    else:
+        system_prompt = _SYSTEM_PREAMBLE.format(context=context)
+        temperature = 0.4
+        doc_type = None
 
     client = genai.Client(api_key=settings.GEMINI_API_KEY)
 
@@ -164,7 +265,7 @@ async def chat(req: ChatRequest):
 
     cfg = genai_types.GenerateContentConfig(
         system_instruction=system_prompt,
-        temperature=0.4,
+        temperature=temperature,
     )
 
     # Try each model in preference order; fall through on quota/rate errors.
@@ -181,6 +282,7 @@ async def chat(req: ChatRequest):
             return ChatResponse(
                 reply=clean_reply,
                 suggested_actions=[SuggestedAction(**a) for a in actions],
+                doc_type=doc_type,
             )
         except GeminiClientError as exc:
             last_error = str(exc)
