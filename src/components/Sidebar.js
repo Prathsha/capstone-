@@ -14,12 +14,6 @@ const NAV_ITEMS = [
       { path: '/intelligence', label: 'Market Intelligence', icon: '◈' },
     ],
   },
-  {
-    section: 'AI Assistant',
-    items: [
-      { path: '/chat', label: 'AI Assistant (Orchestrate)', icon: '◎' },
-    ],
-  },
 ];
 
 export default function Sidebar({ seller }) {

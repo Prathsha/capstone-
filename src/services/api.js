@@ -24,39 +24,3 @@ export const fetchFinancial = (accountId) =>
 
 export const fetchStockQuote = (accountId) =>
   api.get(`/api/stockquote/${accountId}`).then(r => r.data);
-
-// ── Chat ─────────────────────────────────────────────────────────────────────
-/**
- * Send the full conversation history plus optional account scope to the
- * Gemini-backed chat endpoint.
- *
- * @param {Array<{role:string, content:string}>} messages — full history
- * @param {string[]|null} accountIds — null = all accounts
- * @returns {Promise<{reply: string, suggested_actions: Array}>}
- */
-export const sendChatMessage = (messages, accountIds = null) =>
-  api.post('/api/chat', { messages, account_ids: accountIds }).then(r => r.data);
-
-// ── Export ────────────────────────────────────────────────────────────────────
-/**
- * Export a Gemini-generated document reply as a Word (.docx) file download.
- *
- * @param {string} content    — the raw markdown text from the model
- * @param {string} docType    — "strategy" or "sales_play"
- * @param {string} accountName — used to name the downloaded file
- */
-export const exportDocx = (content, docType, accountName) =>
-  api.post(
-    '/api/export/docx',
-    { content, doc_type: docType, account_name: accountName },
-    { responseType: 'blob' },
-  ).then(r => {
-    const url = URL.createObjectURL(new Blob([r.data]));
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${accountName.replace(/\s+/g, '_')}_${docType}.docx`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  });

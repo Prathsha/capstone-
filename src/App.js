@@ -1,15 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './styles/global.css';
 import { fetchAccounts, fetchDashboard } from './services/api';
-import { useState, useEffect, useCallback } from 'react';
 import Topbar from './components/Topbar';
 import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
 import MarketIntelligence from './pages/MarketIntelligence';
-import OrchestrateChat from './pages/OrchestrateChat';
 import { Spinner, ErrorBlock } from './components/Helpers';
-import { ChatProvider, useChatContext } from './context/ChatContext';
 
 // ── Account Selector Bar ──────────────────────────────────────────────────────
 function AccountSelectorBar({ accounts, selectedIds, onChange }) {
@@ -76,7 +73,7 @@ function AccountSelectorBar({ accounts, selectedIds, onChange }) {
 }
 
 // ════════════════════════════════════════════════════════════════════════════
-// App Inner (needs ChatContext already mounted)
+// App
 // ════════════════════════════════════════════════════════════════════════════
 function AppInner() {
   const [accounts, setAccounts]           = useState([]);
@@ -88,7 +85,38 @@ function AppInner() {
   const [error, setError]                 = useState(null);
   const [dashboardError, setDashError]    = useState(null);
 
-  const { pinnedActions } = useChatContext();
+  // ── Watson Orchestrate floating chat widget ───────────────────────────────
+  // Initialised once for the lifetime of the app so the button is always
+  // visible regardless of which page the user is on.
+  const wxoInitialised = useRef(false);
+  useEffect(() => {
+    if (wxoInitialised.current) return;
+    wxoInitialised.current = true;
+
+    let host = document.getElementById('wxo-host');
+    if (!host) {
+      host = document.createElement('div');
+      host.id = 'wxo-host';
+      document.body.appendChild(host);
+    }
+
+    window.wxOConfiguration = {
+      orchestrationID:
+        '20260715-1849-1485-409b-29a44d219373_20260716-1619-0360-405c-07897e68baa4',
+      hostURL: 'https://dl.watson-orchestrate.ibm.com',
+      rootElementID: 'wxo-host',
+      chatOptions: {
+        agentId: '20adb73a-16fa-4857-92c6-57da2931f27b',
+      },
+    };
+
+    const script = document.createElement('script');
+    script.src = `${window.wxOConfiguration.hostURL}/wxochat/wxoLoader.js?embed=true`;
+    script.addEventListener('load', () => {
+      if (window.wxoLoader) window.wxoLoader.init();
+    });
+    document.head.appendChild(script);
+  }, []);
 
   // ── Initial load: accounts ────────────────────────────────────────────────
   useEffect(() => {
@@ -151,19 +179,6 @@ function AppInner() {
     );
   }
 
-  // Merge backend suggested_actions with chat-pinned actions for the dashboard
-  const mergedDashboard = dashboardData ? {
-    ...dashboardData,
-    suggested_actions: [
-      ...pinnedActions.map(a => ({
-        ...a,
-        // Normalise field names to match existing SuggestedActionItem shape
-        account_name: a.account_name,
-      })),
-      ...(dashboardData.suggested_actions || []),
-    ],
-  } : null;
-
   return (
     <div className="app-body">
       <Topbar seller={seller} />
@@ -183,7 +198,7 @@ function AppInner() {
                   accounts={accounts}
                   seller={seller}
                   selectedIds={selectedIds}
-                  dashboardData={mergedDashboard}
+                  dashboardData={dashboardData}
                   dashboardLoading={dashboardLoading}
                   dashboardError={dashboardError}
                 />
@@ -192,10 +207,6 @@ function AppInner() {
             <Route
               path="/intelligence"
               element={<MarketIntelligence accounts={accounts} />}
-            />
-            <Route
-              path="/chat"
-              element={<OrchestrateChat />}
             />
           </Routes>
         </div>
@@ -207,9 +218,7 @@ function AppInner() {
 export default function App() {
   return (
     <Router>
-      <ChatProvider>
-        <AppInner />
-      </ChatProvider>
+      <AppInner />
     </Router>
   );
 }
