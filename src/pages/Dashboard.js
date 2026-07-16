@@ -110,7 +110,7 @@ function AccountAttainmentRow({ account }) {
     <div className="account-row">
       <HealthBadge score={account.health_score} />
       <div className="account-row__name">{account.name.replace('THE ', '')}</div>
-      <Tag color={account.tier === 'Premier' ? 'purple' : account.tier === 'Strategic' ? 'blue' : 'gray'}>
+      <Tag color={account.tier === 'Enterprise' ? 'purple' : account.tier === 'Strategic' ? 'blue' : account.tier === 'Horizon' ? 'teal' : 'gray'}>
         {account.tier}
       </Tag>
       <div className="account-row__attainment" style={{ color }}>

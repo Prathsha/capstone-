@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import './styles/global.css';
 import { fetchAccounts, fetchDashboard } from './services/api';
 import Topbar from './components/Topbar';
@@ -14,10 +14,6 @@ function AccountSelectorBar({ accounts, selectedIds, onChange }) {
     const val = e.target.value;
     if (val === 'all') {
       onChange([]);
-    } else if (val === 'group-strategic') {
-      onChange(accounts.filter(a => a.tier === 'Strategic').map(a => a.id));
-    } else if (val === 'group-premier') {
-      onChange(accounts.filter(a => a.tier === 'Premier').map(a => a.id));
     } else {
       onChange([val]);
     }
@@ -26,16 +22,6 @@ function AccountSelectorBar({ accounts, selectedIds, onChange }) {
   const getCurrentValue = () => {
     if (selectedIds.length === 0) return 'all';
     if (selectedIds.length === 1) return selectedIds[0];
-    const strategicIds = accounts.filter(a => a.tier === 'Strategic').map(a => a.id);
-    const premierIds   = accounts.filter(a => a.tier === 'Premier').map(a => a.id);
-    if (
-      selectedIds.length === strategicIds.length &&
-      selectedIds.every(id => strategicIds.includes(id))
-    ) return 'group-strategic';
-    if (
-      selectedIds.length === premierIds.length &&
-      selectedIds.every(id => premierIds.includes(id))
-    ) return 'group-premier';
     return 'all';
   };
 
@@ -51,17 +37,11 @@ function AccountSelectorBar({ accounts, selectedIds, onChange }) {
         aria-label="Select accounts to view"
       >
         <option value="all">All Accounts ({accounts.length})</option>
-        <optgroup label="Account Groups">
-          <option value="group-premier">Premier Accounts</option>
-          <option value="group-strategic">Strategic Accounts</option>
-        </optgroup>
-        <optgroup label="Individual Accounts">
-          {accounts.map(a => (
-            <option key={a.id} value={a.id}>
-              {a.name}
-            </option>
-          ))}
-        </optgroup>
+        {accounts.map(a => (
+          <option key={a.id} value={a.id}>
+            {a.name}
+          </option>
+        ))}
       </select>
       <span className="account-selector__badge">
         <span style={{ color: 'var(--color-text-secondary)', fontSize: 13 }}>
@@ -76,6 +56,8 @@ function AccountSelectorBar({ accounts, selectedIds, onChange }) {
 // App
 // ════════════════════════════════════════════════════════════════════════════
 function AppInner() {
+  const location = useLocation();
+
   const [accounts, setAccounts]           = useState([]);
   const [seller, setSeller]               = useState(null);
   const [selectedIds, setSelectedIds]     = useState([]);
@@ -86,16 +68,16 @@ function AppInner() {
   const [dashboardError, setDashError]    = useState(null);
 
   // ── Watson Orchestrate floating chat widget ───────────────────────────────
-  // Initialised once for the lifetime of the app so the button is always
-  // visible regardless of which page the user is on.
-  const wxoInitialised = useRef(false);
+  // Runs once on mount. Guards against double-execution by checking the DOM
+  // directly rather than a ref (refs survive Strict Mode remounts, which
+  // causes the effect to bail out on the real mount after the dev unmount).
   useEffect(() => {
-    if (wxoInitialised.current) return;
-    wxoInitialised.current = true;
+    const WXO_HOST = 'https://dl.watson-orchestrate.ibm.com';
+    const SCRIPT_SRC = `${WXO_HOST}/wxochat/wxoLoader.js?embed=true`;
 
-    let host = document.getElementById('wxo-host');
-    if (!host) {
-      host = document.createElement('div');
+    // Ensure the host div exists outside React's #root.
+    if (!document.getElementById('wxo-host')) {
+      const host = document.createElement('div');
       host.id = 'wxo-host';
       document.body.appendChild(host);
     }
@@ -103,15 +85,22 @@ function AppInner() {
     window.wxOConfiguration = {
       orchestrationID:
         '20260715-1849-1485-409b-29a44d219373_20260716-1619-0360-405c-07897e68baa4',
-      hostURL: 'https://dl.watson-orchestrate.ibm.com',
+      hostURL: WXO_HOST,
       rootElementID: 'wxo-host',
       chatOptions: {
         agentId: '20adb73a-16fa-4857-92c6-57da2931f27b',
       },
     };
 
+    // If the script is already in the DOM (Strict Mode second mount),
+    // wxoLoader is already loaded — just call init() directly.
+    if (document.querySelector(`script[src="${SCRIPT_SRC}"]`)) {
+      if (window.wxoLoader) window.wxoLoader.init();
+      return;
+    }
+
     const script = document.createElement('script');
-    script.src = `${window.wxOConfiguration.hostURL}/wxochat/wxoLoader.js?embed=true`;
+    script.src = SCRIPT_SRC;
     script.addEventListener('load', () => {
       if (window.wxoLoader) window.wxoLoader.init();
     });
@@ -179,17 +168,21 @@ function AppInner() {
     );
   }
 
+  const showAccountBar = location.pathname !== '/intelligence';
+
   return (
     <div className="app-body">
       <Topbar seller={seller} />
       <div className="app-shell">
         <Sidebar seller={seller} />
         <div className="app-main">
-          <AccountSelectorBar
-            accounts={accounts}
-            selectedIds={selectedIds}
-            onChange={handleSelectionChange}
-          />
+          {showAccountBar && (
+            <AccountSelectorBar
+              accounts={accounts}
+              selectedIds={selectedIds}
+              onChange={handleSelectionChange}
+            />
+          )}
           <Routes>
             <Route
               path="/"

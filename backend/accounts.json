@@ -6,21 +6,46 @@
       "ticker": "DGX",
       "industry": "Healthcare / Diagnostics",
       "region": "Northeast US",
-      "tier": "Strategic",
+      "tier": "Horizon",
       "quota": 850000,
       "pipeline": 620000,
       "closed": 310000,
       "renewal_date": "2026-09-15",
-      "owned_products": ["IBM Watson Health", "IBM Cloud Pak for Data"],
+      "owned_products": [
+        "IBM Watson Health",
+        "IBM Cloud Pak for Data"
+      ],
       "health_score": 72,
       "last_contact_days_ago": 12,
       "pending_actions": [
-        {"id": "pa-001", "type": "Renewal", "description": "Watson Health renewal due in 60 days", "priority": "high", "due_date": "2026-09-15"},
-        {"id": "pa-002", "type": "Follow-up", "description": "Follow up on Q2 usage review", "priority": "medium", "due_date": "2026-07-20"}
+        {
+          "id": "pa-001",
+          "type": "Renewal",
+          "description": "Watson Health renewal due in 60 days",
+          "priority": "high",
+          "due_date": "2026-09-15"
+        },
+        {
+          "id": "pa-002",
+          "type": "Follow-up",
+          "description": "Follow up on Q2 usage review",
+          "priority": "medium",
+          "due_date": "2026-07-20"
+        }
       ],
       "suggested_actions": [
-        {"id": "sa-001", "type": "Cross-sell", "description": "Pitch IBM TRIRIGA — facility optimization aligns with lab expansion", "confidence": 0.84},
-        {"id": "sa-002", "type": "Upsell", "description": "Upgrade Cloud Pak for Data to Enterprise tier based on usage growth", "confidence": 0.71}
+        {
+          "id": "sa-001",
+          "type": "Cross-sell",
+          "description": "Pitch IBM TRIRIGA \u2014 facility optimization aligns with lab expansion",
+          "confidence": 0.84
+        },
+        {
+          "id": "sa-002",
+          "type": "Upsell",
+          "description": "Upgrade Cloud Pak for Data to Enterprise tier based on usage growth",
+          "confidence": 0.71
+        }
       ]
     },
     {
@@ -29,21 +54,46 @@
       "ticker": "LNC",
       "industry": "Financial Services / Insurance",
       "region": "Mid-Atlantic US",
-      "tier": "Strategic",
+      "tier": "Horizon",
       "quota": 1200000,
       "pipeline": 780000,
       "closed": 520000,
       "renewal_date": "2026-11-01",
-      "owned_products": ["IBM OpenPages", "IBM Financial Crimes Insight"],
+      "owned_products": [
+        "IBM OpenPages",
+        "IBM Financial Crimes Insight"
+      ],
       "health_score": 65,
       "last_contact_days_ago": 18,
       "pending_actions": [
-        {"id": "pa-003", "type": "EBR", "description": "Executive Business Review scheduled — prep deck needed", "priority": "high", "due_date": "2026-07-18"},
-        {"id": "pa-004", "type": "POC", "description": "Proof of concept for IBM Guardium in progress", "priority": "medium", "due_date": "2026-08-01"}
+        {
+          "id": "pa-003",
+          "type": "EBR",
+          "description": "Executive Business Review scheduled \u2014 prep deck needed",
+          "priority": "high",
+          "due_date": "2026-07-18"
+        },
+        {
+          "id": "pa-004",
+          "type": "POC",
+          "description": "Proof of concept for IBM Guardium in progress",
+          "priority": "medium",
+          "due_date": "2026-08-01"
+        }
       ],
       "suggested_actions": [
-        {"id": "sa-003", "type": "Cross-sell", "description": "Introduce IBM Guardium for data security compliance (SOX alignment)", "confidence": 0.91},
-        {"id": "sa-004", "type": "Expansion", "description": "Expand OpenPages to enterprise risk management module", "confidence": 0.68}
+        {
+          "id": "sa-003",
+          "type": "Cross-sell",
+          "description": "Introduce IBM Guardium for data security compliance (SOX alignment)",
+          "confidence": 0.91
+        },
+        {
+          "id": "sa-004",
+          "type": "Expansion",
+          "description": "Expand OpenPages to enterprise risk management module",
+          "confidence": 0.68
+        }
       ]
     },
     {
@@ -52,21 +102,47 @@
       "ticker": "SIEGY",
       "industry": "Industrial Technology / Manufacturing",
       "region": "Global",
-      "tier": "Premier",
+      "tier": "Horizon",
       "quota": 2100000,
       "pipeline": 1450000,
       "closed": 980000,
       "renewal_date": "2026-12-31",
-      "owned_products": ["IBM MAS", "IBM Sterling Supply Chain", "IBM Cloud"],
+      "owned_products": [
+        "IBM MAS",
+        "IBM Sterling Supply Chain",
+        "IBM Cloud"
+      ],
       "health_score": 81,
       "last_contact_days_ago": 5,
       "pending_actions": [
-        {"id": "pa-005", "type": "Contract", "description": "SOW signature pending for MAS expansion", "priority": "high", "due_date": "2026-07-15"},
-        {"id": "pa-006", "type": "Technical", "description": "Architecture review for hybrid cloud migration", "priority": "medium", "due_date": "2026-07-28"}
+        {
+          "id": "pa-005",
+          "type": "Contract",
+          "description": "SOW signature pending for MAS expansion",
+          "priority": "high",
+          "due_date": "2026-07-15"
+        },
+        {
+          "id": "pa-006",
+          "type": "Technical",
+          "description": "Architecture review for hybrid cloud migration",
+          "priority": "medium",
+          "due_date": "2026-07-28"
+        }
       ],
       "suggested_actions": [
-        {"id": "sa-005", "type": "Upsell", "description": "Propose IBM Turbonomic for cloud cost optimization given increased workloads", "confidence": 0.88},
-        {"id": "sa-006", "type": "Cross-sell", "description": "Sterling Order Management for manufacturing supply chain visibility", "confidence": 0.76}
+        {
+          "id": "sa-005",
+          "type": "Upsell",
+          "description": "Propose IBM Turbonomic for cloud cost optimization given increased workloads",
+          "confidence": 0.88
+        },
+        {
+          "id": "sa-006",
+          "type": "Cross-sell",
+          "description": "Sterling Order Management for manufacturing supply chain visibility",
+          "confidence": 0.76
+        }
       ]
     },
     {
@@ -75,21 +151,45 @@
       "ticker": "SEIC",
       "industry": "Financial Services / Asset Management",
       "region": "Southeast US",
-      "tier": "Strategic",
+      "tier": "Horizon",
       "quota": 600000,
       "pipeline": 310000,
       "closed": 210000,
       "renewal_date": "2027-01-15",
-      "owned_products": ["IBM Cloud Pak for Business Automation"],
+      "owned_products": [
+        "IBM Cloud Pak for Business Automation"
+      ],
       "health_score": 58,
       "last_contact_days_ago": 31,
       "pending_actions": [
-        {"id": "pa-007", "type": "Re-engagement", "description": "No contact in 31 days — re-engagement outreach needed", "priority": "high", "due_date": "2026-07-12"},
-        {"id": "pa-008", "type": "Review", "description": "Q2 business value assessment overdue", "priority": "medium", "due_date": "2026-07-25"}
+        {
+          "id": "pa-007",
+          "type": "Re-engagement",
+          "description": "No contact in 31 days \u2014 re-engagement outreach needed",
+          "priority": "high",
+          "due_date": "2026-07-12"
+        },
+        {
+          "id": "pa-008",
+          "type": "Review",
+          "description": "Q2 business value assessment overdue",
+          "priority": "medium",
+          "due_date": "2026-07-25"
+        }
       ],
       "suggested_actions": [
-        {"id": "sa-007", "type": "Cross-sell", "description": "IBM Cognos Analytics for investment portfolio reporting automation", "confidence": 0.79},
-        {"id": "sa-008", "type": "Advisory", "description": "Offer IBM Garage engagement to accelerate automation roadmap", "confidence": 0.65}
+        {
+          "id": "sa-007",
+          "type": "Cross-sell",
+          "description": "IBM Cognos Analytics for investment portfolio reporting automation",
+          "confidence": 0.79
+        },
+        {
+          "id": "sa-008",
+          "type": "Advisory",
+          "description": "Offer IBM Garage engagement to accelerate automation roadmap",
+          "confidence": 0.65
+        }
       ]
     },
     {
@@ -98,21 +198,46 @@
       "ticker": null,
       "industry": "Healthcare / Insurance",
       "region": "Mid-Atlantic US",
-      "tier": "Strategic",
+      "tier": "Horizon",
       "quota": 750000,
       "pipeline": 490000,
       "closed": 380000,
       "renewal_date": "2026-08-30",
-      "owned_products": ["IBM Watson Assistant", "IBM Cloud Pak for Integration"],
+      "owned_products": [
+        "IBM Watson Assistant",
+        "IBM Cloud Pak for Integration"
+      ],
       "health_score": 77,
       "last_contact_days_ago": 8,
       "pending_actions": [
-        {"id": "pa-009", "type": "Renewal", "description": "Watson Assistant renewal in 45 days", "priority": "high", "due_date": "2026-08-30"},
-        {"id": "pa-010", "type": "Demo", "description": "Prepare watsonx.ai demo for Digital Experience team", "priority": "medium", "due_date": "2026-07-22"}
+        {
+          "id": "pa-009",
+          "type": "Renewal",
+          "description": "Watson Assistant renewal in 45 days",
+          "priority": "high",
+          "due_date": "2026-08-30"
+        },
+        {
+          "id": "pa-010",
+          "type": "Demo",
+          "description": "Prepare watsonx.ai demo for Digital Experience team",
+          "priority": "medium",
+          "due_date": "2026-07-22"
+        }
       ],
       "suggested_actions": [
-        {"id": "sa-009", "type": "Upsell", "description": "Expand Watson Assistant to member portal — 40% call deflection ROI", "confidence": 0.87},
-        {"id": "sa-010", "type": "Cross-sell", "description": "IBM DataStage for claims data integration pipeline", "confidence": 0.72}
+        {
+          "id": "sa-009",
+          "type": "Upsell",
+          "description": "Expand Watson Assistant to member portal \u2014 40% call deflection ROI",
+          "confidence": 0.87
+        },
+        {
+          "id": "sa-010",
+          "type": "Cross-sell",
+          "description": "IBM DataStage for claims data integration pipeline",
+          "confidence": 0.72
+        }
       ]
     },
     {
@@ -121,21 +246,45 @@
       "ticker": null,
       "industry": "Financial Technology / Data Services",
       "region": "Northeast US",
-      "tier": "Standard",
+      "tier": "Horizon",
       "quota": 420000,
       "pipeline": 180000,
       "closed": 95000,
       "renewal_date": "2026-10-01",
-      "owned_products": ["IBM Db2 on Cloud"],
+      "owned_products": [
+        "IBM Db2 on Cloud"
+      ],
       "health_score": 44,
       "last_contact_days_ago": 52,
       "pending_actions": [
-        {"id": "pa-011", "type": "At-Risk", "description": "Health score critically low — escalate to account team", "priority": "critical", "due_date": "2026-07-10"},
-        {"id": "pa-012", "type": "Renewal Risk", "description": "Renewal at risk — competitive displacement signal detected", "priority": "critical", "due_date": "2026-07-14"}
+        {
+          "id": "pa-011",
+          "type": "At-Risk",
+          "description": "Health score critically low \u2014 escalate to account team",
+          "priority": "critical",
+          "due_date": "2026-07-10"
+        },
+        {
+          "id": "pa-012",
+          "type": "Renewal Risk",
+          "description": "Renewal at risk \u2014 competitive displacement signal detected",
+          "priority": "critical",
+          "due_date": "2026-07-14"
+        }
       ],
       "suggested_actions": [
-        {"id": "sa-011", "type": "Retention", "description": "Schedule exec-level QBR to address competitive pressure and reaffirm value", "confidence": 0.93},
-        {"id": "sa-012", "type": "Discount Lever", "description": "Offer multi-year commit discount to lock in renewal before Q3", "confidence": 0.81}
+        {
+          "id": "sa-011",
+          "type": "Retention",
+          "description": "Schedule exec-level QBR to address competitive pressure and reaffirm value",
+          "confidence": 0.93
+        },
+        {
+          "id": "sa-012",
+          "type": "Discount Lever",
+          "description": "Offer multi-year commit discount to lock in renewal before Q3",
+          "confidence": 0.81
+        }
       ]
     },
     {
@@ -144,21 +293,46 @@
       "ticker": "SEM",
       "industry": "Healthcare / Hospital Systems",
       "region": "Central US",
-      "tier": "Standard",
+      "tier": "Horizon",
       "quota": 480000,
       "pipeline": 290000,
       "closed": 185000,
       "renewal_date": "2026-11-15",
-      "owned_products": ["IBM Cloud", "IBM Security QRadar"],
+      "owned_products": [
+        "IBM Cloud",
+        "IBM Security QRadar"
+      ],
       "health_score": 69,
       "last_contact_days_ago": 14,
       "pending_actions": [
-        {"id": "pa-013", "type": "Technical", "description": "QRadar SIEM upgrade assessment pending", "priority": "medium", "due_date": "2026-08-05"},
-        {"id": "pa-014", "type": "Proposal", "description": "Draft proposal for HIPAA compliance expansion", "priority": "high", "due_date": "2026-07-18"}
+        {
+          "id": "pa-013",
+          "type": "Technical",
+          "description": "QRadar SIEM upgrade assessment pending",
+          "priority": "medium",
+          "due_date": "2026-08-05"
+        },
+        {
+          "id": "pa-014",
+          "type": "Proposal",
+          "description": "Draft proposal for HIPAA compliance expansion",
+          "priority": "high",
+          "due_date": "2026-07-18"
+        }
       ],
       "suggested_actions": [
-        {"id": "sa-013", "type": "Cross-sell", "description": "IBM Verify for zero-trust identity across 400+ care facilities", "confidence": 0.83},
-        {"id": "sa-014", "type": "Upsell", "description": "QRadar SOAR to complement existing SIEM deployment", "confidence": 0.74}
+        {
+          "id": "sa-013",
+          "type": "Cross-sell",
+          "description": "IBM Verify for zero-trust identity across 400+ care facilities",
+          "confidence": 0.83
+        },
+        {
+          "id": "sa-014",
+          "type": "Upsell",
+          "description": "QRadar SOAR to complement existing SIEM deployment",
+          "confidence": 0.74
+        }
       ]
     },
     {
@@ -167,21 +341,46 @@
       "ticker": "RICOY",
       "industry": "Technology / Imaging & Document Solutions",
       "region": "Global",
-      "tier": "Standard",
+      "tier": "Horizon",
       "quota": 560000,
       "pipeline": 350000,
       "closed": 260000,
       "renewal_date": "2027-02-01",
-      "owned_products": ["IBM FileNet Content Manager", "IBM Cloud Pak for Business Automation"],
+      "owned_products": [
+        "IBM FileNet Content Manager",
+        "IBM Cloud Pak for Business Automation"
+      ],
       "health_score": 73,
       "last_contact_days_ago": 9,
       "pending_actions": [
-        {"id": "pa-015", "type": "Workshop", "description": "Digital transformation workshop scheduled for July", "priority": "medium", "due_date": "2026-07-24"},
-        {"id": "pa-016", "type": "Proposal", "description": "Content Services Platform expansion proposal", "priority": "high", "due_date": "2026-07-30"}
+        {
+          "id": "pa-015",
+          "type": "Workshop",
+          "description": "Digital transformation workshop scheduled for July",
+          "priority": "medium",
+          "due_date": "2026-07-24"
+        },
+        {
+          "id": "pa-016",
+          "type": "Proposal",
+          "description": "Content Services Platform expansion proposal",
+          "priority": "high",
+          "due_date": "2026-07-30"
+        }
       ],
       "suggested_actions": [
-        {"id": "sa-015", "type": "Cross-sell", "description": "IBM watsonx Orchestrate for document workflow automation at scale", "confidence": 0.85},
-        {"id": "sa-016", "type": "Upsell", "description": "Upgrade FileNet to Cloud Pak for Content — modernization story", "confidence": 0.69}
+        {
+          "id": "sa-015",
+          "type": "Cross-sell",
+          "description": "IBM watsonx Orchestrate for document workflow automation at scale",
+          "confidence": 0.85
+        },
+        {
+          "id": "sa-016",
+          "type": "Upsell",
+          "description": "Upgrade FileNet to Cloud Pak for Content \u2014 modernization story",
+          "confidence": 0.69
+        }
       ]
     },
     {
@@ -190,21 +389,45 @@
       "ticker": null,
       "industry": "Financial Services / Mortgage",
       "region": "Northeast US",
-      "tier": "Standard",
+      "tier": "Horizon",
       "quota": 310000,
       "pipeline": 140000,
       "closed": 75000,
       "renewal_date": "2026-10-15",
-      "owned_products": ["IBM OpenPages"],
+      "owned_products": [
+        "IBM OpenPages"
+      ],
       "health_score": 53,
       "last_contact_days_ago": 27,
       "pending_actions": [
-        {"id": "pa-017", "type": "Engagement", "description": "Outreach needed — pipeline stalled for 3 weeks", "priority": "high", "due_date": "2026-07-15"},
-        {"id": "pa-018", "type": "Review", "description": "OpenPages ROI review to strengthen renewal conversation", "priority": "medium", "due_date": "2026-08-01"}
+        {
+          "id": "pa-017",
+          "type": "Engagement",
+          "description": "Outreach needed \u2014 pipeline stalled for 3 weeks",
+          "priority": "high",
+          "due_date": "2026-07-15"
+        },
+        {
+          "id": "pa-018",
+          "type": "Review",
+          "description": "OpenPages ROI review to strengthen renewal conversation",
+          "priority": "medium",
+          "due_date": "2026-08-01"
+        }
       ],
       "suggested_actions": [
-        {"id": "sa-017", "type": "Cross-sell", "description": "IBM Safer Payments for mortgage fraud detection compliance", "confidence": 0.77},
-        {"id": "sa-018", "type": "Advisory", "description": "IBM Consulting engagement for CFPB compliance readiness", "confidence": 0.61}
+        {
+          "id": "sa-017",
+          "type": "Cross-sell",
+          "description": "IBM Safer Payments for mortgage fraud detection compliance",
+          "confidence": 0.77
+        },
+        {
+          "id": "sa-018",
+          "type": "Advisory",
+          "description": "IBM Consulting engagement for CFPB compliance readiness",
+          "confidence": 0.61
+        }
       ]
     }
   ],

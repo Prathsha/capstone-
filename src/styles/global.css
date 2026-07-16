@@ -999,3 +999,15 @@ a:hover { color: var(--color-interactive-hover); text-decoration: underline; }
 .gap-4 { gap: var(--space-4); }
 .w-full { width: 100%; }
 
+
+/* ── Watson Orchestrate widget ───────────────────────────────────────────────
+   The loader adds WxOChat__layoutSize--float to <body> when the float panel
+   is active. Override it to widen and tighten the panel.                    */
+body.WxOChat__layoutSize--float [class*="WxOChat"][class*="panel"],
+body.WxOChat__layoutSize--float [class*="WxOChat"][class*="container"],
+body.WxOChat__layoutSize--float [class*="WxOChat"][class*="window"] {
+  width: 480px !important;
+  height: 680px !important;
+  max-height: 90vh !important;
+}
+
