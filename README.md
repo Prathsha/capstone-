@@ -87,12 +87,12 @@ Colors follow the official IBM color system: https://www.ibm.com/design/language
 
 | Account | Ticker | Tier |
 |---|---|---|
-| Quest Diagnostics | DGX | Strategic |
-| The Lincoln National Life Insurance Company | LNC | Strategic |
-| Siemens | SIEGY | Premier |
-| SEI Investments | SEIC | Strategic |
-| Independence BlueCross | — | Strategic |
-| SunGard Data Systems | — | Standard |
-| Select Medical Corp | SEM | Standard |
-| Ricoh | RICOY | Standard |
-| Sagent M&C LLC | — | Standard |
+| Quest Diagnostics | DGX | Horizon |
+| The Lincoln National Life Insurance Company | LNC | Horizon |
+| Siemens | SIEGY | Horizon |
+| SEI Investments | SEIC | Horizon |
+| Independence BlueCross | — | Horizon |
+| SunGard Data Systems | — | Horizon |
+| Select Medical Corp | SEM | Horizon |
+| Ricoh | RICOY | Horizon |
+| Sagent M&C LLC | — | Horizon |

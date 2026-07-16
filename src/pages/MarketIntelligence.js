@@ -260,10 +260,10 @@ export default function MarketIntelligence({ accounts }) {
       <div className="card mb-6">
         <div className="card__header" style={{ marginBottom: 0 }}>
           <div>
-            <div className="card__title">Select Account</div>
+            <div className="card__title">Horizon Account</div>
           </div>
           {selectedAccount && (
-            <Tag color={selectedAccount.tier === 'Premier' ? 'purple' : 'blue'}>
+            <Tag color={selectedAccount.tier === 'Enterprise' ? 'purple' : selectedAccount.tier === 'Strategic' ? 'blue' : selectedAccount.tier === 'Horizon' ? 'teal' : 'gray'}>
               {selectedAccount.tier}
             </Tag>
           )}

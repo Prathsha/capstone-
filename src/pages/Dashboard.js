@@ -27,15 +27,13 @@ function PendingActionItem({ item }) {
 
 // ── Suggested action item ─────────────────────────────────────────────────────
 function SuggestedActionItem({ item }) {
-  const isFromChat = item.source === 'gemini';
   return (
-    <div className={`action-item${isFromChat ? ' action-item--chat' : ''}`}>
-      <div className="action-item__priority-bar" style={{ background: isFromChat ? 'var(--ibm-purple-50)' : 'var(--ibm-blue-50)' }} />
+    <div className="action-item">
+      <div className="action-item__priority-bar" style={{ background: 'var(--ibm-blue-50)' }} />
       <div className="action-item__body">
         <div className="action-item__header">
           <span className="action-item__account">{item.account_name}</span>
-          <Tag color={isFromChat ? 'purple' : 'blue'}>{item.type}</Tag>
-          {isFromChat && <Tag color="purple">Chat</Tag>}
+          <Tag color="blue">{item.type}</Tag>
         </div>
         <div className="action-item__description">{item.description}</div>
         <div className="action-item__meta">
@@ -112,7 +110,7 @@ function AccountAttainmentRow({ account }) {
     <div className="account-row">
       <HealthBadge score={account.health_score} />
       <div className="account-row__name">{account.name.replace('THE ', '')}</div>
-      <Tag color={account.tier === 'Premier' ? 'purple' : account.tier === 'Strategic' ? 'blue' : 'gray'}>
+      <Tag color={account.tier === 'Enterprise' ? 'purple' : account.tier === 'Strategic' ? 'blue' : account.tier === 'Horizon' ? 'teal' : 'gray'}>
         {account.tier}
       </Tag>
       <div className="account-row__attainment" style={{ color }}>
