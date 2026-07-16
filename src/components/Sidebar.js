@@ -17,7 +17,7 @@ const NAV_ITEMS = [
   {
     section: 'AI Assistant',
     items: [
-      { path: '/chat', label: 'Seller Chat', icon: '◎' },
+      { path: '/chat', label: 'AI Assistant (Orchestrate)', icon: '◎' },
     ],
   },
 ];

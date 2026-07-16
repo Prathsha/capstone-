@@ -7,7 +7,7 @@ import Topbar from './components/Topbar';
 import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
 import MarketIntelligence from './pages/MarketIntelligence';
-import ChatPage from './pages/Chat';
+import OrchestrateChat from './pages/OrchestrateChat';
 import { Spinner, ErrorBlock } from './components/Helpers';
 import { ChatProvider, useChatContext } from './context/ChatContext';
 
@@ -195,7 +195,7 @@ function AppInner() {
             />
             <Route
               path="/chat"
-              element={<ChatPage accounts={accounts} seller={seller} />}
+              element={<OrchestrateChat />}
             />
           </Routes>
         </div>

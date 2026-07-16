@@ -150,6 +150,8 @@ a:hover { color: var(--color-interactive-hover); text-decoration: underline; }
   flex-direction: column;
   min-width: 0;
   overflow-x: hidden;
+  overflow-y: auto;          /* scroll happens here, not on <body> */
+  height: calc(100vh - 48px); /* viewport minus fixed topbar */
   background: var(--color-bg-subtle);
   margin-left: var(--sidebar-width); /* offset for fixed sidebar */
 }
