@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const BASE = 'http://localhost:8000';
+// In production (Vercel) REACT_APP_API_URL is not set, so requests go to the
+// same origin at /api — which Vercel routes to the Python serverless function.
+// Locally, set REACT_APP_API_URL=http://localhost:8000 in .env.development.local
+const BASE = process.env.REACT_APP_API_URL || '';
 
 const api = axios.create({ baseURL: BASE, timeout: 30000 });
 
