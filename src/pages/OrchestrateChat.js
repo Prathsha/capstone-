@@ -1,59 +1,61 @@
 import React, { useEffect, useRef } from 'react';
 
-// ════════════════════════════════════════════════════════════════════════════
-// Watson Orchestrate Chat Page
-// The wxO loader must NOT be pointed at #root — that element is owned by
-// React. We create a dedicated sibling div (#wxo-host) directly on <body>
-// so the loader can mount its widget there without touching React's DOM.
-// ════════════════════════════════════════════════════════════════════════════
-const WXO_HOST_ID = 'wxo-host';
+const WXO_HOST_ID   = 'wxo-chat-host';
+const WXO_SCRIPT_ID = 'wxo-loader-script';
+
+const WXO_CONFIG = {
+  orchestrationID:
+    '20260715-1849-1485-409b-29a44d219373_20260716-1619-0360-405c-07897e68baa4',
+  hostURL: 'https://dl.watson-orchestrate.ibm.com',
+  chatOptions: {
+    agentId: '20adb73a-16fa-4857-92c6-57da2931f27b',
+  },
+};
 
 export default function OrchestrateChat() {
+  const bodyRef     = useRef(null);
   const initialised = useRef(false);
 
   useEffect(() => {
-    // React 18 Strict Mode double-invokes effects in dev — guard against that.
     if (initialised.current) return;
     initialised.current = true;
 
-    // Create a mount point for the widget outside React's #root.
     let host = document.getElementById(WXO_HOST_ID);
     if (!host) {
       host = document.createElement('div');
       host.id = WXO_HOST_ID;
-      document.body.appendChild(host);
+      host.style.cssText = 'width:100%;height:100%;position:absolute;inset:0;';
     }
 
-    window.wxOConfiguration = {
-      orchestrationID:
-        '20260715-1849-1485-409b-29a44d219373_20260716-1619-0360-405c-07897e68baa4',
-      hostURL: 'https://dl.watson-orchestrate.ibm.com',
-      rootElementID: WXO_HOST_ID,
-      chatOptions: {
-        agentId: '20adb73a-16fa-4857-92c6-57da2931f27b',
-      },
-    };
+    if (bodyRef.current && !bodyRef.current.contains(host)) {
+      bodyRef.current.appendChild(host);
+    }
 
-    const script = document.createElement('script');
-    script.src = `${window.wxOConfiguration.hostURL}/wxochat/wxoLoader.js?embed=true`;
-    script.addEventListener('load', () => {
+    if (!document.getElementById(WXO_SCRIPT_ID)) {
+      window.wxOConfiguration = { ...WXO_CONFIG, rootElementID: WXO_HOST_ID };
+      const script    = document.createElement('script');
+      script.id       = WXO_SCRIPT_ID;
+      script.src      = `${WXO_CONFIG.hostURL}/wxochat/wxoLoader.js?embed=true`;
+      script.onload   = () => { if (window.wxoLoader) window.wxoLoader.init(); };
+      document.head.appendChild(script);
+    } else {
       if (window.wxoLoader) {
+        window.wxOConfiguration = { ...WXO_CONFIG, rootElementID: WXO_HOST_ID };
         window.wxoLoader.init();
       }
-    });
-    document.head.appendChild(script);
+    }
   }, []);
 
+  // Keep host inside our container on every render
+  useEffect(() => {
+    const host      = document.getElementById(WXO_HOST_ID);
+    const container = bodyRef.current;
+    if (host && container && !container.contains(host)) {
+      container.appendChild(host);
+    }
+  });
+
   return (
-    <div className="page-content">
-      <div className="page-header">
-        <div className="page-header__eyebrow">AI Assistant</div>
-        <h1 className="page-header__title">Seller Intelligence Chat</h1>
-        <p className="page-header__subtitle">
-          Powered by IBM Watson Orchestrate — use the chat button in the
-          bottom-right corner to get started.
-        </p>
-      </div>
-    </div>
+    <div className="wxo-page__body" ref={bodyRef} style={{ flex: 1, position: 'relative', minHeight: 0 }} />
   );
 }

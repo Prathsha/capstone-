@@ -8,6 +8,7 @@ Routes
 GET /api/news/{account_id}       — recent news articles (NewsAPI)
 GET /api/financial/{account_id}  — financial news + company profile (Finnhub)
 GET /api/stockquote/{account_id} — stock quote + price history (yfinance)
+GET /api/competitive-news        — live competitor news via NewsAPI
 """
 
 import asyncio
@@ -22,6 +23,109 @@ from mock import mock_financial_news, mock_news, mock_profile
 from queries import finnhub_short_name, news_query
 
 router = APIRouter(prefix="/api")
+
+# ── Competitive Intelligence News ────────────────────────────────────────────
+
+# Short query-friendly names for each competitor
+_COMPETITOR_QUERIES: dict[str, str] = {
+    "Microsoft":         '"Microsoft" AND (Azure OR AI OR Copilot OR enterprise)',
+    "AWS":               '"AWS" OR "Amazon Web Services" AND (cloud OR AI OR enterprise)',
+    "Google Cloud":      '"Google Cloud" AND (AI OR enterprise OR Vertex)',
+    "OpenAI":            '"OpenAI" AND (enterprise OR GPT OR AI)',
+    "Anthropic":         '"Anthropic" AND (Claude OR AI OR enterprise)',
+    "Oracle":            '"Oracle" AND (cloud OR database OR ERP OR enterprise)',
+    "Salesforce":        '"Salesforce" AND (AI OR Agentforce OR CRM OR enterprise)',
+    "ServiceNow":        '"ServiceNow" AND (AI OR automation OR enterprise)',
+    "Snowflake":         '"Snowflake" AND (data OR cloud OR AI OR enterprise)',
+    "Databricks":        '"Databricks" AND (data OR AI OR lakehouse OR enterprise)',
+    "SAP":               '"SAP" AND (S/4HANA OR cloud OR ERP OR enterprise)',
+    "Dell Technologies": '"Dell Technologies" AND (cloud OR infrastructure OR APEX)',
+    "HPE":               '"HPE" OR "Hewlett Packard Enterprise" AND (GreenLake OR cloud OR infrastructure)',
+    "VMware":            '"VMware" OR "Broadcom VMware" AND (cloud OR virtualization OR enterprise)',
+    "Palo Alto Networks":'"Palo Alto Networks" AND (security OR XDR OR cloud)',
+    "CrowdStrike":       '"CrowdStrike" AND (security OR Falcon OR endpoint)',
+    "Splunk":            '"Splunk" AND (SIEM OR security OR observability)',
+    "Datadog":           '"Datadog" AND (monitoring OR AIOps OR observability)',
+    "Cisco":             '"Cisco" AND (networking OR security OR enterprise)',
+    "Accenture":         '"Accenture" AND (consulting OR AI OR cloud OR enterprise)',
+}
+
+
+@router.get("/competitive-news")
+async def get_competitive_news(
+    competitor: str = Query(None, description="Competitor name; omit for all"),
+    days_back: int = Query(14, ge=1, le=60),
+):
+    """
+    Fetch recent news articles for one or all competitors from NewsAPI.
+    Falls back to Google News search URLs when NEWS_API_KEY is not configured.
+    """
+    from urllib.parse import quote_plus
+
+    def _gnews_url(q: str) -> str:
+        return f"https://news.google.com/search?q={quote_plus(q)}"
+
+    targets: list[str] = (
+        [competitor] if competitor and competitor in _COMPETITOR_QUERIES
+        else list(_COMPETITOR_QUERIES.keys())
+    )
+
+    if not settings.NEWS_API_KEY:
+        # Return mock Google News links for each competitor
+        now = datetime.utcnow()
+        mock_articles = []
+        for comp in targets:
+            mock_articles.append({
+                "competitor": comp,
+                "source": "Google News",
+                "title": f"{comp} — Latest Enterprise Technology News",
+                "description": f"Recent coverage of {comp} products, partnerships, and enterprise strategy.",
+                "url": _gnews_url(f'"{comp}" enterprise technology 2026'),
+                "published_at": (now - timedelta(days=2)).isoformat() + "Z",
+                "relevance": "Threat",
+            })
+        return {"articles": mock_articles, "source": "mock"}
+
+    from_date = (datetime.utcnow() - timedelta(days=days_back)).strftime("%Y-%m-%d")
+
+    async def _fetch_one(comp: str) -> list[dict]:
+        q = _COMPETITOR_QUERIES.get(comp, f'"{comp}"')
+        params = {
+            "q": q,
+            "from": from_date,
+            "sortBy": "publishedAt",
+            "language": "en",
+            "pageSize": 5,
+            "apiKey": settings.NEWS_API_KEY,
+        }
+        try:
+            async with httpx.AsyncClient(timeout=15.0) as client:
+                resp = await client.get("https://newsapi.org/v2/everything", params=params)
+            if resp.status_code != 200:
+                return []
+            raw = resp.json()
+            return [
+                {
+                    "competitor": comp,
+                    "source": a["source"]["name"],
+                    "title": a["title"],
+                    "description": a.get("description") or "",
+                    "url": a["url"],
+                    "published_at": a["publishedAt"],
+                    "image_url": a.get("urlToImage"),
+                    "relevance": "Threat",  # default; UI can override
+                }
+                for a in raw.get("articles", [])
+                if a.get("title") and "[Removed]" not in a.get("title", "")
+            ]
+        except Exception:
+            return []
+
+    results = await asyncio.gather(*[_fetch_one(c) for c in targets])
+    articles = [item for sublist in results for item in sublist]
+    articles.sort(key=lambda x: x.get("published_at", ""), reverse=True)
+
+    return {"articles": articles, "source": "newsapi"}
 
 
 # ── NewsAPI ─────────────────────────────────────────────────────────────────

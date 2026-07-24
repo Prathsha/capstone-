@@ -5,19 +5,34 @@ const NAV_ITEMS = [
   {
     section: 'Overview',
     items: [
-      { path: '/',         label: 'Dashboard',         icon: '▦' },
+      { path: '/',         label: 'Dashboard',    icon: '▦' },
+      { path: '/accounts', label: 'My Accounts',  icon: '▤' },
     ],
   },
   {
     section: 'Intelligence',
     items: [
       { path: '/intelligence', label: 'Market Intelligence', icon: '◈' },
+      { path: '/competitive',  label: 'Competitive Intel',   icon: '⊕' },
     ],
   },
   {
-    section: 'AI Assistant',
+    section: 'Customers',
     items: [
-      { path: '/chat', label: 'AI Assistant (Orchestrate)', icon: '◎' },
+      { path: '/contacts',    label: 'Contacts',  icon: '◉' },
+      { path: '/org-chart',   label: 'Org Chart', icon: '◫' },
+    ],
+  },
+  {
+    section: 'Technical',
+    items: [
+      { path: '/install-base', label: 'Install Base', icon: '⊞' },
+    ],
+  },
+  {
+    section: 'Team',
+    items: [
+      { path: '/team', label: 'Team Management', icon: '◑' },
     ],
   },
 ];

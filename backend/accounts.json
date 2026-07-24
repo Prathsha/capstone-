@@ -12,8 +12,8 @@
       "closed": 310000,
       "renewal_date": "2026-09-15",
       "owned_products": [
-        "IBM Watson Health",
-        "IBM Cloud Pak for Data"
+        "IBM Cloud Pak for Data",
+        "IBM watsonx.data"
       ],
       "health_score": 72,
       "last_contact_days_ago": 12,
@@ -21,7 +21,7 @@
         {
           "id": "pa-001",
           "type": "Renewal",
-          "description": "Watson Health renewal due in 60 days",
+          "description": "Cloud Pak for Data renewal due in 60 days",
           "priority": "high",
           "due_date": "2026-09-15"
         },
@@ -433,11 +433,18 @@
   ],
   "seller": {
     "name": "Arvind Krishna",
-    "title": "Brand Sales Specialist",
+    "title": "Technical Sales Leader",
     "pod": "Pod 13",
     "quota_total": 7270000,
     "quota_closed": 3013000,
     "quota_pipeline": 4610000,
-    "ytd_target_pct": 0.55
+    "ytd_target_pct": 0.55,
+    "email": "arvind.krishna@ibm.com",
+    "phone": "+1 (215) 555-0142",
+    "location": "Philadelphia, PA",
+    "region": "Mid-Atlantic & Northeast US",
+    "team": ["Jordan Reeves (ATL)", "Maya Patel (CSE)", "Derek Okafor (BSS)"],
+    "accounts_count": 9,
+    "bio": "Technical Sales Leader with 12+ years at IBM, specializing in hybrid cloud, AI, and security solutions for enterprise clients in financial services and healthcare."
   }
 }
