@@ -136,24 +136,37 @@ a:hover { color: var(--color-interactive-hover); text-decoration: underline; }
   padding-top: 48px;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .app-shell {
   display: flex;
   flex: 1;
+  overflow: hidden;
+  height: calc(100vh - 48px);
 }
 
 .app-main {
   flex: 1;
-  display: flex;
-  flex-direction: column;
   min-width: 0;
   overflow-x: hidden;
-  overflow-y: auto;          /* scroll happens here, not on <body> */
-  height: calc(100vh - 48px); /* viewport minus fixed topbar */
+  overflow-y: auto;
   background: var(--color-bg-subtle);
-  margin-left: var(--sidebar-width); /* offset for fixed sidebar */
+  margin-left: var(--sidebar-width);
+}
+
+/* ── WxO chat host — must not block clicks on the React app ─────────────────── */
+#wxo-chat-host {
+  pointer-events: none;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 9999;
+}
+
+#wxo-chat-host * {
+  pointer-events: auto;
 }
 
 .page-content {
@@ -1421,4 +1434,344 @@ a:hover { color: var(--color-interactive-hover); text-decoration: underline; }
 /* ── Dashboard: chat-sourced action items ───────────────────────────────── */
 .action-item--chat {
   border-left: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TSL Application — Extended Component Styles
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Contact Card ──────────────────────────────────────────────────────────── */
+.contact-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.contact-card__stars {
+  display: inline-flex;
+  gap: 1px;
+  align-items: center;
+}
+
+.contact-role-tag {
+  flex-shrink: 0;
+}
+
+/* ── Org Chart ──────────────────────────────────────────────────────────────── */
+.org-tree {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: auto;
+  padding: var(--space-4);
+}
+
+.org-level {
+  display: flex;
+  gap: var(--space-8);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.org-branch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.org-node {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  padding: var(--space-3) var(--space-4);
+  min-width: 180px;
+  max-width: 220px;
+  box-shadow: var(--shadow-sm);
+}
+
+.org-connector {
+  width: 2px;
+  background: var(--ibm-gray-30);
+}
+
+.org-connector--down {
+  height: 24px;
+  align-self: center;
+}
+
+/* ── Asset Card ─────────────────────────────────────────────────────────────── */
+.asset-card {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Install Base Table ─────────────────────────────────────────────────────── */
+.install-base-table th,
+.install-base-table td {
+  min-width: 90px;
+  white-space: nowrap;
+}
+
+.install-base-table th:first-child,
+.install-base-table td:first-child {
+  min-width: 160px;
+  position: sticky;
+  left: 0;
+  background: inherit;
+  z-index: 1;
+}
+
+.install-base-table th:first-child {
+  background: var(--ibm-gray-10);
+}
+
+/* ── Task Item ──────────────────────────────────────────────────────────────── */
+.task-item {
+  transition: background 0.1s;
+}
+
+.task-item:hover {
+  background: var(--color-bg-subtle) !important;
+}
+
+.task-item--done {
+  opacity: 0.65;
+}
+
+/* ── Recommendation Cards ───────────────────────────────────────────────────── */
+.rec-card {
+  border-left: 4px solid var(--color-border);
+}
+
+.rec-card--crosssell {
+  border-left-color: var(--ibm-blue-60);
+}
+
+.rec-card--risk {
+  border-left-color: var(--ibm-red-60);
+}
+
+.rec-card--upsell {
+  border-left-color: var(--ibm-purple-60);
+}
+
+/* ── Playbook Step ──────────────────────────────────────────────────────────── */
+.playbook-step:last-child {
+  border-bottom: none !important;
+}
+
+/* ── Battlecard ─────────────────────────────────────────────────────────────── */
+.battlecard {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── News Item ──────────────────────────────────────────────────────────────── */
+.news-item {
+  /* Extends .article-card — no additional overrides needed */
+}
+
+/* ── Meeting Card ───────────────────────────────────────────────────────────── */
+.meeting-card {
+  border-left: 4px solid var(--color-border);
+  transition: box-shadow 0.15s;
+}
+
+.meeting-card:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Topbar User Profile Dropdown
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.topbar__user-area {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.topbar__user-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-2) var(--space-3);
+  border-radius: 2px;
+  transition: background 0.1s;
+}
+
+.topbar__user-btn:hover {
+  background: var(--ibm-gray-90);
+}
+
+.topbar__profile-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 300px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.16);
+  z-index: 500;
+  overflow: hidden;
+}
+
+.topbar__profile-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  background: var(--ibm-gray-100);
+}
+
+.topbar__profile-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--ibm-blue-60);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.topbar__profile-name {
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.3;
+}
+
+.topbar__profile-title {
+  font-size: var(--font-size-sm);
+  color: var(--ibm-blue-30);
+  margin-top: 2px;
+}
+
+.topbar__profile-pod {
+  font-size: var(--font-size-xs);
+  color: var(--ibm-gray-50);
+  margin-top: 2px;
+}
+
+.topbar__profile-divider {
+  height: 1px;
+  background: var(--color-border);
+}
+
+.topbar__profile-section {
+  padding: var(--space-3) var(--space-4);
+}
+
+.topbar__profile-section-label {
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-2);
+}
+
+.topbar__profile-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  padding: 3px 0;
+  line-height: 1.4;
+}
+
+.topbar__profile-icon {
+  color: var(--ibm-blue-60);
+  flex-shrink: 0;
+  width: 16px;
+  text-align: center;
+  font-size: 11px;
+  margin-top: 1px;
+}
+
+.topbar__profile-bio {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  font-style: italic;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Full-page AI Chat embed (OrchestrateChat page)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.wxo-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1;                /* fills .app-main which already has the right height */
+  height: 100%;
+  background: var(--ibm-gray-100);
+  overflow: hidden;
+}
+
+.wxo-page__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-6);
+  height: 52px;
+  background: var(--ibm-gray-90);
+  border-bottom: 1px solid var(--ibm-gray-80);
+  flex-shrink: 0;
+  gap: var(--space-4);
+}
+
+.wxo-page__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.wxo-page__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ibm-green-40);
+  animation: wxo-pulse 2s ease-in-out infinite;
+}
+
+@keyframes wxo-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+.wxo-page__name {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.3px;
+}
+
+.wxo-page__sub {
+  font-size: var(--font-size-xs);
+  color: var(--ibm-gray-50);
+  margin-left: 2px;
+}
+
+.wxo-page__body {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  background: var(--ibm-gray-100);
+}
+
+/* Full-page chat children fill their page container. The global floating
+   #wxo-chat-host must retain its fixed, bottom-right positioning above. */
+.wxo-page__body > div {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
 }

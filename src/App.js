@@ -1,15 +1,20 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import './styles/global.css';
 import { fetchAccounts, fetchDashboard } from './services/api';
 import { useState, useEffect, useCallback } from 'react';
 import Topbar from './components/Topbar';
 import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
+import MyAccounts from './pages/MyAccounts';
 import MarketIntelligence from './pages/MarketIntelligence';
-import OrchestrateChat from './pages/OrchestrateChat';
+import CompetitiveIntelligence from './pages/CompetitiveIntelligence';
+import Contacts from './pages/Contacts';
+import OrgChart from './pages/OrgChart';
+import InstallBase from './pages/InstallBase';
+import TeamManagement from './pages/TeamManagement';
 import { Spinner, ErrorBlock } from './components/Helpers';
-import { ChatProvider, useChatContext } from './context/ChatContext';
+import { TaskProvider } from './context/TaskContext';
 
 // ── Account Selector Bar ──────────────────────────────────────────────────────
 function AccountSelectorBar({ accounts, selectedIds, onChange }) {
@@ -75,20 +80,26 @@ function AccountSelectorBar({ accounts, selectedIds, onChange }) {
   );
 }
 
+// Routes where the AccountSelectorBar should be hidden
+const HIDE_SELECTOR_PATHS = [
+  '/accounts', '/competitive', '/contacts', '/org-chart', '/install-base', '/team',
+];
+
 // ════════════════════════════════════════════════════════════════════════════
-// App Inner (needs ChatContext already mounted)
+// App Inner
 // ════════════════════════════════════════════════════════════════════════════
 function AppInner() {
-  const [accounts, setAccounts]           = useState([]);
-  const [seller, setSeller]               = useState(null);
-  const [selectedIds, setSelectedIds]     = useState([]);
-  const [dashboardData, setDashboardData] = useState(null);
-  const [loading, setLoading]             = useState(true);
+  const [accounts, setAccounts]            = useState([]);
+  const [seller, setSeller]                = useState(null);
+  const [selectedIds, setSelectedIds]      = useState([]);
+  const [dashboardData, setDashboardData]  = useState(null);
+  const [loading, setLoading]              = useState(true);
   const [dashboardLoading, setDashLoading] = useState(false);
-  const [error, setError]                 = useState(null);
-  const [dashboardError, setDashError]    = useState(null);
+  const [error, setError]                  = useState(null);
+  const [dashboardError, setDashError]     = useState(null);
+  const location = useLocation();
 
-  const { pinnedActions } = useChatContext();
+  const showSelector = !HIDE_SELECTOR_PATHS.includes(location.pathname);
 
   // ── Initial load: accounts ────────────────────────────────────────────────
   useEffect(() => {
@@ -151,30 +162,19 @@ function AppInner() {
     );
   }
 
-  // Merge backend suggested_actions with chat-pinned actions for the dashboard
-  const mergedDashboard = dashboardData ? {
-    ...dashboardData,
-    suggested_actions: [
-      ...pinnedActions.map(a => ({
-        ...a,
-        // Normalise field names to match existing SuggestedActionItem shape
-        account_name: a.account_name,
-      })),
-      ...(dashboardData.suggested_actions || []),
-    ],
-  } : null;
-
   return (
     <div className="app-body">
       <Topbar seller={seller} />
       <div className="app-shell">
         <Sidebar seller={seller} />
         <div className="app-main">
-          <AccountSelectorBar
-            accounts={accounts}
-            selectedIds={selectedIds}
-            onChange={handleSelectionChange}
-          />
+          {showSelector && (
+            <AccountSelectorBar
+              accounts={accounts}
+              selectedIds={selectedIds}
+              onChange={handleSelectionChange}
+            />
+          )}
           <Routes>
             <Route
               path="/"
@@ -183,20 +183,19 @@ function AppInner() {
                   accounts={accounts}
                   seller={seller}
                   selectedIds={selectedIds}
-                  dashboardData={mergedDashboard}
+                  dashboardData={dashboardData}
                   dashboardLoading={dashboardLoading}
                   dashboardError={dashboardError}
                 />
               }
             />
-            <Route
-              path="/intelligence"
-              element={<MarketIntelligence accounts={accounts} />}
-            />
-            <Route
-              path="/chat"
-              element={<OrchestrateChat />}
-            />
+            <Route path="/accounts"     element={<MyAccounts accounts={accounts} />} />
+            <Route path="/intelligence" element={<MarketIntelligence accounts={accounts} />} />
+            <Route path="/competitive"  element={<CompetitiveIntelligence />} />
+            <Route path="/contacts"     element={<Contacts accounts={accounts} />} />
+            <Route path="/org-chart"    element={<OrgChart />} />
+            <Route path="/install-base" element={<InstallBase accounts={accounts} />} />
+            <Route path="/team"         element={<TeamManagement />} />
           </Routes>
         </div>
       </div>
@@ -204,12 +203,42 @@ function AppInner() {
   );
 }
 
+// ── WxO chat widget — loads after React mounts ───────────────────────────────
+function WxOChat() {
+  useEffect(() => {
+    window.wxOConfiguration = {
+      orchestrationID: "20260715-1849-1485-409b-29a44d219373_20260716-1619-0360-405c-07897e68baa4",
+      hostURL: "https://dl.watson-orchestrate.ibm.com",
+      rootElementID: "wxo-chat-host",
+      chatOptions: {
+        agentId: "20adb73a-16fa-4857-92c6-57da2931f27b",
+      },
+    };
+
+    if (document.getElementById('wxo-loader-script')) {
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.id  = 'wxo-loader-script';
+    script.src = `${window.wxOConfiguration.hostURL}/wxochat/wxoLoader.js?embed=true`;
+    script.addEventListener('load', () => {
+      if (window.wxoLoader) {
+        window.wxoLoader.init();
+      }
+    });
+    document.head.appendChild(script);
+  }, []);
+  return null;
+}
+
 export default function App() {
   return (
     <Router>
-      <ChatProvider>
+      <TaskProvider>
+        <WxOChat />
         <AppInner />
-      </ChatProvider>
+      </TaskProvider>
     </Router>
   );
 }
