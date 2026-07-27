@@ -268,9 +268,15 @@ function SuggestedActionItem({ item }) {
 
 // ── Quota progress bar ────────────────────────────────────────────────────────
 function QuotaOverview({ summary }) {
-  const { total_quota, closed, pipeline, attainment_pct, coverage_pct } = summary;
-  const closedPct = Math.min((closed / total_quota) * 100, 100);
-  const pipelinePct = Math.min((pipeline / total_quota) * 100, 100 - closedPct);
+  const {
+    total_quota, closed, pipeline,
+    weighted_pipeline, pipeline_needed,
+    attainment_pct, coverage_pct, win_rate,
+  } = summary;
+  const closedPct   = Math.min((closed / total_quota) * 100, 100);
+  // Progress bar uses probability-weighted pipeline so it doesn't look "almost done"
+  const weightedPct = Math.min((weighted_pipeline / total_quota) * 100, 100 - closedPct);
+  const winRatePct  = Math.round((win_rate ?? 0.35) * 100);
 
   return (
     <div className="quota-overview">
@@ -285,11 +291,25 @@ function QuotaOverview({ summary }) {
         </div>
       </div>
       <div>
-        <div className="quota-overview__title">In Pipeline</div>
-        <div className="quota-overview__value" style={{ color: 'var(--ibm-blue-40)' }}>
+        <div className="quota-overview__title">Pipeline (Face Value)</div>
+        <div className="quota-overview__value" style={{ color: 'var(--ibm-gray-40)' }}>
           {formatCurrency(pipeline)}
         </div>
+        <div style={{ fontSize: 11, color: 'var(--ibm-gray-50)', marginTop: 2 }}>
+          ≈ {formatCurrency(weighted_pipeline)} expected @ {winRatePct}% win rate
+        </div>
       </div>
+      {pipeline_needed > 0 && (
+        <div>
+          <div className="quota-overview__title" style={{ color: 'var(--ibm-red-50)' }}>Pipeline Gap</div>
+          <div className="quota-overview__value" style={{ color: 'var(--ibm-red-50)' }}>
+            {formatCurrency(pipeline_needed)}
+          </div>
+          <div style={{ fontSize: 11, color: 'var(--ibm-gray-50)', marginTop: 2 }}>
+            more pipeline needed to close
+          </div>
+        </div>
+      )}
 
       <div className="quota-overview__progress">
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
@@ -297,12 +317,12 @@ function QuotaOverview({ summary }) {
             Attainment: <strong style={{ color: '#fff' }}>{attainment_pct}%</strong>
           </span>
           <span style={{ fontSize: 12, color: 'var(--ibm-gray-40)' }}>
-            Coverage: <strong style={{ color: '#fff' }}>{coverage_pct}%</strong>
+            Expected coverage: <strong style={{ color: '#fff' }}>{coverage_pct}%</strong>
           </span>
         </div>
         <div className="quota-progress-bar">
           <div className="quota-progress-bar__closed"   style={{ width: `${closedPct}%` }} />
-          <div className="quota-progress-bar__pipeline" style={{ left: `${closedPct}%`, width: `${pipelinePct}%` }} />
+          <div className="quota-progress-bar__pipeline" style={{ left: `${closedPct}%`, width: `${weightedPct}%` }} />
         </div>
         <div className="quota-legend">
           <div className="quota-legend__item">
@@ -311,7 +331,7 @@ function QuotaOverview({ summary }) {
           </div>
           <div className="quota-legend__item">
             <div className="quota-legend__dot quota-legend__dot--pipeline" />
-            Pipeline
+            Expected ({winRatePct}% win rate)
           </div>
           <div className="quota-legend__item">
             <div className="quota-legend__dot quota-legend__dot--gap" />
@@ -438,13 +458,25 @@ export default function Dashboard({
             </div>
           </Link>
           <Link to="/accounts" style={{ textDecoration: 'none' }}>
-            <div className="kpi-tile" style={{ cursor: 'pointer', transition: 'box-shadow 0.15s' }}
+            <div
+              className={quota_summary.pipeline_needed > 0 ? 'kpi-tile kpi-tile--warning' : 'kpi-tile kpi-tile--success'}
+              style={{ cursor: 'pointer', transition: 'box-shadow 0.15s' }}
               onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.12)'}
               onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}
             >
-              <div className="kpi-tile__label">Active Pipeline</div>
-              <div className="kpi-tile__value">{formatCurrency(quota_summary.pipeline)}</div>
-              <div className="kpi-tile__sub">{quota_summary.coverage_pct}% coverage · View Accounts →</div>
+              <div className="kpi-tile__label">
+                {quota_summary.pipeline_needed > 0 ? 'Pipeline Gap' : 'Pipeline Sufficient'}
+              </div>
+              <div className="kpi-tile__value">
+                {quota_summary.pipeline_needed > 0
+                  ? formatCurrency(quota_summary.pipeline_needed)
+                  : formatCurrency(quota_summary.pipeline)}
+              </div>
+              <div className="kpi-tile__sub">
+                {quota_summary.pipeline_needed > 0
+                  ? `${formatCurrency(quota_summary.pipeline)} in pipeline — need more · View Accounts →`
+                  : `${quota_summary.coverage_pct}% expected coverage · View Accounts →`}
+              </div>
             </div>
           </Link>
           <Link to="/team" style={{ textDecoration: 'none' }}>

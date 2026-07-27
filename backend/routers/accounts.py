@@ -76,13 +76,25 @@ def get_dashboard(account_ids: Optional[str] = Query(None)):
     total_closed = sum(a["closed"] for a in selected)
     total_pipeline = sum(a["pipeline"] for a in selected)
 
+    # Industry-standard enterprise win rate applied to raw pipeline to avoid
+    # overstating progress. Sellers need ~3x coverage to reliably hit quota.
+    WIN_RATE = 0.35
+    weighted_pipeline = round(total_pipeline * WIN_RATE)
+    remaining_quota = max(total_quota - total_closed, 0)
+    # Pipeline needed = how much face-value pipeline is required to cover the gap
+    # (remaining quota / win rate). Negative means the seller already has enough.
+    pipeline_needed = max(round(remaining_quota / WIN_RATE) - total_pipeline, 0)
+
     return {
         "quota_summary": {
             "total_quota": total_quota,
             "closed": total_closed,
             "pipeline": total_pipeline,
+            "weighted_pipeline": weighted_pipeline,
+            "pipeline_needed": pipeline_needed,
+            "win_rate": WIN_RATE,
             "attainment_pct": round(total_closed / total_quota * 100, 1) if total_quota else 0,
-            "coverage_pct": round((total_closed + total_pipeline) / total_quota * 100, 1) if total_quota else 0,
+            "coverage_pct": round((total_closed + weighted_pipeline) / total_quota * 100, 1) if total_quota else 0,
         },
         "pending_actions": all_pending,
         "suggested_actions": all_suggested,
