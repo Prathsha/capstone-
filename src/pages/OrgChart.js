@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { CONTACTS } from '../data/contacts';
 import { ORG_CHARTS } from '../data/orgCharts';
 
@@ -65,53 +65,64 @@ function FunctionBranch({ branch }) {
   );
 }
 
-export default function OrgChart({ selectedIds = [] }) {
-  const initial = selectedIds.length === 1 ? selectedIds[0] : 'acc-001';
-  const [selectedId, setSelectedId] = useState(initial);
-
-  React.useEffect(() => {
-    if (selectedIds.length === 1) setSelectedId(selectedIds[0]);
-  }, [selectedIds]);
-
-  const account = ACCOUNTS_LIST.find(item => item.id === selectedId);
-  const chart = ORG_CHARTS[selectedId];
+function OrganizationChart({ account, showHeading = false }) {
+  const chart = ORG_CHARTS[account.id];
 
   return (
-    <div className="page-content">
-      <div className="page-header">
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
-          <div>
-            <div className="page-header__eyebrow">Customers</div>
-            <h1 className="page-header__title">Org Chart</h1>
-            <p className="page-header__subtitle">{account.label} — {account.subtitle}</p>
-          </div>
-          <select
-            value={selectedId}
-            onChange={event => setSelectedId(event.target.value)}
-            className="account-selector__select"
-            style={{ minWidth: 260, height: 36, marginTop: 4 }}
-          >
-            {ACCOUNTS_LIST.map(item => <option key={item.id} value={item.id}>{item.label}</option>)}
-          </select>
+    <section style={{ marginBottom: 'var(--space-8)' }}>
+      {showHeading && (
+        <div style={{ marginBottom: 'var(--space-4)' }}>
+          <h2 style={{ margin: 0, fontSize: 'var(--font-size-lg)' }}>{account.label}</h2>
+          <div className="text-sm text-muted" style={{ marginTop: 'var(--space-2)' }}>{account.subtitle}</div>
         </div>
-      </div>
-
+      )}
       <div className="org-tree">
         <div className="org-chart-columns">
           <section>
             <h2 className="org-section-title">Executive leadership & board</h2>
             <div className="org-leader-list">
-              {chart.leaders.map((leader, index) => <PersonNode key={`${leader.title}-${index}`} person={leader} accent={index === 0} />)}
+              {chart.leaders.map((leader, index) => (
+                <PersonNode key={`${leader.title}-${index}`} person={leader} accent={index === 0} />
+              ))}
             </div>
           </section>
           <section>
             <h2 className="org-section-title">Functions & business units</h2>
             <div className="org-functions-grid">
-              {chart.functions.map((branch, index) => <FunctionBranch key={`${branch.title}-${index}`} branch={branch} />)}
+              {chart.functions.map((branch, index) => (
+                <FunctionBranch key={`${branch.title}-${index}`} branch={branch} />
+              ))}
             </div>
           </section>
         </div>
       </div>
+    </section>
+  );
+}
+
+export default function OrgChart({ selectedIds = [] }) {
+  const isSingleAccount = selectedIds.length === 1;
+  const selectedAccount = isSingleAccount
+    ? ACCOUNTS_LIST.find(item => item.id === selectedIds[0])
+    : null;
+
+  return (
+    <div className="page-content">
+      <div className="page-header">
+        <div className="page-header__eyebrow">Customers</div>
+        <h1 className="page-header__title">Org Chart</h1>
+        <p className="page-header__subtitle">
+          {selectedAccount
+            ? `${selectedAccount.label} — ${selectedAccount.subtitle}`
+            : 'Organization structures across all 9 accounts'}
+        </p>
+      </div>
+
+      {selectedAccount
+        ? <OrganizationChart account={selectedAccount} />
+        : ACCOUNTS_LIST.map(account => (
+            <OrganizationChart key={account.id} account={account} showHeading />
+          ))}
     </div>
   );
 }

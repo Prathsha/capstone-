@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { CONTACTS } from '../data/contacts';
 
-const COMPANIES = [...new Set(CONTACTS.map(contact => contact.company))];
-
 export default function Contacts({ accounts = [], selectedIds = [] }) {
   // Pre-select the account filter when exactly one account is selected globally
   const preselect = selectedIds.length === 1
@@ -31,20 +29,7 @@ export default function Contacts({ accounts = [], selectedIds = [] }) {
         <p className="page-header__subtitle">{CONTACTS.length} verified contacts across 9 accounts</p>
       </div>
 
-      <div style={{ display: 'flex', gap: 'var(--space-4)', marginBottom: 'var(--space-6)', flexWrap: 'wrap', alignItems: 'center' }}>
-        <label htmlFor="contact-account" style={{ fontSize: 'var(--font-size-sm)', fontWeight: 600, color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-          Account
-        </label>
-        <select
-          id="contact-account"
-          value={filterAccount}
-          onChange={event => setFilterAccount(event.target.value)}
-          className="account-selector__select"
-          style={{ minWidth: 260, height: 32 }}
-        >
-          <option value="All">All Accounts</option>
-          {COMPANIES.map(company => <option key={company} value={company}>{company}</option>)}
-        </select>
+      <div style={{ marginBottom: 'var(--space-6)' }}>
         <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
           Showing {filtered.length} contacts
         </span>
