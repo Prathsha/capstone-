@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import './styles/global.css';
 import { fetchAccounts, fetchDashboard } from './services/api';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import Topbar from './components/Topbar';
 import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
@@ -16,16 +16,20 @@ import TeamManagement from './pages/TeamManagement';
 import { Spinner, ErrorBlock } from './components/Helpers';
 import { TaskProvider } from './context/TaskContext';
 
+const SELLER_PROFILE = {
+  title: 'Technology Sales Leader',
+  location: 'New York',
+  region: 'Northeast',
+  team: ['Pratham Shah', 'Ian Slater', 'Sadaf Sobhani'],
+  bio: 'Technology Sales Leader with 12+ years at IBM, specializing in hybrid cloud, AI, and security solutions for enterprise clients in financial services and healthcare.',
+};
+
 // ── Account Selector Bar ──────────────────────────────────────────────────────
 function AccountSelectorBar({ accounts, selectedIds, onChange }) {
   const handleChange = (e) => {
     const val = e.target.value;
     if (val === 'all') {
       onChange([]);
-    } else if (val === 'group-strategic') {
-      onChange(accounts.filter(a => a.tier === 'Strategic').map(a => a.id));
-    } else if (val === 'group-premier') {
-      onChange(accounts.filter(a => a.tier === 'Premier').map(a => a.id));
     } else {
       onChange([val]);
     }
@@ -34,16 +38,6 @@ function AccountSelectorBar({ accounts, selectedIds, onChange }) {
   const getCurrentValue = () => {
     if (selectedIds.length === 0) return 'all';
     if (selectedIds.length === 1) return selectedIds[0];
-    const strategicIds = accounts.filter(a => a.tier === 'Strategic').map(a => a.id);
-    const premierIds   = accounts.filter(a => a.tier === 'Premier').map(a => a.id);
-    if (
-      selectedIds.length === strategicIds.length &&
-      selectedIds.every(id => strategicIds.includes(id))
-    ) return 'group-strategic';
-    if (
-      selectedIds.length === premierIds.length &&
-      selectedIds.every(id => premierIds.includes(id))
-    ) return 'group-premier';
     return 'all';
   };
 
@@ -59,10 +53,6 @@ function AccountSelectorBar({ accounts, selectedIds, onChange }) {
         aria-label="Select accounts to view"
       >
         <option value="all">All Accounts ({accounts.length})</option>
-        <optgroup label="Account Groups">
-          <option value="group-premier">Premier Accounts</option>
-          <option value="group-strategic">Strategic Accounts</option>
-        </optgroup>
         <optgroup label="Individual Accounts">
           {accounts.map(a => (
             <option key={a.id} value={a.id}>
@@ -105,7 +95,7 @@ function AppInner() {
     fetchAccounts()
       .then(data => {
         setAccounts(data.accounts);
-        setSeller(data.seller);
+        setSeller({ ...data.seller, ...SELLER_PROFILE });
       })
       .catch(e => setError(`Cannot reach backend. Is the FastAPI server running? (${e.message})`))
       .finally(() => setLoading(false));
@@ -203,18 +193,49 @@ function AppInner() {
 
 // ── WxO chat widget — loads after React mounts ───────────────────────────────
 function WxOChat() {
+  const chatInstanceRef = useRef(null);
+  const [chatReady, setChatReady] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatMaximized, setChatMaximized] = useState(false);
+
   useEffect(() => {
+    const host = document.getElementById('wxo-chat-host');
+    host?.classList.toggle('wxo-chat-host--maximized', chatMaximized);
+    host?.classList.toggle('wxo-chat-host--closed', !chatOpen);
+    return () => {
+      host?.classList.remove('wxo-chat-host--maximized');
+      host?.classList.remove('wxo-chat-host--closed');
+    };
+  }, [chatMaximized, chatOpen]);
+
+  useEffect(() => {
+    const chatHost = document.getElementById('wxo-chat-host');
+
     window.wxOConfiguration = {
       orchestrationID: "20260715-1849-1485-409b-29a44d219373_20260716-1619-0360-405c-07897e68baa4",
       hostURL: "https://dl.watson-orchestrate.ibm.com",
-      rootElementID: "wxo-chat-host",
+      showLauncher: true,
+      layout: {
+        form: "custom",
+        customElement: chatHost,
+        showOrchestrateHeader: true,
+      },
       chatOptions: {
         agentId: "20adb73a-16fa-4857-92c6-57da2931f27b",
+        onLoad: (instance) => {
+          chatInstanceRef.current = instance;
+          const initializeClosedView = () => {
+            instance.changeView({ launcher: false, mainWindow: false });
+          };
+          instance.on('chat:ready', initializeClosedView);
+          initializeClosedView();
+          setChatReady(true);
+        },
       },
     };
 
     if (document.getElementById('wxo-loader-script')) {
-      return;
+      return undefined;
     }
 
     const script = document.createElement('script');
@@ -227,7 +248,58 @@ function WxOChat() {
     });
     document.head.appendChild(script);
   }, []);
-  return null;
+
+  const openChat = async () => {
+    await chatInstanceRef.current?.changeView({ launcher: false, mainWindow: true });
+    setChatOpen(true);
+  };
+
+  const minimizeChat = async () => {
+    await chatInstanceRef.current?.changeView({ launcher: false, mainWindow: false });
+    setChatMaximized(false);
+    setChatOpen(false);
+  };
+
+  const resetChat = async () => {
+    await chatInstanceRef.current?.restartConversation();
+  };
+
+  const toggleMaximizeChat = () => {
+    setChatMaximized(current => !current);
+  };
+
+  return (
+    <>
+      {chatOpen && (
+        <div className={`chat-custom-header${chatMaximized ? ' chat-custom-header--maximized' : ''}`} role="banner" aria-label="AI chat header">
+          <span>Capstone</span>
+          <div className="chat-custom-header__actions">
+            <button type="button" onClick={resetChat} aria-label="Reset chat" title="Reset chat">↻</button>
+            <button
+              type="button"
+              onClick={toggleMaximizeChat}
+              aria-label={chatMaximized ? 'Restore chat' : 'Maximize chat'}
+              title={chatMaximized ? 'Restore chat' : 'Maximize chat'}
+            >
+              {chatMaximized ? '↙' : '↗'}
+            </button>
+            <button type="button" onClick={minimizeChat} aria-label="Minimize chat" title="Minimize chat">—</button>
+          </div>
+        </div>
+      )}
+      {!chatOpen && (
+        <button
+          type="button"
+          className="chat-text-launcher"
+          onClick={openChat}
+          disabled={!chatReady}
+          aria-label="Open AI chat"
+        >
+          AI Chat
+        </button>
+      )}
+    </>
+  );
 }
 
 export default function App() {

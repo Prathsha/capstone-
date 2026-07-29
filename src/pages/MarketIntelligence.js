@@ -237,7 +237,7 @@ function StockQuotePanel({ accountId }) {
 }
 
 // ── Single-account News Section ───────────────────────────────────────────────
-function NewsSection({ accountId, source, daysBack = 30 }) {
+function NewsSection({ accountId, source, daysBack = 30, refreshKey }) {
   const [data, setData]       = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState(null);
@@ -245,13 +245,13 @@ function NewsSection({ accountId, source, daysBack = 30 }) {
   const loadData = useCallback(() => {
     setLoading(true); setError(null);
     const fetcher = source === 'general'
-      ? fetchNews(accountId, daysBack)
-      : fetchFinancial(accountId);
+      ? fetchNews(accountId, daysBack, refreshKey)
+      : fetchFinancial(accountId, refreshKey);
     fetcher
       .then(setData)
       .catch(e => setError(e.message))
       .finally(() => setLoading(false));
-  }, [accountId, source, daysBack]);
+  }, [accountId, source, daysBack, refreshKey]);
 
   useEffect(() => { loadData(); }, [loadData]);
 
@@ -276,7 +276,7 @@ function NewsSection({ accountId, source, daysBack = 30 }) {
 }
 
 // ── Overall News — fetches all accounts in parallel ───────────────────────────
-function OverallNewsSection({ accounts, daysBack = 30 }) {
+function OverallNewsSection({ accounts, daysBack = 30, refreshKey }) {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading]   = useState(true);
 
@@ -285,7 +285,7 @@ function OverallNewsSection({ accounts, daysBack = 30 }) {
     setLoading(true);
     Promise.all(
       accounts.map(acc =>
-        fetchNews(acc.id, daysBack)
+        fetchNews(acc.id, daysBack, refreshKey)
           .then(data => ({
             data,
             accountName: acc.name,
@@ -301,7 +301,7 @@ function OverallNewsSection({ accounts, daysBack = 30 }) {
       all.sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
       setArticles(all.slice(0, 40)); // top 40 most recent across all accounts
     }).finally(() => setLoading(false));
-  }, [accounts, daysBack]);
+  }, [accounts, daysBack, refreshKey]);
 
   if (loading) return <Spinner />;
 
@@ -332,6 +332,16 @@ export default function MarketIntelligence({ accounts, selectedIds = [] }) {
   useEffect(() => {
     setSelectedId(selectedIds.length === 1 ? selectedIds[0] : (accounts[0]?.id || ''));
   }, [selectedIds, accounts]);
+  const [newsRefreshKey, setNewsRefreshKey] = useState(() => new Date().toDateString());
+
+  // Keep an already-open Market Intelligence page current when the date rolls over.
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      const today = new Date().toDateString();
+      setNewsRefreshKey(current => current === today ? current : today);
+    }, 60 * 1000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   const selectedAccount = accounts.find(a => a.id === selectedId);
 
@@ -373,8 +383,8 @@ export default function MarketIntelligence({ accounts, selectedIds = [] }) {
       {/* ── General News Tab ─────────────────────────────────────────────── */}
       {activeTab === 'news' && (
         isSingleAccount
-          ? <NewsSection key={`news-${selectedId}`} accountId={selectedId} source="general" daysBack={30} />
-          : <OverallNewsSection key="overall" accounts={accounts} daysBack={30} />
+          ? <NewsSection key={`news-${selectedId}`} accountId={selectedId} source="general" daysBack={30} refreshKey={newsRefreshKey} />
+          : <OverallNewsSection key="overall" accounts={accounts} daysBack={30} refreshKey={newsRefreshKey} />
       )}
 
       {/* ── Financial News Tab ───────────────────────────────────────────── */}
@@ -385,17 +395,24 @@ export default function MarketIntelligence({ accounts, selectedIds = [] }) {
               <Tag color={selectedAccount.tier === 'Strategic' ? 'blue' : 'gray'}>{selectedAccount.tier}</Tag>
               <span className="text-sm text-muted"><strong>Industry:</strong> {selectedAccount.industry}</span>
               <span className="text-sm text-muted"><strong>Ticker:</strong> {selectedAccount.ticker || 'Private'}</span>
+              <select
+                className="account-selector__select"
+                value={selectedId}
+                onChange={e => setSelectedId(e.target.value)}
+              >
+                {accounts.map(a => (
+                  <option key={a.id} value={a.id}>{a.name}</option>
+                ))}
+              </select>
             </div>
           )}
-          <div className="notification notification--info" style={{ marginBottom: 'var(--space-5)' }}>
-            <strong>Financial News</strong> — Earnings updates, institutional activity,
-            and financial press from Finnhub.
-            {selectedAccount && !selectedAccount.ticker && (
-              <span> Note: This account is privately held — Finnhub coverage may be limited.</span>
-            )}
-          </div>
+          {selectedAccount && !selectedAccount.ticker && (
+            <div className="notification notification--info" style={{ marginBottom: 'var(--space-5)' }}>
+              This account is privately held, so financial-news coverage may be limited.
+            </div>
+          )}
           {selectedAccount && (
-            <NewsSection key={`fin-${selectedId}`} accountId={selectedId} source="financial" />
+            <NewsSection key={`fin-${selectedId}`} accountId={selectedId} source="financial" refreshKey={newsRefreshKey} />
           )}
         </div>
       )}

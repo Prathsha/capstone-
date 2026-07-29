@@ -18,7 +18,7 @@ const BATTLECARDS = [
     differentiator: 'IBM open standards & governance vs. Microsoft proprietary stack dependency',
     strengths: ['Microsoft 365/Teams installed base creates stickiness', 'Azure Active Directory as default enterprise identity', 'Co-sell motion with Copilot/OpenAI relationship', 'Aggressive enterprise discounting'],
     ibmAdvantages: ['Watsonx AI governance and explainability built-in for regulated industries', 'IBM Security (QRadar, Guardium) outperforms Sentinel in depth and SIEM maturity', 'Red Hat OpenShift avoids Azure-only Kubernetes lock-in', 'IBM zSystems for mission-critical regulated workloads'],
-    url: 'https://www.microsoft.com/en-us/azure',
+    url: 'https://azure.microsoft.com/en-us/',
   },
   {
     competitor: 'Amazon Web Services',
@@ -72,7 +72,7 @@ const BATTLECARDS = [
     differentiator: 'IBM\'s cross-domain integration vs. ServiceNow\'s ITSM-centric platform',
     strengths: ['Market leader in ITSM and IT operations management', 'Now Assist AI embedded across IT, HR, and Finance', 'Strong platform stickiness and renewal rates'],
     ibmAdvantages: ['IBM watsonx Orchestrate extends automation beyond IT/HR to business operations', 'IBM\'s open integration layer connects disparate systems ServiceNow cannot reach', 'Watsonx governance applies across all automation — ServiceNow governance is limited'],
-    url: 'https://www.servicenow.com/now-platform/artificial-intelligence.html',
+    url: 'https://www.servicenow.com/products/now-assist.html',
   },
   {
     competitor: 'Snowflake',
@@ -135,7 +135,7 @@ const BATTLECARDS = [
     differentiator: 'IBM\'s open hybrid cloud vs. VMware\'s virtualization lock-in post-Broadcom',
     strengths: ['vSphere dominates enterprise virtualization with massive installed base', 'NSX is the leading network virtualization platform', 'Post-Broadcom pricing backlash is creating churn — and VMware bundles are forcing upsells'],
     ibmAdvantages: ['Red Hat OpenShift provides a VMware migration destination with Kubernetes-native infrastructure', 'IBM Cloud VMware Solutions smooth the transition for existing VMware customers', 'IBM pricing predictability vs. Broadcom\'s aggressive licensing changes'],
-    url: 'https://www.broadcom.com/products/software/vmware',
+    url: 'https://news.broadcom.com/cloud/raising-the-bar-on-private-cloud-vmware-cloud-foundation',
   },
   {
     competitor: 'Palo Alto Networks',
@@ -153,7 +153,7 @@ const BATTLECARDS = [
     differentiator: 'IBM\'s compliance-grade security vs. CrowdStrike\'s endpoint-first approach',
     strengths: ['Falcon platform is the market leader in endpoint detection and response (EDR)', 'CrowdStrike\'s threat intelligence is top-tier for adversary tracking', 'FedRAMP High authorization opens government market'],
     ibmAdvantages: ['IBM QRadar provides SIEM-level visibility across hybrid cloud CrowdStrike Falcon does not cover', 'IBM Guardium protects databases and data-at-rest — CrowdStrike is endpoint only', 'IBM Security Consulting delivers managed security outcomes vs. tool-only licensing'],
-    url: 'https://www.crowdstrike.com/platform/falcon-xdr/',
+    url: 'https://www.crowdstrike.com/en-us/platform/',
   },
   {
     competitor: 'Splunk / Cisco',
@@ -189,7 +189,7 @@ const BATTLECARDS = [
     differentiator: 'IBM\'s product ownership + consulting integration vs. Accenture\'s pure services model',
     strengths: ['Accenture SynOps is a leading AI-driven managed operations platform', 'Global scale and industry depth across all verticals', 'Strong Google Cloud and Salesforce partnership ecosystem'],
     ibmAdvantages: ['IBM uniquely owns the underlying AI platform (watsonx) AND delivers consulting — Accenture cannot', 'IBM Consulting has proven watsonx implementation credentials in production at scale', 'IBM\'s outcome-based contracts with proprietary IP create stickier engagements than Accenture T&M'],
-    url: 'https://www.accenture.com/us-en/services/technology/ai-artificial-intelligence',
+    url: 'https://www.accenture.com/us-en/services/ai-data',
   },
 ];
 

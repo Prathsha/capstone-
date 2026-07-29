@@ -6,6 +6,12 @@ import axios from 'axios';
 const BASE = process.env.REACT_APP_API_URL || '';
 
 const api = axios.create({ baseURL: BASE, timeout: 30000 });
+const dailyCacheKey = () => {
+  const today = new Date();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  return `${today.getFullYear()}-${month}-${day}`;
+};
 
 // ── Accounts ────────────────────────────────────────────────────────────────
 export const fetchAccounts = () => api.get('/api/accounts').then(r => r.data);
@@ -18,12 +24,16 @@ export const fetchDashboard = (accountIds = null) => {
 };
 
 // ── News ─────────────────────────────────────────────────────────────────────
-export const fetchNews = (accountId, daysBack = 30) =>
-  api.get(`/api/news/${accountId}`, { params: { days_back: daysBack } }).then(r => r.data);
+export const fetchNews = (accountId, daysBack = 30, cacheDate = dailyCacheKey()) =>
+  api.get(`/api/news/${accountId}`, {
+    params: { days_back: daysBack, cache_date: cacheDate },
+  }).then(r => r.data);
 
 // ── Financial ────────────────────────────────────────────────────────────────
-export const fetchFinancial = (accountId) =>
-  api.get(`/api/financial/${accountId}`).then(r => r.data);
+export const fetchFinancial = (accountId, cacheDate = dailyCacheKey()) =>
+  api.get(`/api/financial/${accountId}`, {
+    params: { cache_date: cacheDate },
+  }).then(r => r.data);
 
 export const fetchStockQuote = (accountId) =>
   api.get(`/api/stockquote/${accountId}`).then(r => r.data);
