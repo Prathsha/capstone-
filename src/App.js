@@ -81,9 +81,7 @@ function AccountSelectorBar({ accounts, selectedIds, onChange }) {
 }
 
 // Routes where the AccountSelectorBar should be hidden
-const HIDE_SELECTOR_PATHS = [
-  '/accounts', '/competitive', '/contacts', '/org-chart', '/install-base', '/team',
-];
+const HIDE_SELECTOR_PATHS = ['/competitive', '/team'];
 
 // ════════════════════════════════════════════════════════════════════════════
 // App Inner
@@ -189,12 +187,12 @@ function AppInner() {
                 />
               }
             />
-            <Route path="/accounts"     element={<MyAccounts accounts={accounts} />} />
-            <Route path="/intelligence" element={<MarketIntelligence accounts={accounts} />} />
+            <Route path="/accounts"     element={<MyAccounts accounts={accounts} selectedIds={selectedIds} />} />
+            <Route path="/intelligence" element={<MarketIntelligence accounts={accounts} selectedIds={selectedIds} />} />
             <Route path="/competitive"  element={<CompetitiveIntelligence />} />
-            <Route path="/contacts"     element={<Contacts accounts={accounts} />} />
-            <Route path="/org-chart"    element={<OrgChart />} />
-            <Route path="/install-base" element={<InstallBase accounts={accounts} />} />
+            <Route path="/contacts"     element={<Contacts accounts={accounts} selectedIds={selectedIds} />} />
+            <Route path="/org-chart"    element={<OrgChart selectedIds={selectedIds} />} />
+            <Route path="/install-base" element={<InstallBase accounts={accounts} selectedIds={selectedIds} />} />
             <Route path="/team"         element={<TeamManagement />} />
           </Routes>
         </div>

@@ -321,12 +321,23 @@ function OverallNewsSection({ accounts, daysBack = 30 }) {
 // ════════════════════════════════════════════════════════════════════════════
 // Market Intelligence Page
 // ════════════════════════════════════════════════════════════════════════════
-export default function MarketIntelligence({ accounts }) {
-  const [newsView, setNewsView]   = useState('overall'); // 'overall' | account id
+export default function MarketIntelligence({ accounts, selectedIds = [] }) {
   const [activeTab, setActiveTab] = useState('news');
-  const [selectedId, setSelectedId] = useState(accounts[0]?.id || '');
+
+  // Derive the active single account from the global topbar selection.
+  // Single account selected → use it. Otherwise fall back to the first account.
+  const derivedId = selectedIds.length === 1 ? selectedIds[0] : (accounts[0]?.id || '');
+  const [selectedId, setSelectedId] = useState(derivedId);
+
+  useEffect(() => {
+    setSelectedId(selectedIds.length === 1 ? selectedIds[0] : (accounts[0]?.id || ''));
+  }, [selectedIds, accounts]);
 
   const selectedAccount = accounts.find(a => a.id === selectedId);
+
+  // For General News: show all accounts when nothing specific is selected,
+  // otherwise show the single selected account's news.
+  const isSingleAccount = selectedIds.length === 1;
 
   const tabs = [
     { id: 'news',      label: 'General News' },
@@ -340,7 +351,9 @@ export default function MarketIntelligence({ accounts }) {
         <div className="page-header__eyebrow">Intelligence</div>
         <h1 className="page-header__title">Market Intelligence</h1>
         <p className="page-header__subtitle">
-          News, financial updates, and market signals for your accounts
+          {isSingleAccount && selectedAccount
+            ? `${selectedAccount.name} — ${selectedAccount.industry}`
+            : 'News, financial updates, and market signals for your accounts'}
         </p>
       </div>
 
@@ -359,82 +372,21 @@ export default function MarketIntelligence({ accounts }) {
 
       {/* ── General News Tab ─────────────────────────────────────────────── */}
       {activeTab === 'news' && (
-        <div>
-          {/* News view switcher */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginBottom: 'var(--space-5)', flexWrap: 'wrap' }}>
-            <button
-              onClick={() => setNewsView('overall')}
-              style={{
-                padding: '6px 16px',
-                border: `1px solid ${newsView === 'overall' ? 'var(--ibm-blue-60)' : 'var(--color-border)'}`,
-                background: newsView === 'overall' ? 'var(--ibm-blue-60)' : 'var(--color-surface)',
-                color: newsView === 'overall' ? '#fff' : 'var(--color-text-secondary)',
-                fontFamily: 'var(--font-sans)', fontSize: 'var(--font-size-sm)', cursor: 'pointer',
-              }}
-            >
-              All Accounts
-            </button>
-            {accounts.map(a => (
-              <button
-                key={a.id}
-                onClick={() => { setNewsView(a.id); setSelectedId(a.id); }}
-                style={{
-                  padding: '6px 16px',
-                  border: `1px solid ${newsView === a.id ? 'var(--ibm-blue-60)' : 'var(--color-border)'}`,
-                  background: newsView === a.id ? 'var(--ibm-blue-60)' : 'var(--color-surface)',
-                  color: newsView === a.id ? '#fff' : 'var(--color-text-secondary)',
-                  fontFamily: 'var(--font-sans)', fontSize: 'var(--font-size-xs)',
-                  cursor: 'pointer', whiteSpace: 'nowrap',
-                }}
-              >
-                {a.name.split(' ')[0]}
-              </button>
-            ))}
-          </div>
-
-          {newsView === 'overall' ? (
-            <OverallNewsSection key="overall" accounts={accounts} daysBack={30} />
-          ) : (
-            <NewsSection key={`news-${newsView}`} accountId={newsView} source="general" daysBack={30} />
-          )}
-        </div>
+        isSingleAccount
+          ? <NewsSection key={`news-${selectedId}`} accountId={selectedId} source="general" daysBack={30} />
+          : <OverallNewsSection key="overall" accounts={accounts} daysBack={30} />
       )}
 
       {/* ── Financial News Tab ───────────────────────────────────────────── */}
       {activeTab === 'financial' && (
         <div>
-          {/* Account Picker */}
-          <div className="card mb-6">
-            <div className="card__header" style={{ marginBottom: 0 }}>
-              <div className="card__title">Select Account</div>
-              {selectedAccount && (
-                <Tag color={selectedAccount.tier === 'Strategic' ? 'blue' : 'gray'}>
-                  {selectedAccount.tier}
-                </Tag>
-              )}
+          {selectedAccount && (
+            <div style={{ marginBottom: 'var(--space-4)', display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap', alignItems: 'center' }}>
+              <Tag color={selectedAccount.tier === 'Strategic' ? 'blue' : 'gray'}>{selectedAccount.tier}</Tag>
+              <span className="text-sm text-muted"><strong>Industry:</strong> {selectedAccount.industry}</span>
+              <span className="text-sm text-muted"><strong>Ticker:</strong> {selectedAccount.ticker || 'Private'}</span>
             </div>
-            <div style={{ marginTop: 'var(--space-4)', display: 'flex', alignItems: 'center', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
-              <select
-                className="account-selector__select"
-                value={selectedId}
-                onChange={e => setSelectedId(e.target.value)}
-              >
-                {accounts.map(a => (
-                  <option key={a.id} value={a.id}>{a.name}</option>
-                ))}
-              </select>
-              {selectedAccount && (
-                <div style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
-                  <div className="text-sm text-muted">
-                    <strong>Industry:</strong> {selectedAccount.industry}
-                  </div>
-                  <div className="text-sm text-muted">
-                    <strong>Ticker:</strong> {selectedAccount.ticker || 'Private'}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
+          )}
           <div className="notification notification--info" style={{ marginBottom: 'var(--space-5)' }}>
             <strong>Financial News</strong> — Earnings updates, institutional activity,
             and financial press from Finnhub.
@@ -451,41 +403,14 @@ export default function MarketIntelligence({ accounts }) {
       {/* ── Stock & Financials Tab ───────────────────────────────────────── */}
       {activeTab === 'stock' && (
         <div>
-          {/* Account Picker */}
-          <div className="card mb-6">
-            <div className="card__header" style={{ marginBottom: 0 }}>
-              <div className="card__title">Select Account</div>
-              {selectedAccount && (
-                <Tag color={selectedAccount.tier === 'Strategic' ? 'blue' : 'gray'}>
-                  {selectedAccount.tier}
-                </Tag>
-              )}
+          {selectedAccount && (
+            <div style={{ marginBottom: 'var(--space-4)', display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap', alignItems: 'center' }}>
+              <Tag color={selectedAccount.tier === 'Strategic' ? 'blue' : 'gray'}>{selectedAccount.tier}</Tag>
+              <span className="text-sm text-muted"><strong>Ticker:</strong> {selectedAccount.ticker || 'Private'}</span>
+              <span className="text-sm text-muted"><strong>Region:</strong> {selectedAccount.region}</span>
+              <span className="text-sm text-muted"><strong>Last Contact:</strong> {selectedAccount.last_contact_days_ago}d ago</span>
             </div>
-            <div style={{ marginTop: 'var(--space-4)', display: 'flex', alignItems: 'center', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
-              <select
-                className="account-selector__select"
-                value={selectedId}
-                onChange={e => setSelectedId(e.target.value)}
-              >
-                {accounts.map(a => (
-                  <option key={a.id} value={a.id}>{a.name}</option>
-                ))}
-              </select>
-              {selectedAccount && (
-                <div style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
-                  <div className="text-sm text-muted">
-                    <strong>Ticker:</strong> {selectedAccount.ticker || 'Private'}
-                  </div>
-                  <div className="text-sm text-muted">
-                    <strong>Region:</strong> {selectedAccount.region}
-                  </div>
-                  <div className="text-sm text-muted">
-                    <strong>Last Contact:</strong> {selectedAccount.last_contact_days_ago}d ago
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
+          )}
 
           {selectedAccount && (
             !selectedAccount.ticker ? (

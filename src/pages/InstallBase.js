@@ -220,13 +220,42 @@ function nearRenewal(dateStr) {
   return diffMs > 0 && diffMs < 1000 * 60 * 60 * 24 * 120;
 }
 
-export default function InstallBase() {
+// Map account id -> display name used as keys in the static data tables
+const ID_TO_TABLE_NAME = {
+  'acc-001': 'QUEST DIAGNOSTICS',
+  'acc-002': 'THE LINCOLN NATIONAL',
+  'acc-003': 'SIEMENS',
+  'acc-004': 'SEI INVESTMENTS',
+  'acc-005': 'INDEPENDENCE BLUECROSS',
+  'acc-006': 'SUNGARD DATA SYSTEMS',
+  'acc-007': 'SELECT MEDICAL CORP',
+  'acc-008': 'RICOH',
+  'acc-009': 'SAGENT M&C LLC',
+};
+
+export default function InstallBase({ accounts = [], selectedIds = [] }) {
+  // Determine which table-name keys are "active" based on the global selection
+  const activeNames = selectedIds.length > 0
+    ? new Set(selectedIds.map(id => ID_TO_TABLE_NAME[id]).filter(Boolean))
+    : null; // null = all accounts
+
+  const isHighlighted = (name) => !activeNames || activeNames.has(name);
+
+  const visibleAccounts = activeNames
+    ? ACCOUNTS.filter(a => activeNames.has(a))
+    : ACCOUNTS;
+
+  const subtitleCount = activeNames ? activeNames.size : 9;
+
   return (
     <div className="page-content">
       <div className="page-header">
         <div className="page-header__eyebrow">Technical</div>
         <h1 className="page-header__title">Install Base</h1>
-        <p className="page-header__subtitle">IBM portfolio coverage and competitive footprint across your 9 accounts</p>
+        <p className="page-header__subtitle">
+          IBM portfolio coverage and competitive footprint across{' '}
+          {subtitleCount === 9 ? 'your 9 accounts' : `${subtitleCount} selected account${subtitleCount !== 1 ? 's' : ''}`}
+        </p>
       </div>
 
       {/* IBM Portfolio */}
@@ -240,7 +269,12 @@ export default function InstallBase() {
             <tr>
               <th>Product</th>
               <th>Category</th>
-              {ACCOUNTS.map(a => <th key={a} style={{ fontSize: 10, whiteSpace: 'normal', minWidth: 80 }}>{a}</th>)}
+              {visibleAccounts.map(a => (
+                <th key={a} style={{
+                  fontSize: 10, whiteSpace: 'normal', minWidth: 80,
+                  background: isHighlighted(a) && activeNames ? 'var(--ibm-blue-10)' : undefined,
+                }}>{a}</th>
+              ))}
             </tr>
           </thead>
           <tbody>
@@ -248,12 +282,15 @@ export default function InstallBase() {
               <tr key={row.product}>
                 <td style={{ fontWeight: 600 }}>{row.product}</td>
                 <td><span className="tag tag--gray">{row.category}</span></td>
-                {ACCOUNTS.map(account => {
+                {visibleAccounts.map(account => {
                   const inst = row.installs[account];
-                  if (!inst || !inst.owned) return <td key={account} style={{ textAlign: 'center', color: 'var(--ibm-gray-40)' }}>—</td>;
+                  const highlighted = isHighlighted(account) && activeNames;
+                  if (!inst || !inst.owned) return (
+                    <td key={account} style={{ textAlign: 'center', color: 'var(--ibm-gray-40)', background: highlighted ? 'var(--ibm-blue-10)' : undefined }}>—</td>
+                  );
                   const warn = nearRenewal(inst.renewal);
                   return (
-                    <td key={account} style={{ textAlign: 'center' }}>
+                    <td key={account} style={{ textAlign: 'center', background: highlighted ? 'var(--ibm-blue-10)' : undefined }}>
                       <span style={{ color: 'var(--ibm-green-50)', fontWeight: 700, fontSize: 16 }}>✓</span>
                       {warn
                         ? <div style={{ fontSize: 10, color: 'var(--ibm-orange-40)', marginTop: 2 }}>⚠ {inst.renewal}</div>
@@ -275,18 +312,26 @@ export default function InstallBase() {
           <thead>
             <tr>
               <th>Competitor</th>
-              {ACCOUNTS.map(a => <th key={a} style={{ fontSize: 10, whiteSpace: 'normal', minWidth: 80 }}>{a}</th>)}
+              {visibleAccounts.map(a => (
+                <th key={a} style={{
+                  fontSize: 10, whiteSpace: 'normal', minWidth: 80,
+                  background: isHighlighted(a) && activeNames ? 'var(--ibm-blue-10)' : undefined,
+                }}>{a}</th>
+              ))}
             </tr>
           </thead>
           <tbody>
             {COMP_FOOTPRINT.map(row => (
               <tr key={row.competitor}>
                 <td style={{ fontWeight: 600 }}>{row.competitor}</td>
-                {ACCOUNTS.map(account => {
+                {visibleAccounts.map(account => {
                   const inst = row.accounts[account];
-                  if (!inst || !inst.present) return <td key={account} style={{ textAlign: 'center', color: 'var(--ibm-gray-40)' }}>—</td>;
+                  const highlighted = isHighlighted(account) && activeNames;
+                  if (!inst || !inst.present) return (
+                    <td key={account} style={{ textAlign: 'center', color: 'var(--ibm-gray-40)', background: highlighted ? 'var(--ibm-blue-10)' : undefined }}>—</td>
+                  );
                   return (
-                    <td key={account} style={{ textAlign: 'center' }}>
+                    <td key={account} style={{ textAlign: 'center', background: highlighted ? 'var(--ibm-blue-10)' : undefined }}>
                       <span className={`tag ${THREAT_LEVEL[inst.threat] || 'tag--gray'}`} style={{ fontSize: 10 }}>{inst.threat}</span>
                       <div style={{ fontSize: 10, color: 'var(--color-text-secondary)', marginTop: 2 }}>{inst.products}</div>
                     </td>

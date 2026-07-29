@@ -7,13 +7,21 @@
       "industry": "Healthcare / Diagnostics",
       "region": "Northeast US",
       "tier": "Horizon",
-      "quota": 850000,
-      "pipeline": 620000,
-      "closed": 310000,
+      "quota": 825000,
+      "pipeline": 1180000,
+      "closed": 0,
       "renewal_date": "2026-09-15",
       "owned_products": [
         "IBM Cloud Pak for Data",
         "IBM watsonx.data"
+      ],
+      "install_base": [
+        { "product": "IBM Cloud Pak for Data",      "category": "AI & Analytics",  "arr": 1850000, "since": "2021-03", "renewal": "2027-01-20" },
+        { "product": "IBM watsonx.data",            "category": "AI & Analytics",  "arr": 1420000, "since": "2023-06", "renewal": "2026-09-15" },
+        { "product": "IBM Watson Studio",           "category": "AI & Analytics",  "arr": 780000,  "since": "2022-01", "renewal": "2026-11-01" },
+        { "product": "IBM DataStage",               "category": "Data Integration","arr": 650000,  "since": "2020-09", "renewal": "2027-03-01" },
+        { "product": "IBM OpenScale / AI Fairness", "category": "AI & Analytics",  "arr": 420000,  "since": "2023-11", "renewal": "2026-11-30" },
+        { "product": "IBM Cloud (IaaS)",            "category": "Cloud",           "arr": 580000,  "since": "2019-07", "renewal": "2026-12-31" }
       ],
       "health_score": 72,
       "last_contact_days_ago": 12,
@@ -62,6 +70,12 @@
       "owned_products": [
         "IBM OpenPages",
         "IBM Financial Crimes Insight"
+      ],
+      "install_base": [
+        { "product": "IBM OpenPages",                   "category": "GRC",      "arr": 1100000, "since": "2019-04", "renewal": "2026-11-01" },
+        { "product": "IBM Financial Crimes Insight",    "category": "Security", "arr": 870000,  "since": "2021-10", "renewal": "2027-04-01" },
+        { "product": "IBM Safer Payments",              "category": "Security", "arr": 540000,  "since": "2022-06", "renewal": "2026-12-15" },
+        { "product": "IBM Cloud Pak for Integration",   "category": "Integration","arr": 390000,"since": "2023-01", "renewal": "2027-01-15" }
       ],
       "health_score": 65,
       "last_contact_days_ago": 18,
@@ -112,6 +126,13 @@
         "IBM Sterling Supply Chain",
         "IBM Cloud"
       ],
+      "install_base": [
+        { "product": "IBM MAS (Maximo)",              "category": "Asset Mgmt",    "arr": 2200000, "since": "2018-05", "renewal": "2026-12-31" },
+        { "product": "IBM Sterling Supply Chain",     "category": "Supply Chain",  "arr": 1650000, "since": "2020-03", "renewal": "2027-03-31" },
+        { "product": "IBM Cloud (IaaS / PaaS)",       "category": "Cloud",         "arr": 1100000, "since": "2019-11", "renewal": "2026-12-31" },
+        { "product": "IBM Turbonomic",                "category": "AIOps",         "arr": 480000,  "since": "2022-09", "renewal": "2027-02-28" },
+        { "product": "IBM MQ",                        "category": "Integration",   "arr": 310000,  "since": "2017-01", "renewal": "2027-01-01" }
+      ],
       "health_score": 81,
       "last_contact_days_ago": 5,
       "pending_actions": [
@@ -158,6 +179,11 @@
       "renewal_date": "2027-01-15",
       "owned_products": [
         "IBM Cloud Pak for Business Automation"
+      ],
+      "install_base": [
+        { "product": "IBM Cloud Pak for Business Automation", "category": "Automation",    "arr": 920000,  "since": "2021-07", "renewal": "2027-01-15" },
+        { "product": "IBM Cognos Analytics",                  "category": "Analytics",     "arr": 340000,  "since": "2020-02", "renewal": "2026-08-01" },
+        { "product": "IBM Robotic Process Automation",        "category": "Automation",    "arr": 210000,  "since": "2023-04", "renewal": "2027-04-01" }
       ],
       "health_score": 58,
       "last_contact_days_ago": 31,
@@ -207,6 +233,12 @@
         "IBM Watson Assistant",
         "IBM Cloud Pak for Integration"
       ],
+      "install_base": [
+        { "product": "IBM Watson Assistant",          "category": "AI / Chatbot",   "arr": 760000,  "since": "2020-11", "renewal": "2026-08-30" },
+        { "product": "IBM Cloud Pak for Integration", "category": "Integration",    "arr": 580000,  "since": "2021-05", "renewal": "2027-05-01" },
+        { "product": "IBM DataStage",                 "category": "Data Integration","arr": 390000, "since": "2023-09", "renewal": "2026-09-30" },
+        { "product": "IBM API Connect",               "category": "Integration",    "arr": 220000,  "since": "2022-03", "renewal": "2027-03-01" }
+      ],
       "health_score": 77,
       "last_contact_days_ago": 8,
       "pending_actions": [
@@ -253,6 +285,10 @@
       "renewal_date": "2026-10-01",
       "owned_products": [
         "IBM Db2 on Cloud"
+      ],
+      "install_base": [
+        { "product": "IBM Db2 on Cloud",    "category": "Database",    "arr": 610000,  "since": "2018-03", "renewal": "2026-10-01" },
+        { "product": "IBM InfoSphere",      "category": "Data Mgmt",   "arr": 270000,  "since": "2019-06", "renewal": "2026-10-15" }
       ],
       "health_score": 44,
       "last_contact_days_ago": 52,
@@ -302,6 +338,11 @@
         "IBM Cloud",
         "IBM Security QRadar"
       ],
+      "install_base": [
+        { "product": "IBM Security QRadar SIEM",  "category": "Security",  "arr": 830000,  "since": "2020-07", "renewal": "2026-11-15" },
+        { "product": "IBM Cloud (IaaS)",           "category": "Cloud",     "arr": 490000,  "since": "2021-01", "renewal": "2026-12-31" },
+        { "product": "IBM Guardium",               "category": "Security",  "arr": 310000,  "since": "2022-11", "renewal": "2027-02-01" }
+      ],
       "health_score": 69,
       "last_contact_days_ago": 14,
       "pending_actions": [
@@ -350,6 +391,11 @@
         "IBM FileNet Content Manager",
         "IBM Cloud Pak for Business Automation"
       ],
+      "install_base": [
+        { "product": "IBM FileNet Content Manager",           "category": "Content Mgmt", "arr": 920000, "since": "2017-09", "renewal": "2027-02-01" },
+        { "product": "IBM Cloud Pak for Business Automation", "category": "Automation",   "arr": 680000, "since": "2022-03", "renewal": "2027-02-01" },
+        { "product": "IBM Datacap",                           "category": "Content Mgmt", "arr": 290000, "since": "2019-04", "renewal": "2026-10-01" }
+      ],
       "health_score": 73,
       "last_contact_days_ago": 9,
       "pending_actions": [
@@ -396,6 +442,10 @@
       "renewal_date": "2026-10-15",
       "owned_products": [
         "IBM OpenPages"
+      ],
+      "install_base": [
+        { "product": "IBM OpenPages",       "category": "GRC",           "arr": 480000, "since": "2020-10", "renewal": "2026-10-15" },
+        { "product": "IBM Safer Payments",  "category": "Security",      "arr": 195000, "since": "2022-07", "renewal": "2027-01-01" }
       ],
       "health_score": 53,
       "last_contact_days_ago": 27,

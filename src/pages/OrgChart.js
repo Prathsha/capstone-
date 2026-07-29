@@ -197,8 +197,14 @@ function OrgBranch({ item }) {
   );
 }
 
-export default function OrgChart() {
-  const [selectedId, setSelectedId] = useState('acc-001');
+export default function OrgChart({ selectedIds = [] }) {
+  const initial = selectedIds.length === 1 ? selectedIds[0] : 'acc-001';
+  const [selectedId, setSelectedId] = useState(initial);
+
+  // Keep in sync when the global selection changes to a single account
+  React.useEffect(() => {
+    if (selectedIds.length === 1) setSelectedId(selectedIds[0]);
+  }, [selectedIds]);
   const acct = ACCOUNTS_LIST.find(a => a.id === selectedId);
   const org  = ORGS[selectedId];
 

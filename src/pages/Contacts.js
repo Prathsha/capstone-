@@ -38,9 +38,23 @@ function Stars({ count }) {
 const COMPANIES = [...new Set(CONTACTS.map(c => c.company))];
 const ROLES     = [...new Set(CONTACTS.map(c => c.role))];
 
-export default function Contacts() {
-  const [filterAccount, setFilterAccount] = useState('All');
+export default function Contacts({ accounts = [], selectedIds = [] }) {
+  // Pre-select the account filter when exactly one account is selected globally
+  const preselect = selectedIds.length === 1
+    ? (accounts.find(a => a.id === selectedIds[0])?.name ?? 'All')
+    : 'All';
+
+  const [filterAccount, setFilterAccount] = useState(preselect);
   const [filterRole,    setFilterRole]    = useState('All');
+
+  // Keep the local filter in sync if the global selection changes
+  React.useEffect(() => {
+    setFilterAccount(
+      selectedIds.length === 1
+        ? (accounts.find(a => a.id === selectedIds[0])?.name ?? 'All')
+        : 'All'
+    );
+  }, [selectedIds, accounts]);
 
   const filtered = CONTACTS.filter(c =>
     (filterAccount === 'All' || c.company === filterAccount) &&
