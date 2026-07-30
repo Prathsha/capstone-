@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Spinner, ErrorBlock, Tag, HealthBadge, ConfidenceBar,
+  Spinner, ErrorBlock, Tag, ConfidenceBar,
   formatCurrency, formatDate, priorityColor,
 } from '../components/Helpers';
 import { useTaskContext, TEAM_MEMBERS } from '../context/TaskContext';
@@ -343,29 +343,6 @@ function QuotaOverview({ summary }) {
   );
 }
 
-// ── Per-account attainment row ────────────────────────────────────────────────
-function AccountAttainmentRow({ account }) {
-  const pct = Math.round((account.closed / account.quota) * 100);
-  const color = pct >= 80 ? 'var(--ibm-green-50)' : pct >= 50 ? 'var(--ibm-yellow-30)' : 'var(--ibm-red-60)';
-  return (
-    <div className="account-row">
-      <HealthBadge score={account.health_score} />
-      <div className="account-row__name">{account.name.replace('THE ', '')}</div>
-      <Tag color={account.tier === 'Premier' ? 'purple' : account.tier === 'Strategic' ? 'blue' : 'gray'}>
-        {account.tier}
-      </Tag>
-      <div className="account-row__attainment" style={{ color }}>
-        {pct}%
-      </div>
-      <div style={{ width: 80 }}>
-        <div style={{ height: 4, background: 'var(--ibm-gray-20)' }}>
-          <div style={{ height: '100%', width: `${Math.min(pct, 100)}%`, background: color }} />
-        </div>
-      </div>
-    </div>
-  );
-}
-
 // ════════════════════════════════════════════════════════════════════════════
 // Dashboard Page
 // ════════════════════════════════════════════════════════════════════════════
@@ -427,7 +404,6 @@ export default function Dashboard({
         />
       )}
 
-      {/* ── Quota Overview Bar ───────────────────────────────────────────── */}
       <QuotaOverview summary={quota_summary} />
 
       <div className="page-content">
@@ -437,7 +413,7 @@ export default function Dashboard({
               ? 'All Accounts'
               : `${displayAccounts.length} Account${displayAccounts.length !== 1 ? 's' : ''} Selected`}
           </div>
-          <h1 className="page-header__title">Technical Sales Leader Dashboard</h1>
+          <h1 className="page-header__title">Technology Sales Leader Dashboard</h1>
           <p className="page-header__subtitle">
             {displayAccounts.length === accounts.length
               ? `Overview of all ${accounts.length} assigned accounts • ${seller?.pod}`
@@ -562,20 +538,6 @@ export default function Dashboard({
           </div>
         </div>
 
-        {/* ── Account Attainment Table ─────────────────────────────────────── */}
-        <div className="card mt-6">
-          <div className="card__header">
-            <div>
-              <div className="card__title">Account Attainment Overview</div>
-              <div className="card__subtitle">Quota progress per account</div>
-            </div>
-          </div>
-          <div>
-            {displayAccounts.map(account => (
-              <AccountAttainmentRow key={account.id} account={account} />
-            ))}
-          </div>
-        </div>
       </div>
     </div>
   );

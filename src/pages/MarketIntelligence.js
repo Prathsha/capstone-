@@ -236,8 +236,52 @@ function StockQuotePanel({ accountId }) {
   );
 }
 
+function AccountStockSection({ account, showHeading = false }) {
+  return (
+    <section style={{ marginBottom: 'var(--space-7)' }}>
+      {showHeading && (
+        <div style={{ marginBottom: 'var(--space-4)' }}>
+          <h2 style={{ margin: 0, fontSize: 'var(--font-size-md)' }}>{account.name}</h2>
+          <div style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap', marginTop: 'var(--space-2)' }}>
+            <span className="text-sm text-muted"><strong>Ticker:</strong> {account.ticker || 'Private'}</span>
+            <span className="text-sm text-muted"><strong>Region:</strong> {account.region}</span>
+          </div>
+        </div>
+      )}
+
+      {!account.ticker ? (
+        <div className="notification notification--info">
+          <strong>{account.name}</strong> is privately held. Stock and financial data is not publicly available.
+        </div>
+      ) : (
+        <div className="grid-1-2" style={{ alignItems: 'start' }}>
+          <StockQuotePanel accountId={account.id} />
+          <div className="card">
+            <div className="card__header">
+              <div className="card__title">IBM Products Owned</div>
+            </div>
+            {account.owned_products?.map((product, index) => (
+              <div key={index} style={{
+                padding: 'var(--space-3) var(--space-4)',
+                borderBottom: '1px solid var(--color-border)',
+                fontSize: 'var(--font-size-sm)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--space-3)',
+              }}>
+                <span style={{ color: 'var(--ibm-blue-60)', fontSize: 12 }}>◆</span>
+                {product}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
+
 // ── Single-account News Section ───────────────────────────────────────────────
-function NewsSection({ accountId, source, daysBack = 30 }) {
+function NewsSection({ accountId, source, daysBack = 30, refreshKey }) {
   const [data, setData]       = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState(null);
@@ -245,13 +289,13 @@ function NewsSection({ accountId, source, daysBack = 30 }) {
   const loadData = useCallback(() => {
     setLoading(true); setError(null);
     const fetcher = source === 'general'
-      ? fetchNews(accountId, daysBack)
-      : fetchFinancial(accountId);
+      ? fetchNews(accountId, daysBack, refreshKey)
+      : fetchFinancial(accountId, refreshKey);
     fetcher
       .then(setData)
       .catch(e => setError(e.message))
       .finally(() => setLoading(false));
-  }, [accountId, source, daysBack]);
+  }, [accountId, source, daysBack, refreshKey]);
 
   useEffect(() => { loadData(); }, [loadData]);
 
@@ -276,7 +320,7 @@ function NewsSection({ accountId, source, daysBack = 30 }) {
 }
 
 // ── Overall News — fetches all accounts in parallel ───────────────────────────
-function OverallNewsSection({ accounts, daysBack = 30 }) {
+function OverallNewsSection({ accounts, source = 'general', daysBack = 30, refreshKey }) {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading]   = useState(true);
 
@@ -284,24 +328,28 @@ function OverallNewsSection({ accounts, daysBack = 30 }) {
     if (!accounts || accounts.length === 0) return;
     setLoading(true);
     Promise.all(
-      accounts.map(acc =>
-        fetchNews(acc.id, daysBack)
+      accounts.map(acc => {
+        const request = source === 'financial'
+          ? fetchFinancial(acc.id, refreshKey)
+          : fetchNews(acc.id, daysBack, refreshKey);
+        return request
           .then(data => ({
             data,
             accountName: acc.name,
             isMock: data?.source === 'mock',
           }))
-          .catch(() => ({ data: null, accountName: acc.name, isMock: true }))
-      )
+          .catch(() => ({ data: null, accountName: acc.name, isMock: true }));
+      })
     ).then(results => {
       const all = results.flatMap(r =>
-        (r.data?.articles || []).map(a => ({ ...a, account_name: r.accountName }))
+        (source === 'financial' ? (r.data?.news || []) : (r.data?.articles || []))
+          .map(a => ({ ...a, account_name: r.accountName }))
       );
       // Sort by published_at descending
       all.sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
       setArticles(all.slice(0, 40)); // top 40 most recent across all accounts
     }).finally(() => setLoading(false));
-  }, [accounts, daysBack]);
+  }, [accounts, source, daysBack, refreshKey]);
 
   if (loading) return <Spinner />;
 
@@ -332,6 +380,16 @@ export default function MarketIntelligence({ accounts, selectedIds = [] }) {
   useEffect(() => {
     setSelectedId(selectedIds.length === 1 ? selectedIds[0] : (accounts[0]?.id || ''));
   }, [selectedIds, accounts]);
+  const [newsRefreshKey, setNewsRefreshKey] = useState(() => new Date().toDateString());
+
+  // Keep an already-open Market Intelligence page current when the date rolls over.
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      const today = new Date().toDateString();
+      setNewsRefreshKey(current => current === today ? current : today);
+    }, 60 * 1000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   const selectedAccount = accounts.find(a => a.id === selectedId);
 
@@ -373,37 +431,35 @@ export default function MarketIntelligence({ accounts, selectedIds = [] }) {
       {/* ── General News Tab ─────────────────────────────────────────────── */}
       {activeTab === 'news' && (
         isSingleAccount
-          ? <NewsSection key={`news-${selectedId}`} accountId={selectedId} source="general" daysBack={30} />
-          : <OverallNewsSection key="overall" accounts={accounts} daysBack={30} />
+          ? <NewsSection key={`news-${selectedId}`} accountId={selectedId} source="general" daysBack={30} refreshKey={newsRefreshKey} />
+          : <OverallNewsSection key="overall" accounts={accounts} daysBack={30} refreshKey={newsRefreshKey} />
       )}
 
       {/* ── Financial News Tab ───────────────────────────────────────────── */}
       {activeTab === 'financial' && (
         <div>
-          {selectedAccount && (
+          {isSingleAccount && selectedAccount && (
             <div style={{ marginBottom: 'var(--space-4)', display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap', alignItems: 'center' }}>
               <Tag color={selectedAccount.tier === 'Strategic' ? 'blue' : 'gray'}>{selectedAccount.tier}</Tag>
               <span className="text-sm text-muted"><strong>Industry:</strong> {selectedAccount.industry}</span>
               <span className="text-sm text-muted"><strong>Ticker:</strong> {selectedAccount.ticker || 'Private'}</span>
             </div>
           )}
-          <div className="notification notification--info" style={{ marginBottom: 'var(--space-5)' }}>
-            <strong>Financial News</strong> — Earnings updates, institutional activity,
-            and financial press from Finnhub.
-            {selectedAccount && !selectedAccount.ticker && (
-              <span> Note: This account is privately held — Finnhub coverage may be limited.</span>
-            )}
-          </div>
-          {selectedAccount && (
-            <NewsSection key={`fin-${selectedId}`} accountId={selectedId} source="financial" />
+          {isSingleAccount && selectedAccount && !selectedAccount.ticker && (
+            <div className="notification notification--info" style={{ marginBottom: 'var(--space-5)' }}>
+              This account is privately held, so financial-news coverage may be limited.
+            </div>
           )}
+          {isSingleAccount && selectedAccount
+            ? <NewsSection key={`fin-${selectedId}`} accountId={selectedId} source="financial" refreshKey={newsRefreshKey} />
+            : <OverallNewsSection key="financial-overall" accounts={accounts} source="financial" refreshKey={newsRefreshKey} />}
         </div>
       )}
 
       {/* ── Stock & Financials Tab ───────────────────────────────────────── */}
       {activeTab === 'stock' && (
         <div>
-          {selectedAccount && (
+          {isSingleAccount && selectedAccount && (
             <div style={{ marginBottom: 'var(--space-4)', display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap', alignItems: 'center' }}>
               <Tag color={selectedAccount.tier === 'Strategic' ? 'blue' : 'gray'}>{selectedAccount.tier}</Tag>
               <span className="text-sm text-muted"><strong>Ticker:</strong> {selectedAccount.ticker || 'Private'}</span>
@@ -412,36 +468,11 @@ export default function MarketIntelligence({ accounts, selectedIds = [] }) {
             </div>
           )}
 
-          {selectedAccount && (
-            !selectedAccount.ticker ? (
-              <div className="notification notification--info">
-                <strong>{selectedAccount.name}</strong> is privately held.
-                Stock and financial data is not publicly available.
-              </div>
-            ) : (
-              <div className="grid-1-2" style={{ alignItems: 'start' }}>
-                <StockQuotePanel key={`stock-${selectedId}`} accountId={selectedId} />
-                <div>
-                  <div className="card">
-                    <div className="card__header">
-                      <div className="card__title">IBM Products Owned</div>
-                    </div>
-                    {selectedAccount.owned_products?.map((p, i) => (
-                      <div key={i} style={{
-                        padding: 'var(--space-3) var(--space-4)',
-                        borderBottom: '1px solid var(--color-border)',
-                        fontSize: 'var(--font-size-sm)',
-                        display: 'flex', alignItems: 'center', gap: 'var(--space-3)'
-                      }}>
-                        <span style={{ color: 'var(--ibm-blue-60)', fontSize: 12 }}>◆</span>
-                        {p}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )
-          )}
+          {isSingleAccount && selectedAccount
+            ? <AccountStockSection key={`stock-${selectedId}`} account={selectedAccount} />
+            : accounts.map(account => (
+                <AccountStockSection key={`stock-${account.id}`} account={account} showHeading />
+              ))}
         </div>
       )}
     </div>

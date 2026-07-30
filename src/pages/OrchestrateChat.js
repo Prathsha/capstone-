@@ -7,6 +7,7 @@ const WXO_CONFIG = {
   orchestrationID:
     '20260715-1849-1485-409b-29a44d219373_20260716-1619-0360-405c-07897e68baa4',
   hostURL: 'https://dl.watson-orchestrate.ibm.com',
+  showLauncher: false,
   chatOptions: {
     agentId: '20adb73a-16fa-4857-92c6-57da2931f27b',
   },

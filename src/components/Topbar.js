@@ -43,7 +43,7 @@ export default function Topbar({ seller }) {
               {seller?.name || 'Seller'}
             </div>
             <div style={{ fontSize: 11, color: 'var(--ibm-gray-40)' }}>
-              {seller?.title || 'Technical Sales Leader'}
+              {seller?.title || 'Technology Sales Leader'}
             </div>
           </div>
           <div className="topbar__avatar" aria-hidden="true">{initials}</div>
@@ -57,7 +57,7 @@ export default function Topbar({ seller }) {
               <div className="topbar__profile-avatar">{initials}</div>
               <div>
                 <div className="topbar__profile-name">{seller?.name || 'Seller'}</div>
-                <div className="topbar__profile-title">{seller?.title || 'Technical Sales Leader'}</div>
+                <div className="topbar__profile-title">{seller?.title || 'Technology Sales Leader'}</div>
                 <div className="topbar__profile-pod">{seller?.pod}</div>
               </div>
             </div>

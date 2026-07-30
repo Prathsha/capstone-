@@ -1,265 +1,128 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { CONTACTS } from '../data/contacts';
+import { ORG_CHARTS } from '../data/orgCharts';
 
 const ACCOUNTS_LIST = [
-  { id: 'acc-001', label: 'QUEST DIAGNOSTICS',                           subtitle: 'Healthcare / Diagnostics · Northeast US' },
-  { id: 'acc-002', label: 'THE LINCOLN NATIONAL LIFE INSURANCE COMPANY', subtitle: 'Financial Services / Insurance · Mid-Atlantic US' },
-  { id: 'acc-003', label: 'SIEMENS',                                     subtitle: 'Industrial Technology / Manufacturing · Global' },
-  { id: 'acc-004', label: 'SEI INVESTMENTS',                             subtitle: 'Financial Services / Asset Management · Southeast US' },
-  { id: 'acc-005', label: 'INDEPENDENCE BLUECROSS',                      subtitle: 'Healthcare / Insurance · Mid-Atlantic US' },
-  { id: 'acc-006', label: 'SUNGARD DATA SYSTEMS',                        subtitle: 'Technology / Financial Services IT · Northeast US' },
-  { id: 'acc-007', label: 'SELECT MEDICAL CORP',                         subtitle: 'Healthcare / Hospital Systems · Central US' },
-  { id: 'acc-008', label: 'RICOH',                                       subtitle: 'Technology / Imaging & Document Solutions · Global' },
-  { id: 'acc-009', label: 'SAGENT M&C LLC',                              subtitle: 'Financial Services / Mortgage Servicing · Southwest US' },
+  { id: 'acc-001', company: 'QUEST DIAGNOSTICS', label: 'QUEST DIAGNOSTICS', subtitle: 'Healthcare / Diagnostics · Northeast US', source: 'https://www.theofficialboard.com/org-chart/quest-diagnostics' },
+  { id: 'acc-002', company: 'THE LINCOLN NATIONAL LIFE INSURANCE COMPANY', label: 'THE LINCOLN NATIONAL LIFE INSURANCE COMPANY', subtitle: 'Financial Services / Insurance · Northeast US', source: 'https://www.theofficialboard.com/org-chart/lincoln-financial-group' },
+  { id: 'acc-003', company: 'SIEMENS', label: 'SIEMENS', subtitle: 'Industrial Technology / Manufacturing · Global', source: 'https://www.theofficialboard.com/org-chart/siemens' },
+  { id: 'acc-004', company: 'SEI INVESTMENTS', label: 'SEI INVESTMENTS', subtitle: 'Financial Services / Asset Management · Northeast US', source: 'https://www.theofficialboard.com/org-chart/sei-investments' },
+  { id: 'acc-005', company: 'INDEPENDENCE BLUECROSS', label: 'INDEPENDENCE BLUECROSS', subtitle: 'Healthcare / Insurance · Northeast US', source: 'https://www.theofficialboard.com/org-chart/independence-blue-cross-2' },
+  { id: 'acc-006', company: 'SUNGARD DATA SYSTEMS', label: 'SUNGARD DATA SYSTEMS / 11:11 SYSTEMS', subtitle: 'Technology / Financial Services IT · Northeast US', source: 'https://www.theofficialboard.com/search?query=11%3A11%20Systems' },
+  { id: 'acc-007', company: 'SELECT MEDICAL CORP', label: 'SELECT MEDICAL CORP', subtitle: 'Healthcare / Hospital Systems · United States', source: 'https://www.theofficialboard.com/org-chart/select-medical-2' },
+  { id: 'acc-008', company: 'RICOH', label: 'RICOH USA', subtitle: 'Technology / Imaging & Document Solutions · North America', source: 'https://www.theofficialboard.com/org-chart/ricoh-usa' },
+  { id: 'acc-009', company: 'SAGENT M&C LLC', label: 'SAGENT', subtitle: 'Financial Services / Mortgage Servicing · United States', source: 'https://www.theofficialboard.com/org-chart/sagent-2' },
 ];
 
-const ORGS = {
-  'acc-001': {
-    root: { name: 'Amit Sharma', title: 'CIO', rel: 'neutral' },
-    children: [
-      {
-        node: { name: 'Ryan Donnally', title: 'VP Data Architecture', rel: 'champion' },
-        children: [
-          { node: { name: 'Tom Walsh',   title: 'Director, AI & Governance', rel: 'champion' }, children: [] },
-          { node: { name: 'Mark Clare',  title: 'Head of BI & Analytics',    rel: 'neutral'  }, children: [] },
-        ],
-      },
-      {
-        node: { name: 'Ravi Nekkalapu', title: 'VP Integration Engineering', rel: 'champion' },
-        children: [
-          { node: { name: 'Paddy Sundararajan', title: 'Director, Mainframe Ops',  rel: 'neutral' }, children: [] },
-          { node: { name: 'Anubha Gaur',        title: 'Director, DevOps & Infra', rel: 'neutral' }, children: [] },
-        ],
-      },
-      {
-        node: { name: 'Mark Ballard', title: 'VP Infrastructure & Cloud', rel: 'neutral' },
-        children: [
-          { node: { name: 'Tony Barton', title: 'VP IT Finance & FinOps', rel: 'champion' }, children: [] },
-        ],
-      },
-    ],
-  },
-  'acc-002': {
-    root: { name: 'Robert Fenn', title: 'CIO', rel: 'neutral' },
-    children: [
-      {
-        node: { name: 'Sandra Osei', title: 'Director of Infrastructure', rel: 'champion' },
-        children: [
-          { node: { name: 'Paul Kwan', title: 'Integration Architect', rel: 'neutral' }, children: [] },
-        ],
-      },
-      {
-        node: { name: 'Kevin Marsh', title: 'CISO', rel: 'blocker' },
-        children: [
-          { node: { name: 'Nina Reyes', title: 'Security Operations Manager', rel: 'neutral' }, children: [] },
-        ],
-      },
-    ],
-  },
-  'acc-003': {
-    root: { name: 'Annika Brandt', title: 'Global IT Director', rel: 'champion' },
-    children: [
-      {
-        node: { name: 'Ravi Patel', title: 'Enterprise Architect', rel: 'champion' },
-        children: [
-          { node: { name: 'Lars Becker', title: 'Cloud Platform Lead', rel: 'neutral' }, children: [] },
-          { node: { name: 'Fatima Al-Rashid', title: 'Integration Specialist', rel: 'neutral' }, children: [] },
-        ],
-      },
-      {
-        node: { name: 'Stefan Müller', title: 'VP Operations Technology', rel: 'neutral' },
-        children: [
-          { node: { name: 'Yuki Tanaka', title: 'Supply Chain Tech Lead', rel: 'neutral' }, children: [] },
-        ],
-      },
-    ],
-  },
-  'acc-005': {
-    root: { name: 'James Nguyen', title: 'Chief Digital Officer', rel: 'champion' },
-    children: [
-      {
-        node: { name: 'Tara Williams', title: 'Director of Integration', rel: 'champion' },
-        children: [
-          { node: { name: 'Marcus Bell', title: 'API Platform Architect', rel: 'neutral' }, children: [] },
-        ],
-      },
-      {
-        node: { name: 'Donna Harper', title: 'VP Member Technology', rel: 'neutral' },
-        children: [
-          { node: { name: 'Chen Wei', title: 'Digital Product Manager', rel: 'neutral' }, children: [] },
-        ],
-      },
-    ],
-  },
-  'acc-007': {
-    root: { name: 'Tom Kerr', title: 'CIO', rel: 'neutral' },
-    children: [
-      {
-        node: { name: 'Lisa Trombetta', title: 'VP Security Operations', rel: 'neutral' },
-        children: [
-          { node: { name: 'Andre Brooks', title: 'SOC Director', rel: 'neutral' }, children: [] },
-        ],
-      },
-      {
-        node: { name: 'Mark Shapiro', title: 'Director of Cloud & Infrastructure', rel: 'neutral' },
-        children: [],
-      },
-    ],
-  },
-  'acc-004': {
-    root: { name: 'Carol Simmons', title: 'VP Technology', rel: 'neutral' },
-    children: [
-      {
-        node: { name: 'Derek Flynn', title: 'Director of Enterprise Architecture', rel: 'neutral' },
-        children: [
-          { node: { name: 'Priya Nair', title: 'Cloud Platform Lead', rel: 'neutral' }, children: [] },
-        ],
-      },
-      {
-        node: { name: 'James Cho', title: 'Head of Data & Analytics', rel: 'neutral' },
-        children: [
-          { node: { name: 'Lin Wei', title: 'BI & Reporting Manager', rel: 'neutral' }, children: [] },
-        ],
-      },
-    ],
-  },
-  'acc-006': {
-    root: { name: 'Michael Rath', title: 'CTO', rel: 'blocker' },
-    children: [
-      {
-        node: { name: 'Patrick Nolan', title: 'VP Infrastructure', rel: 'neutral' },
-        children: [
-          { node: { name: 'Kim Lee', title: 'Database Platform Architect', rel: 'neutral' }, children: [] },
-        ],
-      },
-      {
-        node: { name: 'Rachel Ortiz', title: 'Director of Cloud Strategy', rel: 'neutral' },
-        children: [],
-      },
-    ],
-  },
-  'acc-008': {
-    root: { name: 'David Okafor', title: 'CIO', rel: 'champion' },
-    children: [
-      {
-        node: { name: 'Sophie Laurent', title: 'VP Digital Transformation', rel: 'champion' },
-        children: [
-          { node: { name: 'Kenji Ito', title: 'Content Platform Architect', rel: 'neutral' }, children: [] },
-          { node: { name: 'Maria Santos', title: 'Automation Lead', rel: 'neutral' }, children: [] },
-        ],
-      },
-    ],
-  },
-  'acc-009': {
-    root: { name: 'Robert Yuen', title: 'CIO', rel: 'neutral' },
-    children: [
-      {
-        node: { name: 'Amy Chen', title: 'Head of Compliance IT', rel: 'champion' },
-        children: [
-          { node: { name: 'Tom Bradley', title: 'GRC Platform Architect', rel: 'neutral' }, children: [] },
-        ],
-      },
-      {
-        node: { name: 'Marcus Webb', title: 'VP Technology Operations', rel: 'neutral' },
-        children: [],
-      },
-    ],
-  },
-};
+function ContactNode({ contact }) {
+  const subject = encodeURIComponent(`IBM follow-up for ${contact.company}`);
 
-const REL = {
-  champion: { bg: 'var(--ibm-green-50)',  label: 'Champion', tag: 'tag--green' },
-  neutral:  { bg: 'var(--ibm-yellow-30)', label: 'Neutral',  tag: 'tag--yellow' },
-  blocker:  { bg: 'var(--ibm-red-60)',    label: 'Blocker',  tag: 'tag--red' },
-};
-
-function OrgNode({ name, title, rel }) {
-  const r = REL[rel] || REL.neutral;
   return (
-    <div className="org-node">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
-        <div style={{ fontWeight: 600, fontSize: 'var(--font-size-sm)' }}>{name}</div>
-        <div title={r.label} style={{ width: 10, height: 10, borderRadius: '50%', background: r.bg, flexShrink: 0, marginTop: 2 }} />
+    <div className="org-node" style={{ minWidth: 230 }}>
+      <div style={{ fontWeight: 600, fontSize: 'var(--font-size-sm)' }}>{contact.name}</div>
+      <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)', lineHeight: 1.4, margin: '4px 0 10px' }}>
+        {contact.title}
       </div>
-      <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)', lineHeight: 1.4, marginBottom: 4 }}>{title}</div>
-      <span className={`tag ${r.tag}`} style={{ fontSize: 10 }}>{r.label}</span>
+      <div style={{ display: 'flex', gap: 'var(--space-3)', flexWrap: 'wrap' }}>
+        <a href={`mailto:${contact.email}?subject=${subject}`} style={{ fontSize: 11 }}>Email</a>
+        <a href={contact.linkedin} target="_blank" rel="noopener noreferrer" style={{ fontSize: 11 }}>LinkedIn ↗</a>
+      </div>
     </div>
   );
 }
 
-function OrgBranch({ item }) {
+function PersonNode({ person, accent = false }) {
   return (
-    <div className="org-branch">
-      <OrgNode name={item.node.name} title={item.node.title} rel={item.node.rel} />
-      {item.children.length > 0 && (
-        <>
-          <div className="org-connector org-connector--down" />
-          <div className="org-level">
-            {item.children.map((child, i) => (
-              <OrgBranch key={i} item={child} />
-            ))}
-          </div>
-        </>
-      )}
+    <div className={`org-node${accent ? ' org-node--accent' : ''}`}>
+      <div className="org-node__title">{person.title}</div>
+      {person.name && <div className="org-node__name">{person.name}</div>}
     </div>
+  );
+}
+
+function FunctionBranch({ branch }) {
+  const contacts = (branch.contacts || [])
+    .map(id => CONTACTS.find(contact => contact.id === id))
+    .filter(Boolean);
+
+  return (
+    <section className="org-branch-card">
+      <PersonNode person={branch} accent />
+      {branch.children?.length > 0 && (
+        <div className="org-children">
+          {branch.children.map((title, index) => (
+            <PersonNode key={`${title}-${index}`} person={{ title }} />
+          ))}
+        </div>
+      )}
+      {contacts.length > 0 && (
+        <div className="org-verified-contacts">
+          <div className="org-verified-contacts__label">Verified IBM contacts</div>
+          {contacts.map(contact => <ContactNode key={contact.id} contact={contact} />)}
+        </div>
+      )}
+    </section>
+  );
+}
+
+function OrganizationChart({ account, showHeading = false }) {
+  const chart = ORG_CHARTS[account.id];
+
+  return (
+    <section style={{ marginBottom: 'var(--space-8)' }}>
+      {showHeading && (
+        <div style={{ marginBottom: 'var(--space-4)' }}>
+          <h2 style={{ margin: 0, fontSize: 'var(--font-size-lg)' }}>{account.label}</h2>
+          <div className="text-sm text-muted" style={{ marginTop: 'var(--space-2)' }}>{account.subtitle}</div>
+        </div>
+      )}
+      <div className="org-tree">
+        <div className="org-chart-columns">
+          <section>
+            <h2 className="org-section-title">Executive leadership & board</h2>
+            <div className="org-leader-list">
+              {chart.leaders.map((leader, index) => (
+                <PersonNode key={`${leader.title}-${index}`} person={leader} accent={index === 0} />
+              ))}
+            </div>
+          </section>
+          <section>
+            <h2 className="org-section-title">Functions & business units</h2>
+            <div className="org-functions-grid">
+              {chart.functions.map((branch, index) => (
+                <FunctionBranch key={`${branch.title}-${index}`} branch={branch} />
+              ))}
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
   );
 }
 
 export default function OrgChart({ selectedIds = [] }) {
-  const initial = selectedIds.length === 1 ? selectedIds[0] : 'acc-001';
-  const [selectedId, setSelectedId] = useState(initial);
-
-  // Keep in sync when the global selection changes to a single account
-  React.useEffect(() => {
-    if (selectedIds.length === 1) setSelectedId(selectedIds[0]);
-  }, [selectedIds]);
-  const acct = ACCOUNTS_LIST.find(a => a.id === selectedId);
-  const org  = ORGS[selectedId];
+  const isSingleAccount = selectedIds.length === 1;
+  const selectedAccount = isSingleAccount
+    ? ACCOUNTS_LIST.find(item => item.id === selectedIds[0])
+    : null;
 
   return (
     <div className="page-content">
       <div className="page-header">
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
-          <div>
-            <div className="page-header__eyebrow">Customers</div>
-            <h1 className="page-header__title">Org Chart</h1>
-            <p className="page-header__subtitle">{acct.label} — {acct.subtitle}</p>
-          </div>
-          <select
-            value={selectedId}
-            onChange={e => setSelectedId(e.target.value)}
-            className="account-selector__select"
-            style={{ minWidth: 260, height: 36, marginTop: 4 }}
-          >
-            {ACCOUNTS_LIST.map(a => <option key={a.id} value={a.id}>{a.label}</option>)}
-          </select>
-        </div>
+        <div className="page-header__eyebrow">Customers</div>
+        <h1 className="page-header__title">Org Chart</h1>
+        <p className="page-header__subtitle">
+          {selectedAccount
+            ? `${selectedAccount.label} — ${selectedAccount.subtitle}`
+            : 'Organization structures across all 9 accounts'}
+        </p>
       </div>
 
-      {/* Legend */}
-      <div style={{ display: 'flex', gap: 'var(--space-4)', marginBottom: 'var(--space-6)', flexWrap: 'wrap' }}>
-        {Object.entries(REL).map(([k, v]) => (
-          <div key={k} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)' }}>
-            <div style={{ width: 10, height: 10, borderRadius: '50%', background: v.bg, flexShrink: 0 }} />
-            {v.label}
-          </div>
-        ))}
-      </div>
-
-      <div className="org-tree">
-        <div className="org-level" style={{ justifyContent: 'center' }}>
-          <OrgNode name={org.root.name} title={org.root.title} rel={org.root.rel} />
-        </div>
-        {org.children.length > 0 && (
-          <>
-            <div className="org-connector org-connector--down" />
-            <div className="org-level">
-              {org.children.map((child, i) => (
-                <OrgBranch key={i} item={child} />
-              ))}
-            </div>
-          </>
-        )}
-      </div>
+      {selectedAccount
+        ? <OrganizationChart account={selectedAccount} />
+        : ACCOUNTS_LIST.map(account => (
+            <OrganizationChart key={account.id} account={account} showHeading />
+          ))}
     </div>
   );
 }
