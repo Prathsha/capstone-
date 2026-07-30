@@ -355,7 +355,8 @@ export default function Dashboard({
   dashboardError,
 }) {
   const { tasks, addTask, deleteTask } = useTaskContext();
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal]   = useState(false);
+  const [sortBy, setSortBy]         = useState('priority'); // 'priority' | 'assignee' | 'dueDate'
 
   if (dashboardLoading) return <Spinner />;
   if (dashboardError)   return <ErrorBlock message={dashboardError} />;
@@ -366,14 +367,45 @@ export default function Dashboard({
     ? accounts.filter(a => selectedIds.includes(a.id))
     : accounts;
 
-  // Use the shared task list as pending actions, sorted by priority then due date
+  // Build a set of normalised account name fragments for filtering.
+  // Tasks store short names (e.g. 'QUEST DIAGNOSTICS', 'LINCOLN NATIONAL') while
+  // accounts[] use full legal names — match if either contains the other.
+  const selectedAccountNames = selectedIds.length
+    ? new Set(
+        accounts
+          .filter(a => selectedIds.includes(a.id))
+          .map(a => a.name.toUpperCase())
+      )
+    : null; // null = show all
+
+  const taskMatchesSelection = (task) => {
+    if (!selectedAccountNames) return true;
+    const taskAcct = (task.account || '').toUpperCase();
+    for (const name of selectedAccountNames) {
+      if (name.includes(taskAcct) || taskAcct.includes(name)) return true;
+    }
+    return false;
+  };
+
   const PRIO = { Critical: 0, High: 1, Medium: 2, Low: 3, critical: 0, high: 1, medium: 2, low: 3 };
-  const allPendingActions = [...tasks].sort((a, b) => {
-    const pa = PRIO[a.priority] ?? 3;
-    const pb = PRIO[b.priority] ?? 3;
-    if (pa !== pb) return pa - pb;
-    return (a.dueDate || a.due_date || '').localeCompare(b.dueDate || b.due_date || '');
-  });
+
+  const allPendingActions = [...tasks]
+    .filter(taskMatchesSelection)
+    .sort((a, b) => {
+      if (sortBy === 'assignee') {
+        const nameA = TEAM_MEMBERS.find(m => m.id === a.assignedTo)?.name ?? '';
+        const nameB = TEAM_MEMBERS.find(m => m.id === b.assignedTo)?.name ?? '';
+        return nameA.localeCompare(nameB);
+      }
+      if (sortBy === 'dueDate') {
+        return (a.dueDate || a.due_date || '').localeCompare(b.dueDate || b.due_date || '');
+      }
+      // default: priority then due date
+      const pa = PRIO[a.priority] ?? 3;
+      const pb = PRIO[b.priority] ?? 3;
+      if (pa !== pb) return pa - pb;
+      return (a.dueDate || a.due_date || '').localeCompare(b.dueDate || b.due_date || '');
+    });
 
   const handleActionAdded = (action) => {
     addTask({
@@ -483,11 +515,28 @@ export default function Dashboard({
             <div className="card__header">
               <div>
                 <div className="card__title">Pending Action Items</div>
-                <div className="card__subtitle">Requires your attention</div>
+                <div className="card__subtitle">
+                  {selectedIds.length ? `${displayAccounts.map(a => a.name.split(' ')[0]).join(', ')}` : 'All accounts'} · {allPendingActions.length} item{allPendingActions.length !== 1 ? 's' : ''}
+                </div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
+                <select
+                  value={sortBy}
+                  onChange={e => setSortBy(e.target.value)}
+                  style={{
+                    height: 28, padding: '0 8px', border: '1px solid var(--color-border-strong)',
+                    fontFamily: 'var(--font-sans)', fontSize: 'var(--font-size-xs)',
+                    background: 'var(--color-surface)', color: 'var(--color-text-primary)',
+                    cursor: 'pointer',
+                  }}
+                  aria-label="Sort pending actions"
+                >
+                  <option value="priority">Sort: Priority</option>
+                  <option value="assignee">Sort: Assignee</option>
+                  <option value="dueDate">Sort: Due Date</option>
+                </select>
                 <Tag color={allPendingActions.some(a => a.priority === 'critical') ? 'red' : 'orange'}>
-                  {allPendingActions.filter(a => ['critical','high'].includes(a.priority)).length} urgent
+                  {allPendingActions.filter(a => ['critical','high'].includes((a.priority||'').toLowerCase())).length} urgent
                 </Tag>
                 <button
                   onClick={() => setShowModal(true)}
