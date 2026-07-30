@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { fetchNews, fetchFinancial, fetchStockQuote } from '../services/api';
 import { Spinner, ErrorBlock, Tag, formatRelativeDate, formatCurrency } from '../components/Helpers';
 import { useTaskContext } from '../context/TaskContext';
@@ -14,7 +14,6 @@ function AddToTasksBtn({ title, account, dueDate }) {
 
   const handleAdd = () => {
     if (added) return;
-    // Default due date: 2 weeks from today
     const defaultDue = dueDate || new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10);
     addTask({
       id: `mi-${Date.now()}-${Math.random()}`,
@@ -108,19 +107,13 @@ function PriceChart({ data }) {
           <Tooltip
             formatter={(v) => [`$${v}`, 'Close']}
             labelFormatter={(l) => l}
-            contentStyle={{
-              fontSize: 12,
-              border: '1px solid var(--ibm-gray-20)',
-              background: '#fff',
-            }}
+            contentStyle={{ fontSize: 12, border: '1px solid var(--ibm-gray-20)', background: '#fff' }}
           />
           <ReferenceLine y={first} stroke="var(--ibm-gray-30)" strokeDasharray="3 3" />
           <Line
-            type="monotone"
-            dataKey="close"
+            type="monotone" dataKey="close"
             stroke={isUp ? 'var(--ibm-green-50)' : 'var(--ibm-red-60)'}
-            dot={false}
-            strokeWidth={1.5}
+            dot={false} strokeWidth={1.5}
           />
         </LineChart>
       </ResponsiveContainer>
@@ -128,22 +121,32 @@ function PriceChart({ data }) {
   );
 }
 
-// ── Stock Quote Panel ─────────────────────────────────────────────────────────
-function StockQuotePanel({ accountId }) {
-  const [data, setData]       = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError]     = useState(null);
-
-  useEffect(() => {
-    setLoading(true); setError(null);
-    fetchStockQuote(accountId)
-      .then(setData)
-      .catch(e => setError(e.message))
-      .finally(() => setLoading(false));
-  }, [accountId]);
-
+// ── Pure display components (no fetching) ─────────────────────────────────────
+function NewsDisplay({ articles, loading, error }) {
   if (loading) return <Spinner />;
   if (error)   return <ErrorBlock message={error} />;
+  if (!articles || articles.length === 0)
+    return <div className="empty-state">No recent articles found.</div>;
+  return (
+    <div className="article-list">
+      {articles.map((a, i) => <ArticleCard key={i} article={a} />)}
+    </div>
+  );
+}
+
+function StockDisplay({ data, loading, error, account }) {
+  if (loading) return <Spinner />;
+  if (error)   return <ErrorBlock message={error} />;
+  if (!account) return null;
+
+  if (!account.ticker) {
+    return (
+      <div className="notification notification--info">
+        <strong>{account.name}</strong> is privately held. Stock and financial data is not publicly available.
+      </div>
+    );
+  }
+
   if (!data || !data.quote) {
     return (
       <div className="notification notification--info">
@@ -156,214 +159,81 @@ function StockQuotePanel({ accountId }) {
   const isUp = (q.change_pct || 0) >= 0;
 
   return (
-    <div className="stock-panel">
-      <div className="stock-panel__header">
-        <div className="stock-panel__ticker">{q.ticker}</div>
-        <div className="stock-panel__name">{q.name}</div>
-        {data.source === 'yfinance' && (
-          <div style={{ marginTop: 4, fontSize: 10, color: 'var(--ibm-gray-50)' }}>
-            via yfinance
-          </div>
-        )}
-      </div>
-      <div className="stock-panel__body">
-        <div className="stock-panel__price">
-          {q.price != null ? `$${q.price.toFixed(2)}` : '—'}
+    <div className="grid-1-2" style={{ alignItems: 'start' }}>
+      <div className="stock-panel">
+        <div className="stock-panel__header">
+          <div className="stock-panel__ticker">{q.ticker}</div>
+          <div className="stock-panel__name">{q.name}</div>
+          {data.source === 'yfinance' && (
+            <div style={{ marginTop: 4, fontSize: 10, color: 'var(--ibm-gray-50)' }}>via yfinance</div>
+          )}
         </div>
-        {q.change_pct != null && (
-          <div className={`stock-panel__change stock-panel__change--${isUp ? 'up' : 'down'}`}>
-            {isUp ? '▲' : '▼'} {Math.abs(q.change_pct)}%
+        <div className="stock-panel__body">
+          <div className="stock-panel__price">
+            {q.price != null ? `$${q.price.toFixed(2)}` : '—'}
           </div>
-        )}
-
-        <div className="stock-metrics">
-          <div>
-            <div className="stock-metric__label">Market Cap</div>
-            <div className="stock-metric__value">{formatCurrency(q.market_cap)}</div>
-          </div>
-          <div>
-            <div className="stock-metric__label">Revenue</div>
-            <div className="stock-metric__value">{formatCurrency(q.revenue)}</div>
-          </div>
-          <div>
-            <div className="stock-metric__label">P/E Ratio</div>
-            <div className="stock-metric__value">{q.pe_ratio?.toFixed(1) || '—'}</div>
-          </div>
-          <div>
-            <div className="stock-metric__label">Analyst Target</div>
-            <div className="stock-metric__value">
-              {q.analyst_target ? `$${q.analyst_target.toFixed(2)}` : '—'}
+          {q.change_pct != null && (
+            <div className={`stock-panel__change stock-panel__change--${isUp ? 'up' : 'down'}`}>
+              {isUp ? '▲' : '▼'} {Math.abs(q.change_pct)}%
             </div>
-          </div>
-          <div>
-            <div className="stock-metric__label">52W High</div>
-            <div className="stock-metric__value">
-              {q['52w_high'] ? `$${q['52w_high'].toFixed(2)}` : '—'}
-            </div>
-          </div>
-          <div>
-            <div className="stock-metric__label">52W Low</div>
-            <div className="stock-metric__value">
-              {q['52w_low'] ? `$${q['52w_low'].toFixed(2)}` : '—'}
-            </div>
-          </div>
-          <div>
-            <div className="stock-metric__label">Recommendation</div>
-            <div className="stock-metric__value" style={{ textTransform: 'capitalize' }}>
-              {q.recommendation || '—'}
-            </div>
-          </div>
-          <div>
-            <div className="stock-metric__label">Sector</div>
-            <div className="stock-metric__value">{q.sector || '—'}</div>
-          </div>
-        </div>
-
-        {data.price_history && <PriceChart data={data.price_history} />}
-
-        {q.description && (
-          <div style={{ marginTop: 'var(--space-5)', paddingTop: 'var(--space-5)', borderTop: '1px solid var(--color-border)' }}>
-            <div style={{ fontSize: 'var(--font-size-xs)', textTransform: 'uppercase', letterSpacing: 1, color: 'var(--color-text-secondary)', marginBottom: 'var(--space-2)' }}>
-              Company Overview
-            </div>
-            <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>
-              {q.description}
-            </p>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function AccountStockSection({ account, showHeading = false }) {
-  return (
-    <section style={{ marginBottom: 'var(--space-7)' }}>
-      {showHeading && (
-        <div style={{ marginBottom: 'var(--space-4)' }}>
-          <h2 style={{ margin: 0, fontSize: 'var(--font-size-md)' }}>{account.name}</h2>
-          <div style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap', marginTop: 'var(--space-2)' }}>
-            <span className="text-sm text-muted"><strong>Ticker:</strong> {account.ticker || 'Private'}</span>
-            <span className="text-sm text-muted"><strong>Region:</strong> {account.region}</span>
-          </div>
-        </div>
-      )}
-
-      {!account.ticker ? (
-        <div className="notification notification--info">
-          <strong>{account.name}</strong> is privately held. Stock and financial data is not publicly available.
-        </div>
-      ) : (
-        <div className="grid-1-2" style={{ alignItems: 'start' }}>
-          <StockQuotePanel accountId={account.id} />
-          <div className="card">
-            <div className="card__header">
-              <div className="card__title">IBM Products Owned</div>
-            </div>
-            {account.owned_products?.map((product, index) => (
-              <div key={index} style={{
-                padding: 'var(--space-3) var(--space-4)',
-                borderBottom: '1px solid var(--color-border)',
-                fontSize: 'var(--font-size-sm)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 'var(--space-3)',
-              }}>
-                <span style={{ color: 'var(--ibm-blue-60)', fontSize: 12 }}>◆</span>
-                {product}
+          )}
+          <div className="stock-metrics">
+            {[
+              ['Market Cap',    formatCurrency(q.market_cap)],
+              ['Revenue',       formatCurrency(q.revenue)],
+              ['P/E Ratio',     q.pe_ratio?.toFixed(1) || '—'],
+              ['Analyst Target',q.analyst_target ? `$${q.analyst_target.toFixed(2)}` : '—'],
+              ['52W High',      q['52w_high'] ? `$${q['52w_high'].toFixed(2)}` : '—'],
+              ['52W Low',       q['52w_low']  ? `$${q['52w_low'].toFixed(2)}`  : '—'],
+              ['Recommendation',<span style={{ textTransform: 'capitalize' }}>{q.recommendation || '—'}</span>],
+              ['Sector',        q.sector || '—'],
+            ].map(([label, value]) => (
+              <div key={label}>
+                <div className="stock-metric__label">{label}</div>
+                <div className="stock-metric__value">{value}</div>
               </div>
             ))}
           </div>
+          {data.price_history && <PriceChart data={data.price_history} />}
+          {q.description && (
+            <div style={{ marginTop: 'var(--space-5)', paddingTop: 'var(--space-5)', borderTop: '1px solid var(--color-border)' }}>
+              <div style={{ fontSize: 'var(--font-size-xs)', textTransform: 'uppercase', letterSpacing: 1, color: 'var(--color-text-secondary)', marginBottom: 'var(--space-2)' }}>
+                Company Overview
+              </div>
+              <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>
+                {q.description}
+              </p>
+            </div>
+          )}
         </div>
-      )}
-    </section>
-  );
-}
-
-// ── Single-account News Section ───────────────────────────────────────────────
-function NewsSection({ accountId, source, daysBack = 30, refreshKey }) {
-  const [data, setData]       = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError]     = useState(null);
-
-  const loadData = useCallback(() => {
-    setLoading(true); setError(null);
-    const fetcher = source === 'general'
-      ? fetchNews(accountId, daysBack, refreshKey)
-      : fetchFinancial(accountId, refreshKey);
-    fetcher
-      .then(setData)
-      .catch(e => setError(e.message))
-      .finally(() => setLoading(false));
-  }, [accountId, source, daysBack, refreshKey]);
-
-  useEffect(() => { loadData(); }, [loadData]);
-
-  if (loading) return <Spinner />;
-  if (error)   return <ErrorBlock message={error} />;
-
-  const articles = source === 'general'
-    ? (data?.articles || [])
-    : (data?.news || []);
-
-  return (
-    <div>
-      {articles.length === 0 ? (
-        <div className="empty-state">No recent articles found for this account.</div>
-      ) : (
-        <div className="article-list">
-          {articles.map((a, i) => <ArticleCard key={i} article={a} />)}
+      </div>
+      <div className="card">
+        <div className="card__header">
+          <div className="card__title">IBM Products Owned</div>
         </div>
-      )}
+        {account.owned_products?.map((product, index) => (
+          <div key={index} style={{
+            padding: 'var(--space-3) var(--space-4)',
+            borderBottom: '1px solid var(--color-border)',
+            fontSize: 'var(--font-size-sm)',
+            display: 'flex', alignItems: 'center', gap: 'var(--space-3)',
+          }}>
+            <span style={{ color: 'var(--ibm-blue-60)', fontSize: 12 }}>◆</span>
+            {product}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
 
-// ── Overall News — fetches all accounts in parallel ───────────────────────────
-function OverallNewsSection({ accounts, source = 'general', daysBack = 30, refreshKey }) {
-  const [articles, setArticles] = useState([]);
-  const [loading, setLoading]   = useState(true);
+// ── Cache helpers ─────────────────────────────────────────────────────────────
+// Cache lives outside the component so it persists across navigation away and back.
+// It is keyed by `${refreshCount}:${cacheKey}` so a manual refresh busts all entries.
+const _cache = {};
 
-  useEffect(() => {
-    if (!accounts || accounts.length === 0) return;
-    setLoading(true);
-    Promise.all(
-      accounts.map(acc => {
-        const request = source === 'financial'
-          ? fetchFinancial(acc.id, refreshKey)
-          : fetchNews(acc.id, daysBack, refreshKey);
-        return request
-          .then(data => ({
-            data,
-            accountName: acc.name,
-            isMock: data?.source === 'mock',
-          }))
-          .catch(() => ({ data: null, accountName: acc.name, isMock: true }));
-      })
-    ).then(results => {
-      const all = results.flatMap(r =>
-        (source === 'financial' ? (r.data?.news || []) : (r.data?.articles || []))
-          .map(a => ({ ...a, account_name: r.accountName }))
-      );
-      // Sort by published_at descending
-      all.sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
-      setArticles(all.slice(0, 40)); // top 40 most recent across all accounts
-    }).finally(() => setLoading(false));
-  }, [accounts, source, daysBack, refreshKey]);
-
-  if (loading) return <Spinner />;
-
-  return (
-    <div>
-      {articles.length === 0 ? (
-        <div className="empty-state">No recent articles found across accounts.</div>
-      ) : (
-        <div className="article-list">
-          {articles.map((a, i) => <ArticleCard key={i} article={a} />)}
-        </div>
-      )}
-    </div>
-  );
+function cacheKey(refreshCount, ...parts) {
+  return `${refreshCount}:${parts.join(':')}`;
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -373,29 +243,124 @@ export default function MarketIntelligence({ accounts, selectedIds = [] }) {
   const [activeTab, setActiveTab] = useState('news');
 
   // Derive the active single account from the global topbar selection.
-  // Single account selected → use it. Otherwise fall back to the first account.
   const derivedId = selectedIds.length === 1 ? selectedIds[0] : (accounts[0]?.id || '');
   const [selectedId, setSelectedId] = useState(derivedId);
-
   useEffect(() => {
     setSelectedId(selectedIds.length === 1 ? selectedIds[0] : (accounts[0]?.id || ''));
   }, [selectedIds, accounts]);
-  const [newsRefreshKey, setNewsRefreshKey] = useState(() => new Date().toDateString());
 
-  // Keep an already-open Market Intelligence page current when the date rolls over.
-  useEffect(() => {
-    const timer = window.setInterval(() => {
-      const today = new Date().toDateString();
-      setNewsRefreshKey(current => current === today ? current : today);
-    }, 60 * 1000);
-    return () => window.clearInterval(timer);
-  }, []);
+  // refreshCount is bumped only by the manual refresh button — not by tab switches.
+  const [refreshCount, setRefreshCount] = useState(0);
 
+  // Per-fetch-type loading / error / data state, all managed here.
+  const [newsState,      setNewsState]      = useState({ loading: false, error: null, data: null });
+  const [finNewsState,   setFinNewsState]   = useState({ loading: false, error: null, data: null });
+  const [stockState,     setStockState]     = useState({ loading: false, error: null, data: null });
+
+  // Track which cache keys are already in flight so we never double-fetch.
+  const inflight = useRef(new Set());
+
+  const isSingleAccount = selectedIds.length === 1;
   const selectedAccount = accounts.find(a => a.id === selectedId);
 
-  // For General News: show all accounts when nothing specific is selected,
-  // otherwise show the single selected account's news.
-  const isSingleAccount = selectedIds.length === 1;
+  // ── Fetch helpers ─────────────────────────────────────────────────────────
+  const fetchOnce = useCallback((key, fetcher, setState) => {
+    if (_cache[key] !== undefined) {
+      // Already cached — apply immediately, no network call.
+      setState(_cache[key]);
+      return;
+    }
+    if (inflight.current.has(key)) return; // request already in flight
+    inflight.current.add(key);
+    setState(prev => ({ ...prev, loading: true, error: null }));
+    fetcher()
+      .then(data => {
+        const result = { loading: false, error: null, data };
+        _cache[key] = result;
+        setState(result);
+      })
+      .catch(e => {
+        const result = { loading: false, error: e.message, data: null };
+        setState(result);
+        // Don't cache errors — allow retry on next tab visit.
+      })
+      .finally(() => inflight.current.delete(key));
+  }, []);
+
+  // ── General News ──────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (activeTab !== 'news') return;
+    if (isSingleAccount) {
+      const key = cacheKey(refreshCount, 'news', selectedId);
+      fetchOnce(key, () => fetchNews(selectedId, 30), setNewsState);
+    } else {
+      const key = cacheKey(refreshCount, 'news-overall');
+      fetchOnce(key, () =>
+        Promise.all(accounts.map(acc =>
+          fetchNews(acc.id, 30)
+            .then(d => ({ data: d, accountName: acc.name }))
+            .catch(() => ({ data: null, accountName: acc.name }))
+        )).then(results => {
+          const all = results.flatMap(r =>
+            (r.data?.articles || []).map(a => ({ ...a, account_name: r.accountName }))
+          );
+          all.sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
+          return { articles: all.slice(0, 40) };
+        }),
+        setNewsState
+      );
+    }
+  }, [activeTab, isSingleAccount, selectedId, accounts, refreshCount, fetchOnce]);
+
+  // ── Financial News ────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (activeTab !== 'financial') return;
+    if (isSingleAccount) {
+      const key = cacheKey(refreshCount, 'financial', selectedId);
+      fetchOnce(key, () => fetchFinancial(selectedId), setFinNewsState);
+    } else {
+      const key = cacheKey(refreshCount, 'financial-overall');
+      fetchOnce(key, () =>
+        Promise.all(accounts.map(acc =>
+          fetchFinancial(acc.id)
+            .then(d => ({ data: d, accountName: acc.name }))
+            .catch(() => ({ data: null, accountName: acc.name }))
+        )).then(results => {
+          const all = results.flatMap(r =>
+            (r.data?.news || []).map(a => ({ ...a, account_name: r.accountName }))
+          );
+          all.sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
+          return { news: all.slice(0, 40) };
+        }),
+        setFinNewsState
+      );
+    }
+  }, [activeTab, isSingleAccount, selectedId, accounts, refreshCount, fetchOnce]);
+
+  // ── Stock & Financials ────────────────────────────────────────────────────
+  useEffect(() => {
+    if (activeTab !== 'stock') return;
+    if (!selectedAccount?.ticker) return; // privately held — nothing to fetch
+    const key = cacheKey(refreshCount, 'stock', selectedId);
+    fetchOnce(key, () => fetchStockQuote(selectedId), setStockState);
+  }, [activeTab, selectedId, selectedAccount, refreshCount, fetchOnce]);
+
+  // ── Derived display data ──────────────────────────────────────────────────
+  const newsArticles    = isSingleAccount
+    ? (newsState.data?.articles || [])
+    : (newsState.data?.articles || []);
+  const finArticles     = isSingleAccount
+    ? (finNewsState.data?.news || [])
+    : (finNewsState.data?.news || []);
+
+  const handleRefresh = () => {
+    // Clear cache entries for the current refresh epoch and bump the counter.
+    // The next render's useEffects will see a new refreshCount and re-fetch.
+    setRefreshCount(c => c + 1);
+    setNewsState({ loading: false, error: null, data: null });
+    setFinNewsState({ loading: false, error: null, data: null });
+    setStockState({ loading: false, error: null, data: null });
+  };
 
   const tabs = [
     { id: 'news',      label: 'General News' },
@@ -406,13 +371,31 @@ export default function MarketIntelligence({ accounts, selectedIds = [] }) {
   return (
     <div className="page-content">
       <div className="page-header">
-        <div className="page-header__eyebrow">Intelligence</div>
-        <h1 className="page-header__title">Market Intelligence</h1>
-        <p className="page-header__subtitle">
-          {isSingleAccount && selectedAccount
-            ? `${selectedAccount.name} — ${selectedAccount.industry}`
-            : 'News, financial updates, and market signals for your accounts'}
-        </p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 'var(--space-3)' }}>
+          <div>
+            <div className="page-header__eyebrow">Intelligence</div>
+            <h1 className="page-header__title">Market Intelligence</h1>
+            <p className="page-header__subtitle">
+              {isSingleAccount && selectedAccount
+                ? `${selectedAccount.name} — ${selectedAccount.industry}`
+                : 'News, financial updates, and market signals for your accounts'}
+            </p>
+          </div>
+          <button
+            onClick={handleRefresh}
+            title="Reload news from API"
+            style={{
+              display: 'flex', alignItems: 'center', gap: 6,
+              padding: '7px 16px', marginTop: 4,
+              border: '1px solid var(--color-border-strong)',
+              background: 'var(--color-surface)',
+              fontFamily: 'var(--font-sans)', fontSize: 'var(--font-size-sm)',
+              color: 'var(--color-text-secondary)', cursor: 'pointer',
+            }}
+          >
+            ↻ Refresh
+          </button>
+        </div>
       </div>
 
       {/* ── Main Tabs ───────────────────────────────────────────────────── */}
@@ -430,9 +413,11 @@ export default function MarketIntelligence({ accounts, selectedIds = [] }) {
 
       {/* ── General News Tab ─────────────────────────────────────────────── */}
       {activeTab === 'news' && (
-        isSingleAccount
-          ? <NewsSection key={`news-${selectedId}`} accountId={selectedId} source="general" daysBack={30} refreshKey={newsRefreshKey} />
-          : <OverallNewsSection key="overall" accounts={accounts} daysBack={30} refreshKey={newsRefreshKey} />
+        <NewsDisplay
+          articles={newsArticles}
+          loading={newsState.loading}
+          error={newsState.error}
+        />
       )}
 
       {/* ── Financial News Tab ───────────────────────────────────────────── */}
@@ -450,9 +435,11 @@ export default function MarketIntelligence({ accounts, selectedIds = [] }) {
               This account is privately held, so financial-news coverage may be limited.
             </div>
           )}
-          {isSingleAccount && selectedAccount
-            ? <NewsSection key={`fin-${selectedId}`} accountId={selectedId} source="financial" refreshKey={newsRefreshKey} />
-            : <OverallNewsSection key="financial-overall" accounts={accounts} source="financial" refreshKey={newsRefreshKey} />}
+          <NewsDisplay
+            articles={finArticles}
+            loading={finNewsState.loading}
+            error={finNewsState.error}
+          />
         </div>
       )}
 
@@ -467,12 +454,23 @@ export default function MarketIntelligence({ accounts, selectedIds = [] }) {
               <span className="text-sm text-muted"><strong>Last Contact:</strong> {selectedAccount.last_contact_days_ago}d ago</span>
             </div>
           )}
-
-          {isSingleAccount && selectedAccount
-            ? <AccountStockSection key={`stock-${selectedId}`} account={selectedAccount} />
+          {isSingleAccount
+            ? <StockDisplay
+                data={stockState.data}
+                loading={stockState.loading}
+                error={stockState.error}
+                account={selectedAccount}
+              />
             : accounts.map(account => (
-                <AccountStockSection key={`stock-${account.id}`} account={account} showHeading />
-              ))}
+                <StockDisplay
+                  key={account.id}
+                  data={null}
+                  loading={false}
+                  error={null}
+                  account={account}
+                />
+              ))
+          }
         </div>
       )}
     </div>
