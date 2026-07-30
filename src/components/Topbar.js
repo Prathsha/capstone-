@@ -58,7 +58,7 @@ export default function Topbar({ seller }) {
               <div>
                 <div className="topbar__profile-name">{seller?.name || 'Seller'}</div>
                 <div className="topbar__profile-title">{seller?.title || 'Technology Sales Leader'}</div>
-                <div className="topbar__profile-pod">{seller?.pod}</div>
+                <div className="topbar__profile-territory">{seller?.territory}</div>
               </div>
             </div>
 

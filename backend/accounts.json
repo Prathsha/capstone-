@@ -501,7 +501,7 @@
   "seller": {
     "name": "Arvind Krishna",
     "title": "Technical Sales Leader",
-    "pod": "Pod 13",
+    "territory": "Territory 13",
     "quota_total": 7270000,
     "quota_closed": 3013000,
     "quota_pipeline": 4610000,

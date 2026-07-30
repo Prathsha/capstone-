@@ -71,7 +71,7 @@ export default function Sidebar({ seller }) {
               {seller.name}
             </div>
             <div>{seller.title}</div>
-            <div>{seller.pod}</div>
+            <div>{seller.territory}</div>
           </div>
         </div>
       )}

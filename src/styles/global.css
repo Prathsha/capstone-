@@ -1875,7 +1875,7 @@ a:hover { color: var(--color-interactive-hover); text-decoration: underline; }
   margin-top: 2px;
 }
 
-.topbar__profile-pod {
+.topbar__profile-territory {
   font-size: var(--font-size-xs);
   color: var(--ibm-gray-50);
   margin-top: 2px;

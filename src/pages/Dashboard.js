@@ -448,7 +448,7 @@ export default function Dashboard({
           <h1 className="page-header__title">Technology Sales Leader Dashboard</h1>
           <p className="page-header__subtitle">
             {displayAccounts.length === accounts.length
-              ? `Overview of all ${accounts.length} assigned accounts • ${seller?.pod}`
+              ? `Overview of all ${accounts.length} assigned accounts • ${seller?.territory}`
               : `Filtered view for selected accounts`}
           </p>
         </div>
