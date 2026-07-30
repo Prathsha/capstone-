@@ -14,19 +14,26 @@ const ACCOUNTS_LIST = [
 
 const ORGS = {
   'acc-001': {
-    root: { name: 'Dr. Patricia Hale', title: 'CIO', rel: 'champion' },
+    root: { name: 'Amit Sharma', title: 'CIO', rel: 'neutral' },
     children: [
       {
-        node: { name: 'Brian Torres', title: 'VP Data & Analytics', rel: 'champion' },
+        node: { name: 'Ryan Donnally', title: 'VP Data Architecture', rel: 'champion' },
         children: [
-          { node: { name: 'Wei Zhang', title: 'Data Platform Architect', rel: 'neutral' }, children: [] },
-          { node: { name: 'Kiran Mehta', title: 'ML Engineering Lead', rel: 'neutral' }, children: [] },
+          { node: { name: 'Tom Walsh',   title: 'Director, AI & Governance', rel: 'champion' }, children: [] },
+          { node: { name: 'Mark Clare',  title: 'Head of BI & Analytics',    rel: 'neutral'  }, children: [] },
         ],
       },
       {
-        node: { name: 'Angela Ross', title: 'VP Infrastructure', rel: 'neutral' },
+        node: { name: 'Ravi Nekkalapu', title: 'VP Integration Engineering', rel: 'champion' },
         children: [
-          { node: { name: 'Derek Holmes', title: 'Cloud Operations Director', rel: 'neutral' }, children: [] },
+          { node: { name: 'Paddy Sundararajan', title: 'Director, Mainframe Ops',  rel: 'neutral' }, children: [] },
+          { node: { name: 'Anubha Gaur',        title: 'Director, DevOps & Infra', rel: 'neutral' }, children: [] },
+        ],
+      },
+      {
+        node: { name: 'Mark Ballard', title: 'VP Infrastructure & Cloud', rel: 'neutral' },
+        children: [
+          { node: { name: 'Tony Barton', title: 'VP IT Finance & FinOps', rel: 'champion' }, children: [] },
         ],
       },
     ],

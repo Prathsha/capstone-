@@ -4,12 +4,12 @@ import { useTaskContext } from '../context/TaskContext';
 const CROSSSELL = [
   {
     account: 'QUEST DIAGNOSTICS',
-    currentProducts: ['IBM Cloud Pak for Data', 'IBM watsonx.data'],
-    recommended: 'IBM TRIRIGA',
-    reasoning: 'Quest is expanding its lab network with 3 new facilities in FY2027. TRIRIGA\'s facility optimization capabilities directly align with their capital project management needs. Brian Torres (VP Data) has approved a pilot scoping meeting for Aug 14 and has Q3 budget.',
-    confidence: 84,
-    suggestedAction: 'Schedule IBM TRIRIGA scoping call with Brian Torres — Quest Diagnostics lab expansion',
-    dueDate: '2026-07-31',
+    currentProducts: ['IBM Cloud Pak for Data', 'IBM watsonx.data', 'IBM Knowledge Catalog', 'IBM Cloud Pak for Integration', 'IBM Turbonomic', 'IBM watsonx.governance'],
+    recommended: 'IBM Cognos Analytics + Guardium AI Security',
+    reasoning: 'Two active initiatives are converging: (1) BI Consolidation ($467K) with Mark Clare — IBM Cognos is competing against Google Looker. Initially pitched Content Hub but evaluating all options. (2) Governance for AI Projects ($960K) with Tom Walsh — watsonx.gov + Guardium AI Security, competing vs TCS Consulting. TCS\'s weakness is lack of an integrated AI governance platform; IBM\'s unified data + governance story is the differentiator.',
+    confidence: 91,
+    suggestedAction: 'Present integrated watsonx.gov + Guardium AI Security proposal to Tom Walsh — Quest Governance for AI Projects',
+    dueDate: '2026-07-28',
   },
   {
     account: 'THE LINCOLN NATIONAL LIFE INSURANCE COMPANY',

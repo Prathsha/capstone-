@@ -7,21 +7,25 @@
       "industry": "Healthcare / Diagnostics",
       "region": "Northeast US",
       "tier": "Horizon",
-      "quota": 825000,
-      "pipeline": 1180000,
-      "closed": 0,
+      "quota": 2900000,
+      "pipeline": 3800000,
+      "closed": 3800000,
       "renewal_date": "2026-09-15",
       "owned_products": [
         "IBM Cloud Pak for Data",
-        "IBM watsonx.data"
+        "IBM watsonx.data",
+        "IBM Knowledge Catalog",
+        "IBM Cloud Pak for Integration",
+        "IBM Turbonomic",
+        "IBM watsonx.governance"
       ],
       "install_base": [
         { "product": "IBM Cloud Pak for Data",      "category": "AI & Analytics",  "arr": 1850000, "since": "2021-03", "renewal": "2027-01-20" },
         { "product": "IBM watsonx.data",            "category": "AI & Analytics",  "arr": 1420000, "since": "2023-06", "renewal": "2026-09-15" },
-        { "product": "IBM Watson Studio",           "category": "AI & Analytics",  "arr": 780000,  "since": "2022-01", "renewal": "2026-11-01" },
-        { "product": "IBM DataStage",               "category": "Data Integration","arr": 650000,  "since": "2020-09", "renewal": "2027-03-01" },
-        { "product": "IBM OpenScale / AI Fairness", "category": "AI & Analytics",  "arr": 420000,  "since": "2023-11", "renewal": "2026-11-30" },
-        { "product": "IBM Cloud (IaaS)",            "category": "Cloud",           "arr": 580000,  "since": "2019-07", "renewal": "2026-12-31" }
+        { "product": "IBM Knowledge Catalog",       "category": "Data Governance", "arr": 480000,  "since": "2022-06", "renewal": "2027-01-20" },
+        { "product": "IBM Cloud Pak for Integration","category": "Integration",    "arr": 500050,  "since": "2023-01", "renewal": "2026-12-31" },
+        { "product": "IBM Turbonomic",              "category": "AIOps / FinOps",  "arr": 870000,  "since": "2022-09", "renewal": "2026-12-31" },
+        { "product": "IBM watsonx.governance",      "category": "AI Governance",   "arr": 580000,  "since": "2024-02", "renewal": "2027-02-15" }
       ],
       "health_score": 72,
       "last_contact_days_ago": 12,
@@ -29,30 +33,43 @@
         {
           "id": "pa-001",
           "type": "Renewal",
-          "description": "Cloud Pak for Data renewal due in 60 days",
+          "description": "watsonx.data renewal due Sep 15 — expand to Knowledge Catalog bundle",
           "priority": "high",
           "due_date": "2026-09-15"
         },
         {
           "id": "pa-002",
           "type": "Follow-up",
-          "description": "Follow up on Q2 usage review",
+          "description": "Advance Governed Data Foundation initiative — watsonx.data + Guardium + Optim scope with Ryan Donnally",
+          "priority": "high",
+          "due_date": "2026-07-25"
+        },
+        {
+          "id": "pa-003",
+          "type": "Technical",
+          "description": "Mainframe migration discovery: schedule workshop with Paddy Sundararajan to assess in-house repatriation from Canada",
           "priority": "medium",
-          "due_date": "2026-07-20"
+          "due_date": "2026-08-01"
         }
       ],
       "suggested_actions": [
         {
           "id": "sa-001",
-          "type": "Cross-sell",
-          "description": "Pitch IBM TRIRIGA \u2014 facility optimization aligns with lab expansion",
-          "confidence": 0.84
+          "type": "Upsell",
+          "description": "Advance Governance for AI Projects initiative — watsonx.gov + Guardium AI Security ($960K opportunity, competing with TCS Consulting)",
+          "confidence": 0.91
         },
         {
           "id": "sa-002",
-          "type": "Upsell",
-          "description": "Upgrade Cloud Pak for Data to Enterprise tier based on usage growth",
-          "confidence": 0.71
+          "type": "Cross-sell",
+          "description": "Expand BI Consolidation with IBM Cognos Analytics — $467K opportunity, displacing Google Looker per Mark Clare",
+          "confidence": 0.83
+        },
+        {
+          "id": "sa-003",
+          "type": "Cross-sell",
+          "description": "Propose Red Hat OpenShift + Ansible for Automate Technology Operations initiative led by Anubha Gaur",
+          "confidence": 0.77
         }
       ]
     },
