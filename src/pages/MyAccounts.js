@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 // ── Health / tier helpers ─────────────────────────────────────────────────────
@@ -482,9 +483,20 @@ function AccountRow({ account, onSelect }) {
 // ════════════════════════════════════════════════════════════════════════════
 export default function MyAccounts({ accounts = [] }) {
   const list = accounts.length > 0 ? accounts : MOCK_ACCOUNTS;
+  const [searchParams, setSearchParams] = useSearchParams();
 
   // 'list' = account overview, or an account id = showing detail for that account
-  const [view, setView] = useState('list');
+  const [view, setView] = useState(() => searchParams.get('account') || 'list');
+
+  // Sync view → URL: keep ?account= when in detail, remove when in list
+  useEffect(() => {
+    if (view === 'list') {
+      searchParams.delete('account');
+    } else {
+      searchParams.set('account', view);
+    }
+    setSearchParams(searchParams, { replace: true });
+  }, [view]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const selectedAccount = view !== 'list' ? list.find(a => a.id === view) : null;
   const detailData = view !== 'list' ? ACCOUNT_DATA[view] : null;

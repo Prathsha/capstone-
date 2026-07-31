@@ -71,7 +71,7 @@ function AccountSelectorBar({ accounts, selectedIds, onChange }) {
 }
 
 // Routes where the AccountSelectorBar should be hidden
-const HIDE_SELECTOR_PATHS = ['/competitive', '/team'];
+const HIDE_SELECTOR_PATHS = ['/competitive', '/team', '/accounts'];
 
 // ════════════════════════════════════════════════════════════════════════════
 // App Inner

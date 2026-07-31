@@ -455,7 +455,7 @@ export default function Dashboard({
 
         {/* ── KPI Row ─────────────────────────────────────────────────────── */}
         <div className="grid-4 mb-6">
-          <Link to="/accounts" style={{ textDecoration: 'none' }}>
+          <Link to={selectedIds.length === 1 ? `/accounts?account=${selectedIds[0]}` : '/accounts'} style={{ textDecoration: 'none' }}>
             <div className="kpi-tile kpi-tile--success" style={{ cursor: 'pointer', transition: 'box-shadow 0.15s' }}
               onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.12)'}
               onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}
@@ -465,7 +465,7 @@ export default function Dashboard({
               <div className="kpi-tile__sub">{quota_summary.attainment_pct}% attainment · View Accounts →</div>
             </div>
           </Link>
-          <Link to="/accounts" style={{ textDecoration: 'none' }}>
+          <Link to={selectedIds.length === 1 ? `/accounts?account=${selectedIds[0]}` : '/accounts'} style={{ textDecoration: 'none' }}>
             <div
               className={quota_summary.pipeline_needed > 0 ? 'kpi-tile kpi-tile--warning' : 'kpi-tile kpi-tile--success'}
               style={{ cursor: 'pointer', transition: 'box-shadow 0.15s' }}
