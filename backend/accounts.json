@@ -136,7 +136,7 @@
       "tier": "Horizon",
       "quota": 2100000,
       "pipeline": 1450000,
-      "closed": 980000,
+      "closed": 780000,
       "renewal_date": "2026-12-31",
       "owned_products": [
         "IBM MAS",
@@ -192,7 +192,7 @@
       "tier": "Horizon",
       "quota": 600000,
       "pipeline": 310000,
-      "closed": 210000,
+      "closed": 110000,
       "renewal_date": "2027-01-15",
       "owned_products": [
         "IBM Cloud Pak for Business Automation"
@@ -244,7 +244,7 @@
       "tier": "Horizon",
       "quota": 750000,
       "pipeline": 490000,
-      "closed": 380000,
+      "closed": 180000,
       "renewal_date": "2026-08-30",
       "owned_products": [
         "IBM Watson Assistant",
@@ -402,7 +402,7 @@
       "tier": "Horizon",
       "quota": 560000,
       "pipeline": 350000,
-      "closed": 260000,
+      "closed": 26000,
       "renewal_date": "2027-02-01",
       "owned_products": [
         "IBM FileNet Content Manager",
