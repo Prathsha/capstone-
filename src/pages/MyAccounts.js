@@ -2,6 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
+// ── Formatting helpers ────────────────────────────────────────────────────────
+function fmtCurrency(n) {
+  if (n === 0) return '$0';
+  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(2).replace(/\.?0+$/, '')}M`;
+  if (n >= 1_000)     return `$${(n / 1_000).toFixed(0)}K`;
+  return `$${n}`;
+}
+
+function fmtDate(iso) {
+  if (!iso) return 'TBD';
+  const [y, m, d] = iso.split('-');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${months[parseInt(m, 10) - 1]} ${parseInt(d, 10)}, ${y}`;
+}
+
 // ── Health / tier helpers ─────────────────────────────────────────────────────
 function healthClass(score) {
   if (score >= 80) return 'good';
@@ -23,251 +38,6 @@ function attainmentColor(pct) {
   return 'progress-bar__fill--error';
 }
 
-// ── Per-account detail data ───────────────────────────────────────────────────
-const ACCOUNT_DATA = {
-  'acc-001': {
-    name: 'QUEST DIAGNOSTICS', industry: 'Healthcare / Diagnostics', region: 'Northeast US',
-    arr: '$5.7M', arTrend: '+11.4% YoY', health: 72, healthNote: 'watsonx.data renewal Sep 15 · Governed Data Foundation in scope',
-    products: [
-      { name: 'IBM Cloud Pak for Data',       version: '4.8',  renewal: 'Jan 20, 2027', arr: '$1,850,000' },
-      { name: 'IBM watsonx.data',             version: 'SaaS', renewal: 'Sep 15, 2026', arr: '$1,420,000' },
-      { name: 'IBM Turbonomic',               version: 'SaaS', renewal: 'Dec 31, 2026', arr: '$870,000'   },
-      { name: 'IBM Cloud Pak for Integration','version': 'SaaS', renewal: 'Dec 31, 2026', arr: '$500,050' },
-      { name: 'IBM watsonx.governance',       version: 'SaaS', renewal: 'Feb 15, 2027', arr: '$580,000'   },
-      { name: 'IBM Knowledge Catalog',        version: 'SaaS', renewal: 'Jan 20, 2027', arr: '$480,000'   },
-    ],
-    competitors: [
-      { name: 'TCS Consulting', products: ['TCS data governance services'],          scope: 'AI governance — competing on Governance for AI Projects initiative' },
-      { name: 'Google',         products: ['Looker / BigQuery'],                     scope: 'BI Consolidation — displacing incumbent analytics' },
-      { name: 'Wipro',          products: ['Wipro data platform services'],           scope: 'Governed Data Foundation — strategic partner risk' },
-    ],
-    opportunities: [
-      { name: 'Governance for AI Projects (watsonx.gov + Guardium AI Security)', stage: 'Proposal',      value: '$960,325',   closeDate: 'Sep 30, 2026' },
-      { name: 'Create a Governed Data Foundation (watsonx.data + KC + Optim)',   stage: 'Qualification', value: '$1,191,132', closeDate: 'Oct 31, 2026' },
-      { name: 'BI Consolidation — IBM Cognos Analytics',                         stage: 'Discovery',     value: '$467,000',   closeDate: 'Nov 15, 2026' },
-      { name: 'Integration Platform Consolidation (CP4I / API Connect)',         stage: 'Negotiation',   value: '$500,050',   closeDate: 'Aug 31, 2026' },
-      { name: 'Mainframe In-House Migration & Modernization (zTPS)',             stage: 'Discovery',     value: '$0',         closeDate: 'TBD'          },
-      { name: '#VMWARE — Hybrid Cloud Modernization (OpenShift)',                stage: 'Discovery',     value: '$0',         closeDate: 'TBD'          },
-    ],
-    contacts: [
-      { name: 'Ryan Donnally',      title: 'VP Data Architecture',      role: 'Champion',                  strength: '★★★★☆' },
-      { name: 'Tom Walsh',          title: 'Director, AI & Governance',  role: 'Technical Decision Maker',  strength: '★★★★☆' },
-      { name: 'Mark Clare',         title: 'Head of BI & Analytics',     role: 'Technical Decision Maker',  strength: '★★★☆☆' },
-      { name: 'Ravi Nekkalapu',     title: 'VP Integration Engineering', role: 'Champion',                  strength: '★★★★☆' },
-      { name: 'Mark Ballard',       title: 'VP Infrastructure & Cloud',  role: 'Economic Buyer',            strength: '★★★☆☆' },
-      { name: 'Paddy Sundararajan', title: 'Director, Mainframe Ops',    role: 'Technical Decision Maker',  strength: '★★★☆☆' },
-      { name: 'Tony Barton',        title: 'VP IT Finance & FinOps',     role: 'Economic Buyer',            strength: '★★★★☆' },
-      { name: 'Anubha Gaur',        title: 'Director, DevOps & Infra',   role: 'Technical Decision Maker',  strength: '★★★☆☆' },
-    ],
-    revenue: [
-      { period: 'Q2 FY24', amount: 3800000 }, { period: 'Q3 FY24', amount: 4100000 },
-      { period: 'Q4 FY24', amount: 4500000 }, { period: 'Q1 FY25', amount: 4900000 },
-      { period: 'Q2 FY25', amount: 5200000 }, { period: 'Q3 FY25', amount: 5500000 },
-      { period: 'Q4 FY25', amount: 5700000 },
-    ],
-  },
-  'acc-002': {
-    name: 'THE LINCOLN NATIONAL LIFE INSURANCE COMPANY', industry: 'Financial Services / Insurance', region: 'Mid-Atlantic US',
-    arr: '$2.1M', arTrend: '+12.4% YoY', health: 65, healthNote: 'Guardium POC in progress',
-    products: [
-      { name: 'IBM OpenPages',                version: '9.0',  renewal: 'Nov 1, 2026',  arr: '$890,000'   },
-      { name: 'IBM Financial Crimes Insight', version: 'SaaS', renewal: 'Mar 1, 2027',  arr: '$1,210,000' },
-    ],
-    competitors: [
-      { name: 'Crowdstrike', products: ['Falcon XDR'],   scope: 'Endpoint security' },
-      { name: 'ServiceNow',  products: ['GRC Module'],   scope: 'Risk & compliance workflows' },
-    ],
-    opportunities: [
-      { name: 'IBM Guardium — Data Security',   stage: 'Proof of Concept', value: '$480,000', closeDate: 'Aug 1, 2026'  },
-      { name: 'OpenPages Enterprise Risk Mgmt', stage: 'Negotiation',      value: '$310,000', closeDate: 'Sep 30, 2026' },
-    ],
-    contacts: [
-      { name: 'Sandra Osei', title: 'Director of Infrastructure', role: 'Technical Decision Maker', strength: '★★★★☆' },
-      { name: 'Kevin Marsh',  title: 'CISO',                      role: 'Blocker',                  strength: '★★☆☆☆' },
-    ],
-    revenue: [
-      { period: 'Q2 FY24', amount: 1600000 }, { period: 'Q3 FY24', amount: 1720000 },
-      { period: 'Q4 FY24', amount: 1850000 }, { period: 'Q1 FY25', amount: 1960000 },
-      { period: 'Q2 FY25', amount: 2020000 }, { period: 'Q3 FY25', amount: 2080000 },
-      { period: 'Q4 FY25', amount: 2100000 },
-    ],
-  },
-  'acc-003': {
-    name: 'SIEMENS', industry: 'Industrial Technology / Manufacturing', region: 'Global',
-    arr: '$3.8M', arTrend: '+15.1% YoY', health: 81, healthNote: 'SOW signature pending',
-    products: [
-      { name: 'IBM MAS (Maximo)',          version: '8.11', renewal: 'Dec 31, 2026', arr: '$1,820,000' },
-      { name: 'IBM Sterling Supply Chain', version: 'SaaS', renewal: 'Jun 30, 2027', arr: '$1,240,000' },
-      { name: 'IBM Cloud',                 version: 'VPC',  renewal: 'Dec 31, 2026', arr: '$740,000'   },
-    ],
-    competitors: [
-      { name: 'SAP',       products: ['S/4HANA', 'SAP Asset Intelligence'], scope: 'ERP & asset management' },
-      { name: 'Microsoft', products: ['Azure IoT Hub', 'Dynamics 365'],     scope: 'IoT & field service' },
-    ],
-    opportunities: [
-      { name: 'IBM Turbonomic — Cloud Cost Optimization', stage: 'Qualification', value: '$620,000', closeDate: 'Sep 30, 2026' },
-      { name: 'Sterling Order Mgmt Expansion',             stage: 'Negotiation',  value: '$480,000', closeDate: 'Aug 15, 2026' },
-    ],
-    contacts: [
-      { name: 'Annika Brandt', title: 'Global IT Director',   role: 'Champion',                  strength: '★★★★★' },
-      { name: 'Ravi Patel',    title: 'Enterprise Architect',  role: 'Technical Decision Maker',  strength: '★★★★☆' },
-    ],
-    revenue: [
-      { period: 'Q2 FY24', amount: 2800000 }, { period: 'Q3 FY24', amount: 3050000 },
-      { period: 'Q4 FY24', amount: 3200000 }, { period: 'Q1 FY25', amount: 3420000 },
-      { period: 'Q2 FY25', amount: 3600000 }, { period: 'Q3 FY25', amount: 3720000 },
-      { period: 'Q4 FY25', amount: 3800000 },
-    ],
-  },
-  'acc-004': {
-    name: 'SEI INVESTMENTS', industry: 'Financial Services / Asset Management', region: 'Southeast US',
-    arr: '$620,000', arTrend: '-2.1% YoY', health: 58, healthNote: 'No contact in 31 days — re-engage',
-    products: [
-      { name: 'IBM Cloud Pak for Business Automation', version: '23.0', renewal: 'Jan 15, 2027', arr: '$620,000' },
-    ],
-    competitors: [
-      { name: 'Microsoft', products: ['Power Automate', 'Power BI'], scope: 'Process automation & reporting' },
-      { name: 'UiPath',    products: ['RPA Platform'],               scope: 'Robotic process automation' },
-    ],
-    opportunities: [
-      { name: 'IBM Cognos Analytics — Portfolio Reporting', stage: 'Discovery', value: '$280,000', closeDate: 'Nov 30, 2026' },
-      { name: 'IBM Garage Engagement',                      stage: 'Discovery', value: '$150,000', closeDate: 'Oct 15, 2026' },
-    ],
-    contacts: [
-      { name: 'Carol Simmons', title: 'VP Technology', role: 'Economic Buyer', strength: '★★★☆☆' },
-    ],
-    revenue: [
-      { period: 'Q2 FY24', amount: 680000 }, { period: 'Q3 FY24', amount: 660000 },
-      { period: 'Q4 FY24', amount: 650000 }, { period: 'Q1 FY25', amount: 630000 },
-      { period: 'Q2 FY25', amount: 625000 }, { period: 'Q3 FY25', amount: 620000 },
-      { period: 'Q4 FY25', amount: 620000 },
-    ],
-  },
-  'acc-005': {
-    name: 'INDEPENDENCE BLUECROSS', industry: 'Healthcare / Insurance', region: 'Mid-Atlantic US',
-    arr: '$1.48M', arTrend: '+18.6% YoY', health: 77, healthNote: 'Watson Assistant renewal in 45 days',
-    products: [
-      { name: 'IBM Watson Assistant',          version: 'SaaS', renewal: 'Aug 30, 2026', arr: '$680,000' },
-      { name: 'IBM Cloud Pak for Integration', version: '16.1', renewal: 'Feb 28, 2027', arr: '$800,000' },
-    ],
-    competitors: [
-      { name: 'AWS',    products: ['Amazon Connect', 'Lex'], scope: 'Contact center AI' },
-      { name: 'Nuance', products: ['Dragon Medical'],        scope: 'Clinical NLP' },
-    ],
-    opportunities: [
-      { name: 'Watson Assistant — Member Portal Expansion', stage: 'Negotiation',      value: '$420,000', closeDate: 'Sep 1, 2026'  },
-      { name: 'IBM DataStage — Claims Integration',         stage: 'Proof of Concept', value: '$290,000', closeDate: 'Nov 15, 2026' },
-    ],
-    contacts: [
-      { name: 'James Nguyen',  title: 'Chief Digital Officer',   role: 'Economic Buyer', strength: '★★★★☆' },
-      { name: 'Tara Williams', title: 'Director of Integration',  role: 'Champion',       strength: '★★★★★' },
-    ],
-    revenue: [
-      { period: 'Q2 FY24', amount: 980000  }, { period: 'Q3 FY24', amount: 1080000 },
-      { period: 'Q4 FY24', amount: 1180000 }, { period: 'Q1 FY25', amount: 1300000 },
-      { period: 'Q2 FY25', amount: 1380000 }, { period: 'Q3 FY25', amount: 1440000 },
-      { period: 'Q4 FY25', amount: 1480000 },
-    ],
-  },
-  'acc-006': {
-    name: 'SUNGARD DATA SYSTEMS', industry: 'Financial Technology / Data Services', region: 'Northeast US',
-    arr: '$380,000', arTrend: '-14.2% YoY', health: 44, healthNote: 'CRITICAL — competitive displacement risk',
-    products: [
-      { name: 'IBM Db2 on Cloud', version: 'SaaS', renewal: 'Oct 1, 2026', arr: '$380,000' },
-    ],
-    competitors: [
-      { name: 'Snowflake', products: ['Snowflake Data Cloud'], scope: 'Cloud data warehouse — active eval' },
-      { name: 'AWS',       products: ['Aurora PostgreSQL'],    scope: 'Proposed Db2 replacement' },
-    ],
-    opportunities: [
-      { name: 'Db2 Renewal — Multi-year Commit', stage: 'Negotiation', value: '$420,000', closeDate: 'Jul 14, 2026' },
-    ],
-    contacts: [
-      { name: 'Michael Rath', title: 'CTO', role: 'Blocker', strength: '★☆☆☆☆' },
-    ],
-    revenue: [
-      { period: 'Q2 FY24', amount: 490000 }, { period: 'Q3 FY24', amount: 470000 },
-      { period: 'Q4 FY24', amount: 450000 }, { period: 'Q1 FY25', amount: 430000 },
-      { period: 'Q2 FY25', amount: 400000 }, { period: 'Q3 FY25', amount: 385000 },
-      { period: 'Q4 FY25', amount: 380000 },
-    ],
-  },
-  'acc-007': {
-    name: 'SELECT MEDICAL CORP', industry: 'Healthcare / Hospital Systems', region: 'Central US',
-    arr: '$920,000', arTrend: '+6.3% YoY', health: 69, healthNote: 'QRadar upgrade assessment due',
-    products: [
-      { name: 'IBM Cloud',           version: 'VPC', renewal: 'Nov 15, 2026', arr: '$420,000' },
-      { name: 'IBM Security QRadar', version: '7.5', renewal: 'Nov 15, 2026', arr: '$500,000' },
-    ],
-    competitors: [
-      { name: 'Palo Alto',  products: ['Prisma Cloud', 'Cortex XSOAR'], scope: 'Security orchestration' },
-      { name: 'Microsoft',  products: ['Defender for Cloud'],            scope: 'Cloud workload protection' },
-    ],
-    opportunities: [
-      { name: 'IBM Verify — Zero-Trust Identity', stage: 'Qualification',    value: '$380,000', closeDate: 'Oct 1, 2026' },
-      { name: 'QRadar SOAR Add-on',               stage: 'Proof of Concept', value: '$220,000', closeDate: 'Nov 1, 2026' },
-    ],
-    contacts: [
-      { name: 'Lisa Trombetta', title: 'VP Security Operations', role: 'Technical Decision Maker', strength: '★★★☆☆' },
-    ],
-    revenue: [
-      { period: 'Q2 FY24', amount: 780000 }, { period: 'Q3 FY24', amount: 810000 },
-      { period: 'Q4 FY24', amount: 850000 }, { period: 'Q1 FY25', amount: 875000 },
-      { period: 'Q2 FY25', amount: 900000 }, { period: 'Q3 FY25', amount: 915000 },
-      { period: 'Q4 FY25', amount: 920000 },
-    ],
-  },
-  'acc-008': {
-    name: 'RICOH', industry: 'Technology / Imaging & Document Solutions', region: 'Global',
-    arr: '$1.62M', arTrend: '+9.8% YoY', health: 73, healthNote: 'CSP expansion proposal pending',
-    products: [
-      { name: 'IBM FileNet Content Manager',           version: '5.5',  renewal: 'Feb 1, 2027', arr: '$820,000' },
-      { name: 'IBM Cloud Pak for Business Automation', version: '23.0', renewal: 'Feb 1, 2027', arr: '$800,000' },
-    ],
-    competitors: [
-      { name: 'OpenText',  products: ['Content Suite'],     scope: 'Legacy ECM footprint' },
-      { name: 'Microsoft', products: ['SharePoint Online'], scope: 'Unstructured content collaboration' },
-    ],
-    opportunities: [
-      { name: 'watsonx Orchestrate — Workflow Automation', stage: 'Qualification', value: '$520,000', closeDate: 'Oct 30, 2026' },
-      { name: 'FileNet to Content Services Platform',       stage: 'Negotiation',  value: '$380,000', closeDate: 'Aug 30, 2026' },
-    ],
-    contacts: [
-      { name: 'David Okafor', title: 'CIO', role: 'Economic Buyer', strength: '★★★★☆' },
-    ],
-    revenue: [
-      { period: 'Q2 FY24', amount: 1280000 }, { period: 'Q3 FY24', amount: 1360000 },
-      { period: 'Q4 FY24', amount: 1450000 }, { period: 'Q1 FY25', amount: 1510000 },
-      { period: 'Q2 FY25', amount: 1560000 }, { period: 'Q3 FY25', amount: 1590000 },
-      { period: 'Q4 FY25', amount: 1620000 },
-    ],
-  },
-  'acc-009': {
-    name: 'SAGENT M&C LLC', industry: 'Financial Services / Mortgage', region: 'Northeast US',
-    arr: '$310,000', arTrend: '-5.2% YoY', health: 53, healthNote: 'Pipeline stalled — outreach needed',
-    products: [
-      { name: 'IBM OpenPages', version: '9.0', renewal: 'Oct 15, 2026', arr: '$310,000' },
-    ],
-    competitors: [
-      { name: 'Wolters Kluwer', products: ['OneSumX GRC'],  scope: 'Regulatory compliance' },
-      { name: 'MetricStream',   products: ['GRC Platform'], scope: 'Risk management evaluation' },
-    ],
-    opportunities: [
-      { name: 'IBM Safer Payments — Fraud Detection', stage: 'Discovery', value: '$180,000', closeDate: 'Nov 30, 2026' },
-      { name: 'IBM Consulting — CFPB Compliance',     stage: 'Discovery', value: '$120,000', closeDate: 'Dec 15, 2026' },
-    ],
-    contacts: [
-      { name: 'Amy Chen', title: 'Head of Compliance IT', role: 'Champion', strength: '★★★☆☆' },
-    ],
-    revenue: [
-      { period: 'Q2 FY24', amount: 370000 }, { period: 'Q3 FY24', amount: 360000 },
-      { period: 'Q4 FY24', amount: 345000 }, { period: 'Q1 FY25', amount: 330000 },
-      { period: 'Q2 FY25', amount: 320000 }, { period: 'Q3 FY25', amount: 315000 },
-      { period: 'Q4 FY25', amount: 310000 },
-    ],
-  },
-};
-
 const STAGE_COLOR = {
   'Proof of Concept': 'tag--blue',
   'Negotiation':      'tag--green',
@@ -276,17 +46,44 @@ const STAGE_COLOR = {
 };
 
 // ── Account Detail View ───────────────────────────────────────────────────────
-function AccountDetailView({ accountId }) {
-  const d = ACCOUNT_DATA[accountId];
-  if (!d) return <div className="empty-state">No detail data available for this account.</div>;
+function AccountDetailView({ account }) {
+  if (!account) return <div className="empty-state">No detail data available for this account.</div>;
 
-  const chartData = d.revenue.map(r => ({
+  // Derive display values from the live account object
+  const totalArr = (account.install_base || []).reduce((s, p) => s + (p.arr || 0), 0);
+  const products = (account.install_base || []).map(p => ({
+    name:    p.product,
+    version: p.version || '—',
+    renewal: fmtDate(p.renewal),
+    arr:     fmtCurrency(p.arr),
+  }));
+  const opportunities = (account.opportunities || []).map(o => ({
+    name:      o.name,
+    stage:     o.stage,
+    value:     fmtCurrency(o.value),
+    closeDate: fmtDate(o.close_date),
+  }));
+  const chartData = (account.revenue_trend || []).map(r => ({
     period: r.period,
     amount: r.amount,
-    fmt: r.amount >= 1000000
-      ? `$${(r.amount / 1000000).toFixed(2)}M`
-      : `$${(r.amount / 1000).toFixed(0)}K`,
+    fmt:    fmtCurrency(r.amount),
   }));
+
+  const d = {
+    name:        account.name,
+    industry:    account.industry,
+    region:      account.region,
+    arr:         fmtCurrency(totalArr),
+    arTrend:     account.arr_trend || '',
+    health:      account.health_score,
+    healthNote:  account.health_note || '',
+    products,
+    competitors: account.competitors || [],
+    opportunities,
+    contacts:    account.contacts || [],
+  };
+
+  const pipelineTotal = (account.opportunities || []).reduce((s, o) => s + (o.value || 0), 0);
 
   return (
     <div>
@@ -301,7 +98,7 @@ function AccountDetailView({ accountId }) {
           <div className="kpi-tile__label">Active Opportunities</div>
           <div className="kpi-tile__value kpi-tile__value--md">{d.opportunities.length}</div>
           <div className="kpi-tile__sub">
-            ${(d.opportunities.reduce((s, o) => s + parseInt(o.value.replace(/[$,]/g, '')), 0) / 1000).toFixed(0)}K pipeline
+            {fmtCurrency(pipelineTotal)} pipeline
           </div>
         </div>
         <div className={`kpi-tile ${d.health >= 70 ? 'kpi-tile--success' : d.health >= 55 ? 'kpi-tile--warning' : 'kpi-tile--error'}`}>
@@ -499,7 +296,6 @@ export default function MyAccounts({ accounts = [] }) {
   }, [view]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const selectedAccount = view !== 'list' ? list.find(a => a.id === view) : null;
-  const detailData = view !== 'list' ? ACCOUNT_DATA[view] : null;
 
   return (
     <div className="page-content">
@@ -532,9 +328,9 @@ export default function MyAccounts({ accounts = [] }) {
                   <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-xs)' }}>/</span>
                   <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-xs)' }}>Account Details</span>
                 </div>
-                <h1 className="page-header__title">{detailData?.name || selectedAccount?.name}</h1>
+                <h1 className="page-header__title">{selectedAccount?.name}</h1>
                 <p className="page-header__subtitle">
-                  {detailData?.industry} · {detailData?.region}
+                  {selectedAccount?.industry} · {selectedAccount?.region}
                 </p>
               </div>
               {/* Account switcher */}
@@ -549,7 +345,7 @@ export default function MyAccounts({ accounts = [] }) {
             </div>
           </div>
 
-          <AccountDetailView accountId={view} />
+          <AccountDetailView account={list.find(a => a.id === view)} />
         </>
       )}
     </div>
@@ -558,13 +354,13 @@ export default function MyAccounts({ accounts = [] }) {
 
 // Mock fallback accounts (used when backend is not available)
 const MOCK_ACCOUNTS = [
-  { id: 'acc-001', name: 'QUEST DIAGNOSTICS',                           tier: 'Strategic', health_score: 72, quota: 2000000, closed: 1440000 },
-  { id: 'acc-002', name: 'THE LINCOLN NATIONAL LIFE INSURANCE COMPANY', tier: 'Strategic', health_score: 65, quota: 3000000, closed: 1380000 },
-  { id: 'acc-003', name: 'SIEMENS',                                     tier: 'Strategic', health_score: 83, quota: 5000000, closed: 4150000 },
-  { id: 'acc-004', name: 'SEI INVESTMENTS',                             tier: 'Premier',   health_score: 48, quota: 1800000, closed: 630000  },
-  { id: 'acc-005', name: 'INDEPENDENCE BLUECROSS',                      tier: 'Premier',   health_score: 76, quota: 1500000, closed: 1125000 },
-  { id: 'acc-006', name: 'SUNGARD DATA SYSTEMS',                        tier: 'Premier',   health_score: 38, quota: 1200000, closed: 360000  },
-  { id: 'acc-007', name: 'SELECT MEDICAL CORP',                         tier: 'Premier',   health_score: 62, quota: 1000000, closed: 580000  },
-  { id: 'acc-008', name: 'RICOH',                                       tier: 'Strategic', health_score: 80, quota: 2200000, closed: 1760000 },
-  { id: 'acc-009', name: 'SAGENT M&C LLC',                              tier: 'Premier',   health_score: 55, quota: 900000,  closed: 450000  },
+  { id: 'acc-001', name: 'QUEST DIAGNOSTICS',                           tier: 'Horizon', health_score: 72, health_note: 'watsonx.data renewal Sep 15', arr_trend: '+11.4% YoY', quota: 2900000, pipeline: 3800000, closed: 3800000, install_base: [], opportunities: [], competitors: [], contacts: [], revenue_trend: [] },
+  { id: 'acc-002', name: 'THE LINCOLN NATIONAL LIFE INSURANCE COMPANY', tier: 'Horizon', health_score: 65, health_note: 'Guardium POC in progress',     arr_trend: '+12.4% YoY', quota: 1200000, pipeline: 780000,  closed: 520000,  install_base: [], opportunities: [], competitors: [], contacts: [], revenue_trend: [] },
+  { id: 'acc-003', name: 'SIEMENS',                                     tier: 'Horizon', health_score: 81, health_note: 'SOW signature pending',         arr_trend: '+15.1% YoY', quota: 2100000, pipeline: 1450000, closed: 980000,  install_base: [], opportunities: [], competitors: [], contacts: [], revenue_trend: [] },
+  { id: 'acc-004', name: 'SEI INVESTMENTS',                             tier: 'Horizon', health_score: 58, health_note: 'No contact in 31 days',         arr_trend: '-2.1% YoY',  quota: 600000,  pipeline: 310000,  closed: 210000,  install_base: [], opportunities: [], competitors: [], contacts: [], revenue_trend: [] },
+  { id: 'acc-005', name: 'INDEPENDENCE BLUECROSS',                      tier: 'Horizon', health_score: 77, health_note: 'Watson Assistant renewal soon',  arr_trend: '+18.6% YoY', quota: 750000,  pipeline: 490000,  closed: 380000,  install_base: [], opportunities: [], competitors: [], contacts: [], revenue_trend: [] },
+  { id: 'acc-006', name: 'SUNGARD DATA SYSTEMS',                        tier: 'Horizon', health_score: 44, health_note: 'CRITICAL — displacement risk',  arr_trend: '-14.2% YoY', quota: 420000,  pipeline: 180000,  closed: 95000,   install_base: [], opportunities: [], competitors: [], contacts: [], revenue_trend: [] },
+  { id: 'acc-007', name: 'SELECT MEDICAL CORP',                         tier: 'Horizon', health_score: 69, health_note: 'QRadar upgrade assessment due',  arr_trend: '+6.3% YoY',  quota: 480000,  pipeline: 290000,  closed: 185000,  install_base: [], opportunities: [], competitors: [], contacts: [], revenue_trend: [] },
+  { id: 'acc-008', name: 'RICOH',                                       tier: 'Horizon', health_score: 73, health_note: 'CSP expansion proposal pending', arr_trend: '+9.8% YoY',  quota: 560000,  pipeline: 350000,  closed: 260000,  install_base: [], opportunities: [], competitors: [], contacts: [], revenue_trend: [] },
+  { id: 'acc-009', name: 'SAGENT M&C LLC',                              tier: 'Horizon', health_score: 53, health_note: 'Pipeline stalled',               arr_trend: '-5.2% YoY',  quota: 310000,  pipeline: 140000,  closed: 75000,   install_base: [], opportunities: [], competitors: [], contacts: [], revenue_trend: [] },
 ];

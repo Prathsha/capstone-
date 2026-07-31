@@ -7,10 +7,14 @@
       "industry": "Healthcare / Diagnostics",
       "region": "Northeast US",
       "tier": "Horizon",
-      "quota": 2900000,
+      "quota": 5900000,
       "pipeline": 3800000,
       "closed": 3800000,
       "renewal_date": "2026-09-15",
+      "health_score": 72,
+      "health_note": "watsonx.data renewal Sep 15 · Governed Data Foundation in scope",
+      "arr_trend": "+11.4% YoY",
+      "last_contact_days_ago": 12,
       "owned_products": [
         "IBM Cloud Pak for Data",
         "IBM watsonx.data",
@@ -20,57 +24,51 @@
         "IBM watsonx.governance"
       ],
       "install_base": [
-        { "product": "IBM Cloud Pak for Data",      "category": "AI & Analytics",  "arr": 1850000, "since": "2021-03", "renewal": "2027-01-20" },
-        { "product": "IBM watsonx.data",            "category": "AI & Analytics",  "arr": 1420000, "since": "2023-06", "renewal": "2026-09-15" },
-        { "product": "IBM Knowledge Catalog",       "category": "Data Governance", "arr": 480000,  "since": "2022-06", "renewal": "2027-01-20" },
-        { "product": "IBM Cloud Pak for Integration","category": "Integration",    "arr": 500050,  "since": "2023-01", "renewal": "2026-12-31" },
-        { "product": "IBM Turbonomic",              "category": "AIOps / FinOps",  "arr": 870000,  "since": "2022-09", "renewal": "2026-12-31" },
-        { "product": "IBM watsonx.governance",      "category": "AI Governance",   "arr": 580000,  "since": "2024-02", "renewal": "2027-02-15" }
+        { "product": "IBM Cloud Pak for Data",       "category": "AI & Analytics",  "version": "4.8",  "arr": 1850000, "since": "2021-03", "renewal": "2027-01-20" },
+        { "product": "IBM watsonx.data",             "category": "AI & Analytics",  "version": "SaaS", "arr": 1420000, "since": "2023-06", "renewal": "2026-09-15" },
+        { "product": "IBM Turbonomic",               "category": "AIOps / FinOps",  "version": "SaaS", "arr": 870000,  "since": "2022-09", "renewal": "2026-12-31" },
+        { "product": "IBM Cloud Pak for Integration","category": "Integration",     "version": "SaaS", "arr": 500050,  "since": "2023-01", "renewal": "2026-12-31" },
+        { "product": "IBM watsonx.governance",       "category": "AI Governance",   "version": "SaaS", "arr": 580000,  "since": "2024-02", "renewal": "2027-02-15" },
+        { "product": "IBM Knowledge Catalog",        "category": "Data Governance", "version": "SaaS", "arr": 480000,  "since": "2022-06", "renewal": "2027-01-20" }
       ],
-      "health_score": 72,
-      "last_contact_days_ago": 12,
+      "opportunities": [
+        { "name": "Governance for AI Projects (watsonx.gov + Guardium AI Security)", "stage": "Proposal",      "value": 960325,   "close_date": "2026-09-30" },
+        { "name": "Create a Governed Data Foundation (watsonx.data + KC + Optim)",   "stage": "Qualification", "value": 1191132,  "close_date": "2026-10-31" },
+        { "name": "BI Consolidation — IBM Cognos Analytics",                         "stage": "Discovery",     "value": 467000,   "close_date": "2026-11-15" },
+        { "name": "Integration Platform Consolidation (CP4I / API Connect)",         "stage": "Negotiation",   "value": 500050,   "close_date": "2026-08-31" },
+        { "name": "Mainframe In-House Migration & Modernization (zTPS)",             "stage": "Discovery",     "value": 0,        "close_date": null },
+        { "name": "#VMWARE — Hybrid Cloud Modernization (OpenShift)",                "stage": "Discovery",     "value": 0,        "close_date": null }
+      ],
+      "competitors": [
+        { "name": "TCS Consulting", "products": ["TCS data governance services"],        "scope": "AI governance — competing on Governance for AI Projects initiative" },
+        { "name": "Google",         "products": ["Looker / BigQuery"],                   "scope": "BI Consolidation — displacing incumbent analytics" },
+        { "name": "Wipro",          "products": ["Wipro data platform services"],         "scope": "Governed Data Foundation — strategic partner risk" }
+      ],
+      "contacts": [
+        { "name": "Ryan Donnally",      "title": "VP Data Architecture",      "role": "Champion",                  "strength": "★★★★☆" },
+        { "name": "Tom Walsh",          "title": "Director, AI & Governance",  "role": "Technical Decision Maker",  "strength": "★★★★☆" },
+        { "name": "Mark Clare",         "title": "Head of BI & Analytics",     "role": "Technical Decision Maker",  "strength": "★★★☆☆" },
+        { "name": "Ravi Nekkalapu",     "title": "VP Integration Engineering", "role": "Champion",                  "strength": "★★★★☆" },
+        { "name": "Mark Ballard",       "title": "VP Infrastructure & Cloud",  "role": "Economic Buyer",            "strength": "★★★☆☆" },
+        { "name": "Paddy Sundararajan", "title": "Director, Mainframe Ops",    "role": "Technical Decision Maker",  "strength": "★★★☆☆" },
+        { "name": "Tony Barton",        "title": "VP IT Finance & FinOps",     "role": "Economic Buyer",            "strength": "★★★★☆" },
+        { "name": "Anubha Gaur",        "title": "Director, DevOps & Infra",   "role": "Technical Decision Maker",  "strength": "★★★☆☆" }
+      ],
+      "revenue_trend": [
+        { "period": "Q2 FY24", "amount": 3800000 }, { "period": "Q3 FY24", "amount": 4100000 },
+        { "period": "Q4 FY24", "amount": 4500000 }, { "period": "Q1 FY25", "amount": 4900000 },
+        { "period": "Q2 FY25", "amount": 5200000 }, { "period": "Q3 FY25", "amount": 5500000 },
+        { "period": "Q4 FY25", "amount": 5700000 }
+      ],
       "pending_actions": [
-        {
-          "id": "pa-001",
-          "type": "Renewal",
-          "description": "watsonx.data renewal due Sep 15 — expand to Knowledge Catalog bundle",
-          "priority": "high",
-          "due_date": "2026-09-15"
-        },
-        {
-          "id": "pa-002",
-          "type": "Follow-up",
-          "description": "Advance Governed Data Foundation initiative — watsonx.data + Guardium + Optim scope with Ryan Donnally",
-          "priority": "high",
-          "due_date": "2026-07-25"
-        },
-        {
-          "id": "pa-003",
-          "type": "Technical",
-          "description": "Mainframe migration discovery: schedule workshop with Paddy Sundararajan to assess in-house repatriation from Canada",
-          "priority": "medium",
-          "due_date": "2026-08-01"
-        }
+        { "id": "pa-001", "type": "Renewal",   "description": "watsonx.data renewal due Sep 15 — expand to Knowledge Catalog bundle",                                                      "priority": "high",   "due_date": "2026-09-15" },
+        { "id": "pa-002", "type": "Follow-up", "description": "Advance Governed Data Foundation initiative — watsonx.data + Guardium + Optim scope with Ryan Donnally",                  "priority": "high",   "due_date": "2026-07-25" },
+        { "id": "pa-003", "type": "Technical", "description": "Mainframe migration discovery: schedule workshop with Paddy Sundararajan to assess in-house repatriation from Canada",    "priority": "medium", "due_date": "2026-08-01" }
       ],
       "suggested_actions": [
-        {
-          "id": "sa-001",
-          "type": "Upsell",
-          "description": "Advance Governance for AI Projects initiative — watsonx.gov + Guardium AI Security ($960K opportunity, competing with TCS Consulting)",
-          "confidence": 0.91
-        },
-        {
-          "id": "sa-002",
-          "type": "Cross-sell",
-          "description": "Expand BI Consolidation with IBM Cognos Analytics — $467K opportunity, displacing Google Looker per Mark Clare",
-          "confidence": 0.83
-        },
-        {
-          "id": "sa-003",
-          "type": "Cross-sell",
-          "description": "Propose Red Hat OpenShift + Ansible for Automate Technology Operations initiative led by Anubha Gaur",
-          "confidence": 0.77
-        }
+        { "id": "sa-001", "type": "Upsell",     "description": "Advance Governance for AI Projects initiative — watsonx.gov + Guardium AI Security ($960K opportunity, competing with TCS Consulting)", "confidence": 0.91 },
+        { "id": "sa-002", "type": "Cross-sell", "description": "Expand BI Consolidation with IBM Cognos Analytics — $467K opportunity, displacing Google Looker per Mark Clare",                        "confidence": 0.83 },
+        { "id": "sa-003", "type": "Cross-sell", "description": "Propose Red Hat OpenShift + Ansible for Automate Technology Operations initiative led by Anubha Gaur",                                   "confidence": 0.77 }
       ]
     },
     {
@@ -84,47 +82,45 @@
       "pipeline": 780000,
       "closed": 520000,
       "renewal_date": "2026-11-01",
+      "health_score": 65,
+      "health_note": "Guardium POC in progress",
+      "arr_trend": "+12.4% YoY",
+      "last_contact_days_ago": 18,
       "owned_products": [
         "IBM OpenPages",
         "IBM Financial Crimes Insight"
       ],
       "install_base": [
-        { "product": "IBM OpenPages",                   "category": "GRC",      "arr": 1100000, "since": "2019-04", "renewal": "2026-11-01" },
-        { "product": "IBM Financial Crimes Insight",    "category": "Security", "arr": 870000,  "since": "2021-10", "renewal": "2027-04-01" },
-        { "product": "IBM Safer Payments",              "category": "Security", "arr": 540000,  "since": "2022-06", "renewal": "2026-12-15" },
-        { "product": "IBM Cloud Pak for Integration",   "category": "Integration","arr": 390000,"since": "2023-01", "renewal": "2027-01-15" }
+        { "product": "IBM OpenPages",                 "category": "GRC",        "version": "9.0",  "arr": 1100000, "since": "2019-04", "renewal": "2026-11-01" },
+        { "product": "IBM Financial Crimes Insight",  "category": "Security",   "version": "SaaS", "arr": 870000,  "since": "2021-10", "renewal": "2027-04-01" },
+        { "product": "IBM Safer Payments",            "category": "Security",   "version": "SaaS", "arr": 540000,  "since": "2022-06", "renewal": "2026-12-15" },
+        { "product": "IBM Cloud Pak for Integration", "category": "Integration","version": "SaaS", "arr": 390000,  "since": "2023-01", "renewal": "2027-01-15" }
       ],
-      "health_score": 65,
-      "last_contact_days_ago": 18,
+      "opportunities": [
+        { "name": "IBM Guardium — Data Security",   "stage": "Proof of Concept", "value": 480000, "close_date": "2026-08-01" },
+        { "name": "OpenPages Enterprise Risk Mgmt", "stage": "Negotiation",      "value": 310000, "close_date": "2026-09-30" }
+      ],
+      "competitors": [
+        { "name": "Crowdstrike", "products": ["Falcon XDR"],  "scope": "Endpoint security" },
+        { "name": "ServiceNow",  "products": ["GRC Module"],  "scope": "Risk & compliance workflows" }
+      ],
+      "contacts": [
+        { "name": "Sandra Osei", "title": "Director of Infrastructure", "role": "Technical Decision Maker", "strength": "★★★★☆" },
+        { "name": "Kevin Marsh",  "title": "CISO",                      "role": "Blocker",                  "strength": "★★☆☆☆" }
+      ],
+      "revenue_trend": [
+        { "period": "Q2 FY24", "amount": 1600000 }, { "period": "Q3 FY24", "amount": 1720000 },
+        { "period": "Q4 FY24", "amount": 1850000 }, { "period": "Q1 FY25", "amount": 1960000 },
+        { "period": "Q2 FY25", "amount": 2020000 }, { "period": "Q3 FY25", "amount": 2080000 },
+        { "period": "Q4 FY25", "amount": 2100000 }
+      ],
       "pending_actions": [
-        {
-          "id": "pa-003",
-          "type": "EBR",
-          "description": "Executive Business Review scheduled \u2014 prep deck needed",
-          "priority": "high",
-          "due_date": "2026-07-18"
-        },
-        {
-          "id": "pa-004",
-          "type": "POC",
-          "description": "Proof of concept for IBM Guardium in progress",
-          "priority": "medium",
-          "due_date": "2026-08-01"
-        }
+        { "id": "pa-003", "type": "EBR", "description": "Executive Business Review scheduled — prep deck needed", "priority": "high",   "due_date": "2026-07-18" },
+        { "id": "pa-004", "type": "POC", "description": "Proof of concept for IBM Guardium in progress",          "priority": "medium", "due_date": "2026-08-01" }
       ],
       "suggested_actions": [
-        {
-          "id": "sa-003",
-          "type": "Cross-sell",
-          "description": "Introduce IBM Guardium for data security compliance (SOX alignment)",
-          "confidence": 0.91
-        },
-        {
-          "id": "sa-004",
-          "type": "Expansion",
-          "description": "Expand OpenPages to enterprise risk management module",
-          "confidence": 0.68
-        }
+        { "id": "sa-003", "type": "Cross-sell", "description": "Introduce IBM Guardium for data security compliance (SOX alignment)",  "confidence": 0.91 },
+        { "id": "sa-004", "type": "Expansion",  "description": "Expand OpenPages to enterprise risk management module",                "confidence": 0.68 }
       ]
     },
     {
@@ -136,51 +132,49 @@
       "tier": "Horizon",
       "quota": 2100000,
       "pipeline": 1450000,
-      "closed": 780000,
+      "closed": 980000,
       "renewal_date": "2026-12-31",
+      "health_score": 81,
+      "health_note": "SOW signature pending",
+      "arr_trend": "+15.1% YoY",
+      "last_contact_days_ago": 5,
       "owned_products": [
         "IBM MAS",
         "IBM Sterling Supply Chain",
         "IBM Cloud"
       ],
       "install_base": [
-        { "product": "IBM MAS (Maximo)",              "category": "Asset Mgmt",    "arr": 2200000, "since": "2018-05", "renewal": "2026-12-31" },
-        { "product": "IBM Sterling Supply Chain",     "category": "Supply Chain",  "arr": 1650000, "since": "2020-03", "renewal": "2027-03-31" },
-        { "product": "IBM Cloud (IaaS / PaaS)",       "category": "Cloud",         "arr": 1100000, "since": "2019-11", "renewal": "2026-12-31" },
-        { "product": "IBM Turbonomic",                "category": "AIOps",         "arr": 480000,  "since": "2022-09", "renewal": "2027-02-28" },
-        { "product": "IBM MQ",                        "category": "Integration",   "arr": 310000,  "since": "2017-01", "renewal": "2027-01-01" }
+        { "product": "IBM MAS (Maximo)",          "category": "Asset Mgmt",   "version": "8.11", "arr": 2200000, "since": "2018-05", "renewal": "2026-12-31" },
+        { "product": "IBM Sterling Supply Chain", "category": "Supply Chain", "version": "SaaS", "arr": 1650000, "since": "2020-03", "renewal": "2027-03-31" },
+        { "product": "IBM Cloud (IaaS / PaaS)",   "category": "Cloud",        "version": "VPC",  "arr": 1100000, "since": "2019-11", "renewal": "2026-12-31" },
+        { "product": "IBM Turbonomic",            "category": "AIOps",        "version": "SaaS", "arr": 480000,  "since": "2022-09", "renewal": "2027-02-28" },
+        { "product": "IBM MQ",                    "category": "Integration",  "version": "SaaS", "arr": 310000,  "since": "2017-01", "renewal": "2027-01-01" }
       ],
-      "health_score": 81,
-      "last_contact_days_ago": 5,
+      "opportunities": [
+        { "name": "IBM Turbonomic — Cloud Cost Optimization", "stage": "Qualification", "value": 620000, "close_date": "2026-09-30" },
+        { "name": "Sterling Order Mgmt Expansion",             "stage": "Negotiation",  "value": 480000, "close_date": "2026-08-15" }
+      ],
+      "competitors": [
+        { "name": "SAP",       "products": ["S/4HANA", "SAP Asset Intelligence"], "scope": "ERP & asset management" },
+        { "name": "Microsoft", "products": ["Azure IoT Hub", "Dynamics 365"],     "scope": "IoT & field service" }
+      ],
+      "contacts": [
+        { "name": "Annika Brandt", "title": "Global IT Director",   "role": "Champion",                  "strength": "★★★★★" },
+        { "name": "Ravi Patel",    "title": "Enterprise Architect",  "role": "Technical Decision Maker",  "strength": "★★★★☆" }
+      ],
+      "revenue_trend": [
+        { "period": "Q2 FY24", "amount": 2800000 }, { "period": "Q3 FY24", "amount": 3050000 },
+        { "period": "Q4 FY24", "amount": 3200000 }, { "period": "Q1 FY25", "amount": 3420000 },
+        { "period": "Q2 FY25", "amount": 3600000 }, { "period": "Q3 FY25", "amount": 3720000 },
+        { "period": "Q4 FY25", "amount": 3800000 }
+      ],
       "pending_actions": [
-        {
-          "id": "pa-005",
-          "type": "Contract",
-          "description": "SOW signature pending for MAS expansion",
-          "priority": "high",
-          "due_date": "2026-07-15"
-        },
-        {
-          "id": "pa-006",
-          "type": "Technical",
-          "description": "Architecture review for hybrid cloud migration",
-          "priority": "medium",
-          "due_date": "2026-07-28"
-        }
+        { "id": "pa-005", "type": "Contract", "description": "SOW signature pending for MAS expansion",             "priority": "high",   "due_date": "2026-07-15" },
+        { "id": "pa-006", "type": "Technical","description": "Architecture review for hybrid cloud migration",       "priority": "medium", "due_date": "2026-07-28" }
       ],
       "suggested_actions": [
-        {
-          "id": "sa-005",
-          "type": "Upsell",
-          "description": "Propose IBM Turbonomic for cloud cost optimization given increased workloads",
-          "confidence": 0.88
-        },
-        {
-          "id": "sa-006",
-          "type": "Cross-sell",
-          "description": "Sterling Order Management for manufacturing supply chain visibility",
-          "confidence": 0.76
-        }
+        { "id": "sa-005", "type": "Upsell",     "description": "Propose IBM Turbonomic for cloud cost optimization given increased workloads", "confidence": 0.88 },
+        { "id": "sa-006", "type": "Cross-sell", "description": "Sterling Order Management for manufacturing supply chain visibility",          "confidence": 0.76 }
       ]
     },
     {
@@ -192,47 +186,44 @@
       "tier": "Horizon",
       "quota": 600000,
       "pipeline": 310000,
-      "closed": 110000,
+      "closed": 210000,
       "renewal_date": "2027-01-15",
+      "health_score": 58,
+      "health_note": "No contact in 31 days — re-engage",
+      "arr_trend": "-2.1% YoY",
+      "last_contact_days_ago": 31,
       "owned_products": [
         "IBM Cloud Pak for Business Automation"
       ],
       "install_base": [
-        { "product": "IBM Cloud Pak for Business Automation", "category": "Automation",    "arr": 920000,  "since": "2021-07", "renewal": "2027-01-15" },
-        { "product": "IBM Cognos Analytics",                  "category": "Analytics",     "arr": 340000,  "since": "2020-02", "renewal": "2026-08-01" },
-        { "product": "IBM Robotic Process Automation",        "category": "Automation",    "arr": 210000,  "since": "2023-04", "renewal": "2027-04-01" }
+        { "product": "IBM Cloud Pak for Business Automation", "category": "Automation", "version": "23.0", "arr": 920000,  "since": "2021-07", "renewal": "2027-01-15" },
+        { "product": "IBM Cognos Analytics",                  "category": "Analytics",  "version": "SaaS", "arr": 340000,  "since": "2020-02", "renewal": "2026-08-01" },
+        { "product": "IBM Robotic Process Automation",        "category": "Automation", "version": "SaaS", "arr": 210000,  "since": "2023-04", "renewal": "2027-04-01" }
       ],
-      "health_score": 58,
-      "last_contact_days_ago": 31,
+      "opportunities": [
+        { "name": "IBM Cognos Analytics — Portfolio Reporting", "stage": "Discovery", "value": 280000, "close_date": "2026-11-30" },
+        { "name": "IBM Garage Engagement",                      "stage": "Discovery", "value": 150000, "close_date": "2026-10-15" }
+      ],
+      "competitors": [
+        { "name": "Microsoft", "products": ["Power Automate", "Power BI"], "scope": "Process automation & reporting" },
+        { "name": "UiPath",    "products": ["RPA Platform"],               "scope": "Robotic process automation" }
+      ],
+      "contacts": [
+        { "name": "Carol Simmons", "title": "VP Technology", "role": "Economic Buyer", "strength": "★★★☆☆" }
+      ],
+      "revenue_trend": [
+        { "period": "Q2 FY24", "amount": 680000 }, { "period": "Q3 FY24", "amount": 660000 },
+        { "period": "Q4 FY24", "amount": 650000 }, { "period": "Q1 FY25", "amount": 630000 },
+        { "period": "Q2 FY25", "amount": 625000 }, { "period": "Q3 FY25", "amount": 620000 },
+        { "period": "Q4 FY25", "amount": 620000 }
+      ],
       "pending_actions": [
-        {
-          "id": "pa-007",
-          "type": "Re-engagement",
-          "description": "No contact in 31 days \u2014 re-engagement outreach needed",
-          "priority": "high",
-          "due_date": "2026-07-12"
-        },
-        {
-          "id": "pa-008",
-          "type": "Review",
-          "description": "Q2 business value assessment overdue",
-          "priority": "medium",
-          "due_date": "2026-07-25"
-        }
+        { "id": "pa-007", "type": "Re-engagement", "description": "No contact in 31 days — re-engagement outreach needed", "priority": "high",   "due_date": "2026-07-12" },
+        { "id": "pa-008", "type": "Review",         "description": "Q2 business value assessment overdue",                  "priority": "medium", "due_date": "2026-07-25" }
       ],
       "suggested_actions": [
-        {
-          "id": "sa-007",
-          "type": "Cross-sell",
-          "description": "IBM Cognos Analytics for investment portfolio reporting automation",
-          "confidence": 0.79
-        },
-        {
-          "id": "sa-008",
-          "type": "Advisory",
-          "description": "Offer IBM Garage engagement to accelerate automation roadmap",
-          "confidence": 0.65
-        }
+        { "id": "sa-007", "type": "Cross-sell", "description": "IBM Cognos Analytics for investment portfolio reporting automation", "confidence": 0.79 },
+        { "id": "sa-008", "type": "Advisory",   "description": "Offer IBM Garage engagement to accelerate automation roadmap",     "confidence": 0.65 }
       ]
     },
     {
@@ -244,49 +235,47 @@
       "tier": "Horizon",
       "quota": 750000,
       "pipeline": 490000,
-      "closed": 180000,
+      "closed": 380000,
       "renewal_date": "2026-08-30",
+      "health_score": 77,
+      "health_note": "Watson Assistant renewal in 45 days",
+      "arr_trend": "+18.6% YoY",
+      "last_contact_days_ago": 8,
       "owned_products": [
         "IBM Watson Assistant",
         "IBM Cloud Pak for Integration"
       ],
       "install_base": [
-        { "product": "IBM Watson Assistant",          "category": "AI / Chatbot",   "arr": 760000,  "since": "2020-11", "renewal": "2026-08-30" },
-        { "product": "IBM Cloud Pak for Integration", "category": "Integration",    "arr": 580000,  "since": "2021-05", "renewal": "2027-05-01" },
-        { "product": "IBM DataStage",                 "category": "Data Integration","arr": 390000, "since": "2023-09", "renewal": "2026-09-30" },
-        { "product": "IBM API Connect",               "category": "Integration",    "arr": 220000,  "since": "2022-03", "renewal": "2027-03-01" }
+        { "product": "IBM Watson Assistant",          "category": "AI / Chatbot",    "version": "SaaS", "arr": 760000,  "since": "2020-11", "renewal": "2026-08-30" },
+        { "product": "IBM Cloud Pak for Integration", "category": "Integration",     "version": "16.1", "arr": 580000,  "since": "2021-05", "renewal": "2027-05-01" },
+        { "product": "IBM DataStage",                 "category": "Data Integration","version": "SaaS", "arr": 390000,  "since": "2023-09", "renewal": "2026-09-30" },
+        { "product": "IBM API Connect",               "category": "Integration",     "version": "SaaS", "arr": 220000,  "since": "2022-03", "renewal": "2027-03-01" }
       ],
-      "health_score": 77,
-      "last_contact_days_ago": 8,
+      "opportunities": [
+        { "name": "Watson Assistant — Member Portal Expansion", "stage": "Negotiation",      "value": 420000, "close_date": "2026-09-01" },
+        { "name": "IBM DataStage — Claims Integration",         "stage": "Proof of Concept", "value": 290000, "close_date": "2026-11-15" }
+      ],
+      "competitors": [
+        { "name": "AWS",    "products": ["Amazon Connect", "Lex"], "scope": "Contact center AI" },
+        { "name": "Nuance", "products": ["Dragon Medical"],        "scope": "Clinical NLP" }
+      ],
+      "contacts": [
+        { "name": "James Nguyen",  "title": "Chief Digital Officer",  "role": "Economic Buyer", "strength": "★★★★☆" },
+        { "name": "Tara Williams", "title": "Director of Integration", "role": "Champion",       "strength": "★★★★★" }
+      ],
+      "revenue_trend": [
+        { "period": "Q2 FY24", "amount": 980000  }, { "period": "Q3 FY24", "amount": 1080000 },
+        { "period": "Q4 FY24", "amount": 1180000 }, { "period": "Q1 FY25", "amount": 1300000 },
+        { "period": "Q2 FY25", "amount": 1380000 }, { "period": "Q3 FY25", "amount": 1440000 },
+        { "period": "Q4 FY25", "amount": 1480000 }
+      ],
       "pending_actions": [
-        {
-          "id": "pa-009",
-          "type": "Renewal",
-          "description": "Watson Assistant renewal in 45 days",
-          "priority": "high",
-          "due_date": "2026-08-30"
-        },
-        {
-          "id": "pa-010",
-          "type": "Demo",
-          "description": "Prepare watsonx.ai demo for Digital Experience team",
-          "priority": "medium",
-          "due_date": "2026-07-22"
-        }
+        { "id": "pa-009", "type": "Renewal", "description": "Watson Assistant renewal in 45 days",                    "priority": "high",   "due_date": "2026-08-30" },
+        { "id": "pa-010", "type": "Demo",    "description": "Prepare watsonx.ai demo for Digital Experience team",    "priority": "medium", "due_date": "2026-07-22" }
       ],
       "suggested_actions": [
-        {
-          "id": "sa-009",
-          "type": "Upsell",
-          "description": "Expand Watson Assistant to member portal \u2014 40% call deflection ROI",
-          "confidence": 0.87
-        },
-        {
-          "id": "sa-010",
-          "type": "Cross-sell",
-          "description": "IBM DataStage for claims data integration pipeline",
-          "confidence": 0.72
-        }
+        { "id": "sa-009", "type": "Upsell",     "description": "Expand Watson Assistant to member portal — 40% call deflection ROI",    "confidence": 0.87 },
+        { "id": "sa-010", "type": "Cross-sell", "description": "IBM DataStage for claims data integration pipeline",                    "confidence": 0.72 }
       ]
     },
     {
@@ -300,44 +289,40 @@
       "pipeline": 180000,
       "closed": 95000,
       "renewal_date": "2026-10-01",
+      "health_score": 44,
+      "health_note": "CRITICAL — competitive displacement risk",
+      "arr_trend": "-14.2% YoY",
+      "last_contact_days_ago": 52,
       "owned_products": [
         "IBM Db2 on Cloud"
       ],
       "install_base": [
-        { "product": "IBM Db2 on Cloud",    "category": "Database",    "arr": 610000,  "since": "2018-03", "renewal": "2026-10-01" },
-        { "product": "IBM InfoSphere",      "category": "Data Mgmt",   "arr": 270000,  "since": "2019-06", "renewal": "2026-10-15" }
+        { "product": "IBM Db2 on Cloud", "category": "Database", "version": "SaaS", "arr": 610000, "since": "2018-03", "renewal": "2026-10-01" },
+        { "product": "IBM InfoSphere",   "category": "Data Mgmt","version": "SaaS", "arr": 270000, "since": "2019-06", "renewal": "2026-10-15" }
       ],
-      "health_score": 44,
-      "last_contact_days_ago": 52,
+      "opportunities": [
+        { "name": "Db2 Renewal — Multi-year Commit", "stage": "Negotiation", "value": 420000, "close_date": "2026-07-14" }
+      ],
+      "competitors": [
+        { "name": "Snowflake", "products": ["Snowflake Data Cloud"], "scope": "Cloud data warehouse — active eval" },
+        { "name": "AWS",       "products": ["Aurora PostgreSQL"],    "scope": "Proposed Db2 replacement" }
+      ],
+      "contacts": [
+        { "name": "Michael Rath", "title": "CTO", "role": "Blocker", "strength": "★☆☆☆☆" }
+      ],
+      "revenue_trend": [
+        { "period": "Q2 FY24", "amount": 490000 }, { "period": "Q3 FY24", "amount": 470000 },
+        { "period": "Q4 FY24", "amount": 450000 }, { "period": "Q1 FY25", "amount": 430000 },
+        { "period": "Q2 FY25", "amount": 400000 }, { "period": "Q3 FY25", "amount": 385000 },
+        { "period": "Q4 FY25", "amount": 380000 }
+      ],
       "pending_actions": [
-        {
-          "id": "pa-011",
-          "type": "At-Risk",
-          "description": "Health score critically low \u2014 escalate to account team",
-          "priority": "critical",
-          "due_date": "2026-07-10"
-        },
-        {
-          "id": "pa-012",
-          "type": "Renewal Risk",
-          "description": "Renewal at risk \u2014 competitive displacement signal detected",
-          "priority": "critical",
-          "due_date": "2026-07-14"
-        }
+        { "id": "pa-011", "type": "At-Risk",      "description": "Health score critically low — escalate to account team",               "priority": "critical", "due_date": "2026-07-10" },
+        { "id": "pa-012", "type": "Renewal Risk", "description": "Renewal at risk — competitive displacement signal detected",            "priority": "critical", "due_date": "2026-07-14" }
       ],
       "suggested_actions": [
-        {
-          "id": "sa-011",
-          "type": "Retention",
-          "description": "Schedule exec-level QBR to address competitive pressure and reaffirm value",
-          "confidence": 0.93
-        },
-        {
-          "id": "sa-012",
-          "type": "Discount Lever",
-          "description": "Offer multi-year commit discount to lock in renewal before Q3",
-          "confidence": 0.81
-        }
+        { "id": "sa-011", "type": "Retention",      "description": "Schedule exec-level QBR to address competitive pressure and reaffirm value",   "confidence": 0.93 },
+        { "id": "sa-012", "type": "Discount Lever", "description": "Offer multi-year commit discount to lock in renewal before Q3",                "confidence": 0.81 }
       ]
     },
     {
@@ -351,46 +336,43 @@
       "pipeline": 290000,
       "closed": 185000,
       "renewal_date": "2026-11-15",
+      "health_score": 69,
+      "health_note": "QRadar upgrade assessment due",
+      "arr_trend": "+6.3% YoY",
+      "last_contact_days_ago": 14,
       "owned_products": [
         "IBM Cloud",
         "IBM Security QRadar"
       ],
       "install_base": [
-        { "product": "IBM Security QRadar SIEM",  "category": "Security",  "arr": 830000,  "since": "2020-07", "renewal": "2026-11-15" },
-        { "product": "IBM Cloud (IaaS)",           "category": "Cloud",     "arr": 490000,  "since": "2021-01", "renewal": "2026-12-31" },
-        { "product": "IBM Guardium",               "category": "Security",  "arr": 310000,  "since": "2022-11", "renewal": "2027-02-01" }
+        { "product": "IBM Security QRadar SIEM", "category": "Security", "version": "7.5",  "arr": 830000, "since": "2020-07", "renewal": "2026-11-15" },
+        { "product": "IBM Cloud (IaaS)",          "category": "Cloud",    "version": "VPC",  "arr": 490000, "since": "2021-01", "renewal": "2026-12-31" },
+        { "product": "IBM Guardium",              "category": "Security", "version": "SaaS", "arr": 310000, "since": "2022-11", "renewal": "2027-02-01" }
       ],
-      "health_score": 69,
-      "last_contact_days_ago": 14,
+      "opportunities": [
+        { "name": "IBM Verify — Zero-Trust Identity", "stage": "Qualification",    "value": 380000, "close_date": "2026-10-01" },
+        { "name": "QRadar SOAR Add-on",               "stage": "Proof of Concept", "value": 220000, "close_date": "2026-11-01" }
+      ],
+      "competitors": [
+        { "name": "Palo Alto",  "products": ["Prisma Cloud", "Cortex XSOAR"], "scope": "Security orchestration" },
+        { "name": "Microsoft",  "products": ["Defender for Cloud"],            "scope": "Cloud workload protection" }
+      ],
+      "contacts": [
+        { "name": "Lisa Trombetta", "title": "VP Security Operations", "role": "Technical Decision Maker", "strength": "★★★☆☆" }
+      ],
+      "revenue_trend": [
+        { "period": "Q2 FY24", "amount": 780000 }, { "period": "Q3 FY24", "amount": 810000 },
+        { "period": "Q4 FY24", "amount": 850000 }, { "period": "Q1 FY25", "amount": 875000 },
+        { "period": "Q2 FY25", "amount": 900000 }, { "period": "Q3 FY25", "amount": 915000 },
+        { "period": "Q4 FY25", "amount": 920000 }
+      ],
       "pending_actions": [
-        {
-          "id": "pa-013",
-          "type": "Technical",
-          "description": "QRadar SIEM upgrade assessment pending",
-          "priority": "medium",
-          "due_date": "2026-08-05"
-        },
-        {
-          "id": "pa-014",
-          "type": "Proposal",
-          "description": "Draft proposal for HIPAA compliance expansion",
-          "priority": "high",
-          "due_date": "2026-07-18"
-        }
+        { "id": "pa-013", "type": "Technical", "description": "QRadar SIEM upgrade assessment pending",           "priority": "medium", "due_date": "2026-08-05" },
+        { "id": "pa-014", "type": "Proposal",  "description": "Draft proposal for HIPAA compliance expansion",    "priority": "high",   "due_date": "2026-07-18" }
       ],
       "suggested_actions": [
-        {
-          "id": "sa-013",
-          "type": "Cross-sell",
-          "description": "IBM Verify for zero-trust identity across 400+ care facilities",
-          "confidence": 0.83
-        },
-        {
-          "id": "sa-014",
-          "type": "Upsell",
-          "description": "QRadar SOAR to complement existing SIEM deployment",
-          "confidence": 0.74
-        }
+        { "id": "sa-013", "type": "Cross-sell", "description": "IBM Verify for zero-trust identity across 400+ care facilities",  "confidence": 0.83 },
+        { "id": "sa-014", "type": "Upsell",     "description": "QRadar SOAR to complement existing SIEM deployment",              "confidence": 0.74 }
       ]
     },
     {
@@ -402,48 +384,45 @@
       "tier": "Horizon",
       "quota": 560000,
       "pipeline": 350000,
-      "closed": 26000,
+      "closed": 260000,
       "renewal_date": "2027-02-01",
+      "health_score": 73,
+      "health_note": "CSP expansion proposal pending",
+      "arr_trend": "+9.8% YoY",
+      "last_contact_days_ago": 9,
       "owned_products": [
         "IBM FileNet Content Manager",
         "IBM Cloud Pak for Business Automation"
       ],
       "install_base": [
-        { "product": "IBM FileNet Content Manager",           "category": "Content Mgmt", "arr": 920000, "since": "2017-09", "renewal": "2027-02-01" },
-        { "product": "IBM Cloud Pak for Business Automation", "category": "Automation",   "arr": 680000, "since": "2022-03", "renewal": "2027-02-01" },
-        { "product": "IBM Datacap",                           "category": "Content Mgmt", "arr": 290000, "since": "2019-04", "renewal": "2026-10-01" }
+        { "product": "IBM FileNet Content Manager",           "category": "Content Mgmt", "version": "5.5",  "arr": 920000, "since": "2017-09", "renewal": "2027-02-01" },
+        { "product": "IBM Cloud Pak for Business Automation", "category": "Automation",   "version": "23.0", "arr": 680000, "since": "2022-03", "renewal": "2027-02-01" },
+        { "product": "IBM Datacap",                           "category": "Content Mgmt", "version": "SaaS", "arr": 290000, "since": "2019-04", "renewal": "2026-10-01" }
       ],
-      "health_score": 73,
-      "last_contact_days_ago": 9,
+      "opportunities": [
+        { "name": "watsonx Orchestrate — Workflow Automation", "stage": "Qualification", "value": 520000, "close_date": "2026-10-30" },
+        { "name": "FileNet to Content Services Platform",       "stage": "Negotiation",  "value": 380000, "close_date": "2026-08-30" }
+      ],
+      "competitors": [
+        { "name": "OpenText",  "products": ["Content Suite"],     "scope": "Legacy ECM footprint" },
+        { "name": "Microsoft", "products": ["SharePoint Online"], "scope": "Unstructured content collaboration" }
+      ],
+      "contacts": [
+        { "name": "David Okafor", "title": "CIO", "role": "Economic Buyer", "strength": "★★★★☆" }
+      ],
+      "revenue_trend": [
+        { "period": "Q2 FY24", "amount": 1280000 }, { "period": "Q3 FY24", "amount": 1360000 },
+        { "period": "Q4 FY24", "amount": 1450000 }, { "period": "Q1 FY25", "amount": 1510000 },
+        { "period": "Q2 FY25", "amount": 1560000 }, { "period": "Q3 FY25", "amount": 1590000 },
+        { "period": "Q4 FY25", "amount": 1620000 }
+      ],
       "pending_actions": [
-        {
-          "id": "pa-015",
-          "type": "Workshop",
-          "description": "Digital transformation workshop scheduled for July",
-          "priority": "medium",
-          "due_date": "2026-07-24"
-        },
-        {
-          "id": "pa-016",
-          "type": "Proposal",
-          "description": "Content Services Platform expansion proposal",
-          "priority": "high",
-          "due_date": "2026-07-30"
-        }
+        { "id": "pa-015", "type": "Workshop", "description": "Digital transformation workshop scheduled for July",  "priority": "medium", "due_date": "2026-07-24" },
+        { "id": "pa-016", "type": "Proposal", "description": "Content Services Platform expansion proposal",         "priority": "high",   "due_date": "2026-07-30" }
       ],
       "suggested_actions": [
-        {
-          "id": "sa-015",
-          "type": "Cross-sell",
-          "description": "IBM watsonx Orchestrate for document workflow automation at scale",
-          "confidence": 0.85
-        },
-        {
-          "id": "sa-016",
-          "type": "Upsell",
-          "description": "Upgrade FileNet to Cloud Pak for Content \u2014 modernization story",
-          "confidence": 0.69
-        }
+        { "id": "sa-015", "type": "Cross-sell", "description": "IBM watsonx Orchestrate for document workflow automation at scale",      "confidence": 0.85 },
+        { "id": "sa-016", "type": "Upsell",     "description": "Upgrade FileNet to Cloud Pak for Content — modernization story",         "confidence": 0.69 }
       ]
     },
     {
@@ -457,44 +436,41 @@
       "pipeline": 140000,
       "closed": 75000,
       "renewal_date": "2026-10-15",
+      "health_score": 53,
+      "health_note": "Pipeline stalled — outreach needed",
+      "arr_trend": "-5.2% YoY",
+      "last_contact_days_ago": 27,
       "owned_products": [
         "IBM OpenPages"
       ],
       "install_base": [
-        { "product": "IBM OpenPages",       "category": "GRC",           "arr": 480000, "since": "2020-10", "renewal": "2026-10-15" },
-        { "product": "IBM Safer Payments",  "category": "Security",      "arr": 195000, "since": "2022-07", "renewal": "2027-01-01" }
+        { "product": "IBM OpenPages",      "category": "GRC",      "version": "9.0",  "arr": 480000, "since": "2020-10", "renewal": "2026-10-15" },
+        { "product": "IBM Safer Payments", "category": "Security", "version": "SaaS", "arr": 195000, "since": "2022-07", "renewal": "2027-01-01" }
       ],
-      "health_score": 53,
-      "last_contact_days_ago": 27,
+      "opportunities": [
+        { "name": "IBM Safer Payments — Fraud Detection", "stage": "Discovery", "value": 180000, "close_date": "2026-11-30" },
+        { "name": "IBM Consulting — CFPB Compliance",     "stage": "Discovery", "value": 120000, "close_date": "2026-12-15" }
+      ],
+      "competitors": [
+        { "name": "Wolters Kluwer", "products": ["OneSumX GRC"],  "scope": "Regulatory compliance" },
+        { "name": "MetricStream",   "products": ["GRC Platform"], "scope": "Risk management evaluation" }
+      ],
+      "contacts": [
+        { "name": "Amy Chen", "title": "Head of Compliance IT", "role": "Champion", "strength": "★★★☆☆" }
+      ],
+      "revenue_trend": [
+        { "period": "Q2 FY24", "amount": 370000 }, { "period": "Q3 FY24", "amount": 360000 },
+        { "period": "Q4 FY24", "amount": 345000 }, { "period": "Q1 FY25", "amount": 330000 },
+        { "period": "Q2 FY25", "amount": 320000 }, { "period": "Q3 FY25", "amount": 315000 },
+        { "period": "Q4 FY25", "amount": 310000 }
+      ],
       "pending_actions": [
-        {
-          "id": "pa-017",
-          "type": "Engagement",
-          "description": "Outreach needed \u2014 pipeline stalled for 3 weeks",
-          "priority": "high",
-          "due_date": "2026-07-15"
-        },
-        {
-          "id": "pa-018",
-          "type": "Review",
-          "description": "OpenPages ROI review to strengthen renewal conversation",
-          "priority": "medium",
-          "due_date": "2026-08-01"
-        }
+        { "id": "pa-017", "type": "Engagement", "description": "Outreach needed — pipeline stalled for 3 weeks",              "priority": "high",   "due_date": "2026-07-15" },
+        { "id": "pa-018", "type": "Review",      "description": "OpenPages ROI review to strengthen renewal conversation",     "priority": "medium", "due_date": "2026-08-01" }
       ],
       "suggested_actions": [
-        {
-          "id": "sa-017",
-          "type": "Cross-sell",
-          "description": "IBM Safer Payments for mortgage fraud detection compliance",
-          "confidence": 0.77
-        },
-        {
-          "id": "sa-018",
-          "type": "Advisory",
-          "description": "IBM Consulting engagement for CFPB compliance readiness",
-          "confidence": 0.61
-        }
+        { "id": "sa-017", "type": "Cross-sell", "description": "IBM Safer Payments for mortgage fraud detection compliance",           "confidence": 0.77 },
+        { "id": "sa-018", "type": "Advisory",   "description": "IBM Consulting engagement for CFPB compliance readiness",              "confidence": 0.61 }
       ]
     }
   ],
@@ -502,10 +478,6 @@
     "name": "Arvind Krishna",
     "title": "Technical Sales Leader",
     "territory": "Territory 13",
-    "quota_total": 7270000,
-    "quota_closed": 3013000,
-    "quota_pipeline": 4610000,
-    "ytd_target_pct": 0.55,
     "email": "arvind.krishna@ibm.com",
     "phone": "+1 (215) 555-0142",
     "location": "Philadelphia, PA",
