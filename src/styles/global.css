@@ -313,12 +313,10 @@ a:hover { color: var(--color-interactive-hover); text-decoration: underline; }
   gap: var(--space-2);
 }
 
-.topbar__ibm-wordmark {
-  color: #ffffff;
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  font-family: var(--font-sans);
+.topbar__ibm-logo {
+  height: 20px;
+  width: auto;
+  display: block;
 }
 
 .topbar__divider {

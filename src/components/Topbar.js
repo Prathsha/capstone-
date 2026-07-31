@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import ibmLogo from '../assets/ibm_logo.png';
 
 export default function Topbar({ seller }) {
   const [open, setOpen] = useState(false);
@@ -23,9 +24,9 @@ export default function Topbar({ seller }) {
   return (
     <header className="topbar">
       <div className="topbar__logo">
-        <span className="topbar__ibm-wordmark">IBM</span>
+        <img src={ibmLogo} alt="IBM" className="topbar__ibm-logo" />
         <div className="topbar__divider" />
-        <span className="topbar__product-name">Client Intelligence Agent</span>
+        <span className="topbar__product-name">Clarity</span>
       </div>
 
       <div className="topbar__spacer" />
