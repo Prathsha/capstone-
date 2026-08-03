@@ -8,7 +8,7 @@
       "region": "Northeast US",
       "tier": "Horizon",
       "quota": 5900000,
-      "pipeline": 3800000,
+      "pipeline": 2100000,
       "closed": 3800000,
       "renewal_date": "2026-09-15",
       "health_score": 72,

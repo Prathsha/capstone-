@@ -270,43 +270,42 @@ function SuggestedActionItem({ item }) {
 function QuotaOverview({ summary }) {
   const {
     total_quota, closed, pipeline,
-    weighted_pipeline, pipeline_needed,
-    attainment_pct, coverage_pct, win_rate,
+    weighted_pipeline, upside_target, pipeline_needed,
+    attainment_pct, coverage_pct,
   } = summary;
   const closedPct   = Math.min((closed / total_quota) * 100, 100);
   // Progress bar uses probability-weighted pipeline so it doesn't look "almost done"
   const weightedPct = Math.min((weighted_pipeline / total_quota) * 100, 100 - closedPct);
-  const winRatePct  = Math.round((win_rate ?? 0.35) * 100);
 
   return (
     <div className="quota-overview">
       <div>
-        <div className="quota-overview__title">Total Quota</div>
+        <div className="quota-overview__title">CQ Budget</div>
         <div className="quota-overview__value">{formatCurrency(total_quota)}</div>
       </div>
       <div>
-        <div className="quota-overview__title">Closed Won</div>
+        <div className="quota-overview__title">CQ Won</div>
         <div className="quota-overview__value" style={{ color: 'var(--ibm-green-40)' }}>
           {formatCurrency(closed)}
         </div>
       </div>
       <div>
-        <div className="quota-overview__title">Pipeline (Face Value)</div>
+        <div className="quota-overview__title">Upside</div>
         <div className="quota-overview__value" style={{ color: 'var(--ibm-gray-40)' }}>
           {formatCurrency(pipeline)}
         </div>
         <div style={{ fontSize: 11, color: 'var(--ibm-gray-50)', marginTop: 2 }}>
-          ≈ {formatCurrency(weighted_pipeline)} expected @ {winRatePct}% win rate
+          ≈ {formatCurrency(weighted_pipeline)} expected
         </div>
       </div>
       {pipeline_needed > 0 && (
         <div>
-          <div className="quota-overview__title" style={{ color: 'var(--ibm-red-50)' }}>Pipeline Gap</div>
+          <div className="quota-overview__title" style={{ color: 'var(--ibm-red-50)' }}>Upside Needed</div>
           <div className="quota-overview__value" style={{ color: 'var(--ibm-red-50)' }}>
             {formatCurrency(pipeline_needed)}
           </div>
           <div style={{ fontSize: 11, color: 'var(--ibm-gray-50)', marginTop: 2 }}>
-            more pipeline needed to close
+            to reach {formatCurrency(upside_target)} target (4× gap)
           </div>
         </div>
       )}
@@ -327,11 +326,11 @@ function QuotaOverview({ summary }) {
         <div className="quota-legend">
           <div className="quota-legend__item">
             <div className="quota-legend__dot quota-legend__dot--closed" />
-            Closed Won
+            CQ Won
           </div>
           <div className="quota-legend__item">
             <div className="quota-legend__dot quota-legend__dot--pipeline" />
-            Expected ({winRatePct}% win rate)
+            Expected
           </div>
           <div className="quota-legend__item">
             <div className="quota-legend__dot quota-legend__dot--gap" />
@@ -460,7 +459,7 @@ export default function Dashboard({
               onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.12)'}
               onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}
             >
-              <div className="kpi-tile__label">Closed Won</div>
+              <div className="kpi-tile__label">CQ Won</div>
               <div className="kpi-tile__value">{formatCurrency(quota_summary.closed)}</div>
               <div className="kpi-tile__sub">{quota_summary.attainment_pct}% attainment · View Accounts →</div>
             </div>
@@ -473,7 +472,7 @@ export default function Dashboard({
               onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}
             >
               <div className="kpi-tile__label">
-                {quota_summary.pipeline_needed > 0 ? 'Pipeline Gap' : 'Pipeline Sufficient'}
+                {quota_summary.pipeline_needed > 0 ? 'Upside Needed' : 'Upside on Track'}
               </div>
               <div className="kpi-tile__value">
                 {quota_summary.pipeline_needed > 0
@@ -482,7 +481,7 @@ export default function Dashboard({
               </div>
               <div className="kpi-tile__sub">
                 {quota_summary.pipeline_needed > 0
-                  ? `${formatCurrency(quota_summary.pipeline)} in pipeline — need more · View Accounts →`
+                  ? `Need ${formatCurrency(quota_summary.upside_target)} · ${formatCurrency(quota_summary.pipeline)} today · View Accounts →`
                   : `${quota_summary.coverage_pct}% expected coverage · View Accounts →`}
               </div>
             </div>
