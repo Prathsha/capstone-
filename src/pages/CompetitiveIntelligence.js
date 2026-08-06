@@ -13,7 +13,6 @@ const COMPETITORS = [
 const BATTLECARDS = [
   {
     competitor: 'Microsoft / Azure',
-    winRate: '54%',
     category: 'Cloud & AI',
     differentiator: 'IBM open standards & governance vs. Microsoft proprietary stack dependency',
     strengths: ['Microsoft 365/Teams installed base creates stickiness', 'Azure Active Directory as default enterprise identity', 'Co-sell motion with Copilot/OpenAI relationship', 'Aggressive enterprise discounting'],
@@ -22,7 +21,6 @@ const BATTLECARDS = [
   },
   {
     competitor: 'Amazon Web Services',
-    winRate: '61%',
     category: 'Cloud & AI',
     differentiator: 'IBM hybrid-by-design architecture vs. AWS cloud-first lock-in',
     strengths: ['Largest global cloud footprint & ecosystem', 'Aggressive startup credits and marketplace incentives', 'Mature managed services: RDS, EKS, Lambda, SageMaker'],
@@ -31,7 +29,6 @@ const BATTLECARDS = [
   },
   {
     competitor: 'Google Cloud',
-    winRate: '58%',
     category: 'Cloud & AI',
     differentiator: 'IBM enterprise trust and hybrid reach vs. Google\'s cloud-native focus',
     strengths: ['Vertex AI and Gemini are cutting-edge AI platforms', 'BigQuery dominant for cloud data warehousing', 'Strong data analytics and ML tooling'],
@@ -40,7 +37,6 @@ const BATTLECARDS = [
   },
   {
     competitor: 'OpenAI',
-    winRate: '67%',
     category: 'AI Platforms',
     differentiator: 'IBM\'s governed, auditable AI vs. OpenAI\'s general-purpose models',
     strengths: ['GPT-4o is the industry benchmark for LLM capability', 'Rapid enterprise adoption and developer mindshare', 'ChatGPT Enterprise growing quickly in financial services'],
@@ -49,7 +45,6 @@ const BATTLECARDS = [
   },
   {
     competitor: 'Anthropic',
-    winRate: '71%',
     category: 'AI Platforms',
     differentiator: 'IBM\'s enterprise deployment flexibility vs. Anthropic\'s API-first approach',
     strengths: ['Claude 3.5 Sonnet is best-in-class for complex reasoning', 'Strong safety and constitutional AI positioning', 'Growing enterprise partnership with AWS'],
@@ -58,7 +53,6 @@ const BATTLECARDS = [
   },
   {
     competitor: 'Salesforce',
-    winRate: '68%',
     category: 'CRM & Automation',
     differentiator: 'IBM enterprise integration depth vs. Salesforce CRM-centric world view',
     strengths: ['Dominant CRM market share in financial services and insurance', 'Einstein/Agentforce AI add-on gaining strong momentum', 'Low-code automation with Flow Builder and broad ISV ecosystem'],
@@ -67,7 +61,6 @@ const BATTLECARDS = [
   },
   {
     competitor: 'ServiceNow',
-    winRate: '59%',
     category: 'CRM & Automation',
     differentiator: 'IBM\'s cross-domain integration vs. ServiceNow\'s ITSM-centric platform',
     strengths: ['Market leader in ITSM and IT operations management', 'Now Assist AI embedded across IT, HR, and Finance', 'Strong platform stickiness and renewal rates'],
@@ -76,7 +69,6 @@ const BATTLECARDS = [
   },
   {
     competitor: 'Snowflake',
-    winRate: '72%',
     category: 'Data & Analytics',
     differentiator: 'IBM integrated data + AI governance vs. Snowflake analytics-only story',
     strengths: ['Best-in-class cloud data warehouse performance and elasticity', 'Data sharing marketplace with third-party datasets', 'Strong BI tool integrations: Tableau, Power BI, Sigma'],
@@ -85,7 +77,6 @@ const BATTLECARDS = [
   },
   {
     competitor: 'Databricks',
-    winRate: '64%',
     category: 'Data & Analytics',
     differentiator: 'IBM\'s governed enterprise platform vs. Databricks developer-centric open source',
     strengths: ['Lakehouse architecture is the industry\'s leading data + ML unified platform', 'Strong open-source community: Delta Lake, MLflow, Apache Spark', 'Unity Catalog growing as a governance layer'],
@@ -94,7 +85,6 @@ const BATTLECARDS = [
   },
   {
     competitor: 'Oracle',
-    winRate: '55%',
     category: 'ERP & Database',
     differentiator: 'IBM\'s hybrid flexibility vs. Oracle\'s cloud lock-in strategy',
     strengths: ['Dominant Oracle DB installed base creates powerful lock-in', 'OCI pricing increasingly competitive against AWS', 'Oracle Fusion ERP deeply embedded in financial services'],
@@ -103,7 +93,6 @@ const BATTLECARDS = [
   },
   {
     competitor: 'SAP',
-    winRate: '52%',
     category: 'ERP & Database',
     differentiator: 'IBM\'s integration expertise vs. SAP\'s migration complexity and cost',
     strengths: ['SAP S/4HANA is the dominant ERP system globally', 'RISE with SAP simplifies cloud migration packaging', 'SAP AI Business Services embedded in ERP workflows'],
@@ -112,7 +101,6 @@ const BATTLECARDS = [
   },
   {
     competitor: 'Dell Technologies',
-    winRate: '57%',
     category: 'Infrastructure',
     differentiator: 'IBM\'s software-defined platform vs. Dell\'s hardware-centric approach',
     strengths: ['APEX multi-cloud bundles offer attractive TCO for mid-market', 'Strong refresh cycle leverage with existing Dell installed base', 'PowerStore and PowerFlex are competitive hybrid storage platforms'],
@@ -121,7 +109,6 @@ const BATTLECARDS = [
   },
   {
     competitor: 'HPE',
-    winRate: '60%',
     category: 'Infrastructure',
     differentiator: 'IBM\'s vertical specialization vs. HPE\'s horizontal infrastructure play',
     strengths: ['GreenLake as-a-service model resonates with CFO CapEx-to-OpEx mandates', 'Aruba networking creates a full-stack edge-to-cloud story', 'Strong mid-market and SME installed base for servers and storage'],
@@ -130,7 +117,6 @@ const BATTLECARDS = [
   },
   {
     competitor: 'VMware / Broadcom',
-    winRate: '69%',
     category: 'Infrastructure',
     differentiator: 'IBM\'s open hybrid cloud vs. VMware\'s virtualization lock-in post-Broadcom',
     strengths: ['vSphere dominates enterprise virtualization with massive installed base', 'NSX is the leading network virtualization platform', 'Post-Broadcom pricing backlash is creating churn — and VMware bundles are forcing upsells'],
@@ -139,7 +125,6 @@ const BATTLECARDS = [
   },
   {
     competitor: 'Palo Alto Networks',
-    winRate: '56%',
     category: 'Security',
     differentiator: 'IBM\'s integrated security + AI vs. Palo Alto\'s network-centric platform',
     strengths: ['Cortex XDR is a leading endpoint + cloud detection platform', 'Prisma Cloud dominates CSPM for AWS/Azure/GCP environments', 'Strong partner ecosystem and MSSP relationships'],
@@ -148,7 +133,6 @@ const BATTLECARDS = [
   },
   {
     competitor: 'CrowdStrike',
-    winRate: '51%',
     category: 'Security',
     differentiator: 'IBM\'s compliance-grade security vs. CrowdStrike\'s endpoint-first approach',
     strengths: ['Falcon platform is the market leader in endpoint detection and response (EDR)', 'CrowdStrike\'s threat intelligence is top-tier for adversary tracking', 'FedRAMP High authorization opens government market'],
@@ -157,7 +141,6 @@ const BATTLECARDS = [
   },
   {
     competitor: 'Splunk / Cisco',
-    winRate: '58%',
     category: 'Security',
     differentiator: 'IBM\'s AI-driven SOC vs. Splunk\'s log aggregation-centric approach',
     strengths: ['Post-Cisco acquisition offers unified network + security operations', 'Splunk SIEM has deep market penetration in enterprise SOCs', 'Cisco\'s network telemetry adds unique visibility other SIEMs lack'],
@@ -166,7 +149,6 @@ const BATTLECARDS = [
   },
   {
     competitor: 'Datadog',
-    winRate: '63%',
     category: 'Observability',
     differentiator: 'IBM Turbonomic\'s AI-driven cost optimization vs. Datadog\'s observability-only play',
     strengths: ['Datadog APM is the developer favorite for cloud-native observability', 'Expanding into AIOps with Watchdog and Bits AI features', 'Strong land-and-expand with per-host pricing model'],
@@ -175,7 +157,6 @@ const BATTLECARDS = [
   },
   {
     competitor: 'Cisco',
-    winRate: '55%',
     category: 'Networking & Security',
     differentiator: 'IBM\'s software-defined automation vs. Cisco\'s hardware-centric networking',
     strengths: ['Cisco dominates enterprise networking hardware and SD-WAN', 'Post-Splunk acquisition creates a unified security + networking story', 'Cisco Security Cloud is growing as a platform consolidation play'],
@@ -184,7 +165,6 @@ const BATTLECARDS = [
   },
   {
     competitor: 'Accenture',
-    winRate: '49%',
     category: 'Consulting',
     differentiator: 'IBM\'s product ownership + consulting integration vs. Accenture\'s pure services model',
     strengths: ['Accenture SynOps is a leading AI-driven managed operations platform', 'Global scale and industry depth across all verticals', 'Strong Google Cloud and Salesforce partnership ecosystem'],
@@ -407,7 +387,6 @@ export default function CompetitiveIntelligence() {
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', flexShrink: 0 }}>
                   <span className={`tag ${CATEGORY_COLORS[bc.category] || 'tag--gray'}`}>{bc.category}</span>
-                  <span className="tag tag--green">Win Rate: {bc.winRate}</span>
                   <a href={bc.url} target="_blank" rel="noopener noreferrer"
                     onClick={e => e.stopPropagation()}
                     style={{ fontSize: 'var(--font-size-xs)', color: 'var(--ibm-blue-60)', fontWeight: 600 }}>

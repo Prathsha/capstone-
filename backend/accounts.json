@@ -8,7 +8,7 @@
       "region": "Northeast US",
       "tier": "Horizon",
       "quota": 5900000,
-      "pipeline": 2100000,
+      "pipeline": 4140000,
       "closed": 3800000,
       "renewal_date": "2026-09-15",
       "health_score": 72,
@@ -16,28 +16,54 @@
       "arr_trend": "+11.4% YoY",
       "last_contact_days_ago": 12,
       "owned_products": [
-        "IBM Cloud Pak for Data",
-        "IBM watsonx.data",
-        "IBM Knowledge Catalog",
-        "IBM Cloud Pak for Integration",
-        "IBM Turbonomic",
-        "IBM watsonx.governance"
+        "MQ",
+        "ACE",
+        "Connect",
+        "Sterling B2B Integrator",
+        "Sterling Connect:Direct (ITX Healthcare)",
+        "Sterling Connect:Direct (ITX Supply Chain)",
+        "DataPower Gateway",
+        "WebSphere Application Server",
+        "Master Data Management",
+        "Cognos Analytics",
+        "watsonx.governance",
+        "DataStage",
+        "ODM (Operational Decision Manager)",
+        "Tape / Disk Storage",
+        "AIX (Power)",
+        "z16 (Mainframe)"
       ],
       "install_base": [
-        { "product": "IBM Cloud Pak for Data",       "category": "AI & Analytics",  "version": "4.8",  "arr": 1850000, "since": "2021-03", "renewal": "2027-01-20" },
-        { "product": "IBM watsonx.data",             "category": "AI & Analytics",  "version": "SaaS", "arr": 1420000, "since": "2023-06", "renewal": "2026-09-15" },
-        { "product": "IBM Turbonomic",               "category": "AIOps / FinOps",  "version": "SaaS", "arr": 870000,  "since": "2022-09", "renewal": "2026-12-31" },
-        { "product": "IBM Cloud Pak for Integration","category": "Integration",     "version": "SaaS", "arr": 500050,  "since": "2023-01", "renewal": "2026-12-31" },
-        { "product": "IBM watsonx.governance",       "category": "AI Governance",   "version": "SaaS", "arr": 580000,  "since": "2024-02", "renewal": "2027-02-15" },
-        { "product": "IBM Knowledge Catalog",        "category": "Data Governance", "version": "SaaS", "arr": 480000,  "since": "2022-06", "renewal": "2027-01-20" }
+        { "product": "IBM MQ",                              "category": "Messaging / Integration",  "version": "SaaS", "arr": 620000,  "since": "2018-01", "renewal": "2027-01-01", "ibm_team": "Alie Zimmer / Sudhakar Bodapati", "client_owner": "Sharad Ballapu / Krishna Singaraju", "product_admin": "Vito Spagnolo / Marina Johnson", "notes": "Evaluating integration roadmap — vendor consolidation with ACE, API Connect and DataPower in scope" },
+        { "product": "IBM ACE (App Connect Enterprise)",    "category": "Integration",              "version": "SaaS", "arr": 480000,  "since": "2019-03", "renewal": "2027-01-01", "ibm_team": "Alie Zimmer / Sudhakar Bodapati", "client_owner": "Sharad Ballapu / Krishna Singaraju", "product_admin": "Vito Spagnolo / Marina Johnson", "notes": "Part of CP4I consolidation evaluation" },
+        { "product": "IBM API Connect",                     "category": "Integration",              "version": "SaaS", "arr": 310000,  "since": "2020-06", "renewal": "2027-01-01", "ibm_team": "Alie Zimmer / Sudhakar Bodapati", "client_owner": "Sharad Ballapu / Krishna Singaraju", "product_admin": null,                               "notes": null },
+        { "product": "IBM Sterling B2B Integrator",         "category": "Supply Chain / B2B",       "version": "SaaS", "arr": 540000,  "since": "2017-06", "renewal": "2026-12-01", "ibm_team": "Alie Zimmer / Sudhakar Bodapati", "client_owner": "Sharad Ballapu / Krishna Singaraju", "product_admin": null,                               "notes": "Expanded to include 2 Industry packs (ITX Healthcare + Supply Chain) pulled from ELA end of 2023", "business_partner": "Pragma Edge" },
+        { "product": "IBM Sterling Connect:Direct — ITX Healthcare",  "category": "Supply Chain / B2B", "version": "SaaS", "arr": 195000, "since": "2023-01", "renewal": "2026-12-01", "ibm_team": "Alie Zimmer / Sudhakar Bodapati", "client_owner": "Sharad Ballapu / Krishna Singaraju", "product_admin": null, "business_partner": "Pragma Edge", "notes": "Pulled from ELA end of 2023" },
+        { "product": "IBM Sterling Connect:Direct — ITX Supply Chain","category": "Supply Chain / B2B", "version": "SaaS", "arr": 195000, "since": "2023-01", "renewal": "2026-12-01", "ibm_team": "Alie Zimmer / Sudhakar Bodapati", "client_owner": "Sharad Ballapu / Krishna Singaraju", "product_admin": null, "business_partner": "Pragma Edge", "notes": "Pulled from ELA end of 2023" },
+        { "product": "IBM DataPower Gateway",               "category": "Integration",              "version": "Physical + CP4I", "arr": 420000, "since": "2016-04", "renewal": "2026-09-15", "ibm_team": "Alie Zimmer / Sudhakar Bodapati", "client_owner": "Sharad Ballapu / Krishna Singaraju", "product_admin": null, "business_partner": "ISOA Group", "notes": "Evaluating migration from physical DataPower appliances to CP4I virtual licenses — renewal beginning week of 1/19" },
+        { "product": "IBM WebSphere Application Server",    "category": "Application Runtime",      "version": "Traditional", "arr": 890000, "since": "2014-09", "renewal": "2027-03-01", "ibm_team": "Alie Zimmer / Gary DeGruccio",    "client_owner": "Kavitha Chirlamcherla",              "product_admin": "Madhiarasan Ramakrishnan",          "notes": null },
+        { "product": "IBM Master Data Management",          "category": "Data Management",          "version": "SaaS", "arr": 730000,  "since": "2019-07", "renewal": "2027-01-15", "ibm_team": "Sonja Gorman / Ryan Abernethy",  "client_owner": "Jai Vengal / Ketan Parikh",          "product_admin": "Calvin Jenkins",                   "notes": "Performance issues — Expert Labs engaged to help with tuning" },
+        { "product": "IBM Cognos Analytics",                "category": "BI & Analytics",           "version": "12.0", "arr": 560000,  "since": "2018-02", "renewal": "2027-01-15", "ibm_team": "Sonja Gorman / Scott Rittenhouse","client_owner": "Jodi Hall / Robin Snyder / Amar / Ryan Donnally", "product_admin": "Shakti Gupta", "notes": "Planning upgrade to 12.1.1 with possibility of containers — Go live scheduled April after 1Q" },
+        { "product": "IBM watsonx.governance",              "category": "AI Governance",            "version": "SaaS", "arr": 580000,  "since": "2024-02", "renewal": "2027-02-15", "ibm_team": "Sonja Gorman",                   "client_owner": "Tom Walsh",                          "product_admin": null,                               "notes": "POC for .gov underway — planned completion end of Q. Secure long-term purchase at end of POC." },
+        { "product": "IBM DataStage",                       "category": "Data Integration",         "version": "SaaS", "arr": 640000,  "since": "2021-05", "renewal": "2026-11-01", "ibm_team": "Sonja Gorman / Ryan Abernethy",  "client_owner": "Jodi Hall",                          "product_admin": "Diptimayee Panda",                 "notes": null },
+        { "product": "IBM ODM (Operational Decision Manager)", "category": "Decision Management",   "version": "SaaS", "arr": 310000,  "since": "2020-08", "renewal": "2027-01-15", "ibm_team": "Sonja Gorman / Scott Rittenhouse","client_owner": "Kavitha Chirlamcherla",              "product_admin": "Madhiarasan Ramakrishnan",          "notes": null, "business_partner": "Blue Polaris" },
+        { "product": "IBM Tape / Disk Storage",             "category": "Storage",                  "version": "Hardware", "arr": 480000, "since": "2015-01", "renewal": "2026-10-01", "ibm_team": "Terri Hunter / Mike Shuey",      "client_owner": "Christopher Calicutt / VenkataRamana / Adapala N", "product_admin": null, "business_partner": "MSI", "notes": "Inventory exercise underway to understand where to do a refresh" },
+        { "product": "IBM AIX (Power Systems)",             "category": "Infrastructure",           "version": "7.3",  "arr": 390000,  "since": "2013-06", "renewal": "2027-06-01", "ibm_team": "Chris Palermo",                  "client_owner": "Guillermo Gisinger",                 "product_admin": "David Ponist",                     "notes": null, "business_partner": "MSI" },
+        { "product": "IBM z16 (Mainframe)",                 "category": "TXP / Mainframe",          "version": "z16",  "arr": 1200000, "since": "2022-03", "renewal": "2027-03-01", "ibm_team": "TCS (BP) / PSR (BP)",            "client_owner": null,                                 "product_admin": null,                               "notes": null, "business_partner": "PSR, TCS" }
       ],
       "opportunities": [
-        { "name": "Governance for AI Projects (watsonx.gov + Guardium AI Security)", "stage": "Proposal",      "value": 960325,   "close_date": "2026-09-30" },
-        { "name": "Create a Governed Data Foundation (watsonx.data + KC + Optim)",   "stage": "Qualification", "value": 1191132,  "close_date": "2026-10-31" },
-        { "name": "BI Consolidation — IBM Cognos Analytics",                         "stage": "Discovery",     "value": 467000,   "close_date": "2026-11-15" },
-        { "name": "Integration Platform Consolidation (CP4I / API Connect)",         "stage": "Negotiation",   "value": 500050,   "close_date": "2026-08-31" },
-        { "name": "Mainframe In-House Migration & Modernization (zTPS)",             "stage": "Discovery",     "value": 0,        "close_date": null },
-        { "name": "#VMWARE — Hybrid Cloud Modernization (OpenShift)",                "stage": "Discovery",     "value": 0,        "close_date": null }
+        { "name": "watsonx Orchestrate — AI Agent Automation (Client Zero)",                    "stage": "Propose",   "value": 850000,  "close_date": "2026-09-30", "gold_play": "Client Zero",                         "priority": "H", "ibm_role": "BSS",         "owner": "Sonja G",   "client_owner": "Tom Walsh",                   "notes": "Quest has engaged IBM on watsonx Orchestrate" },
+        { "name": "watsonx Governance — EL Services Expansion",                                "stage": "Propose",   "value": 960000,  "close_date": "2026-09-30", "gold_play": "Client Zero",                         "priority": "H", "ibm_role": "BSS",         "owner": "Sonja G",   "client_owner": "Tom Walsh",                   "notes": "Additional EL services to accelerate use cases" },
+        { "name": "Apptio — Technology Business Management",                                   "stage": "Qualify",   "value": 420000,  "close_date": "2026-10-31", "gold_play": "Orchestrate & Govern Agents & TBM",   "priority": "M", "ibm_role": "BSS",         "owner": "Alie Z",    "client_owner": "Andy Barnett / Kevin Barnes",  "notes": "Plan to pitch Apptio to the account" },
+        { "name": "Turbonomic — Cloud Cost Optimization POC",                                  "stage": "Design",    "value": 520000,  "close_date": "2026-10-31", "gold_play": "Orchestrate & Govern Agents & TBM",   "priority": "M", "ibm_role": "BSS",         "owner": "Alie Z",    "client_owner": "Michael Switzer / Prasanna Nippali", "notes": "Turbonomic POC in flight — cover Azure environment" },
+        { "name": "Webmethods — Hybrid Integration Platform",                                  "stage": "Qualify",   "value": 680000,  "close_date": "2026-11-30", "gold_play": "Hybrid IPaaS & Hybrid Cloud",         "priority": "H", "ibm_role": "ATL",         "owner": "Chris S",   "client_owner": "Sharad Ballapu",               "notes": "Quest has decided on the platform — finalizing scope" },
+        { "name": "OpenShift / Fusion — Hybrid Cloud Modernization",                           "stage": "Engage",    "value": 0,       "close_date": null,          "gold_play": "Hybrid IPaaS & Hybrid Cloud",         "priority": "L", "ibm_role": "ATL",         "owner": "Chris S",   "client_owner": null,                           "notes": "Red Hat team working — then replace to Nutanix" },
+        { "name": "watsonx.data — AI-Ready Data Platform",                                     "stage": "Engage",    "value": 0,       "close_date": null,          "gold_play": "Deliver AI Ready Data",               "priority": "L", "ibm_role": "BSS/ATL",     "owner": "Chris/Sonja","client_owner": "Ryan Donnally",               "notes": "Looking for opportunities to leverage AI data platform" },
+        { "name": "watsonx.data Intelligence — Data Governance Platform",                      "stage": "Engage",    "value": 0,       "close_date": null,          "gold_play": "Protect & Govern Data",               "priority": "M", "ibm_role": "ATL",         "owner": "Chris S",   "client_owner": "Ryan Donnally",               "notes": "Positioning as intelligence platform" },
+        { "name": "Concert — Infrastructure Automation & Observability",                       "stage": "Qualify",   "value": 310000,  "close_date": "2026-12-31", "gold_play": "Infrastructure Automation & Security", "priority": "H/M/L", "ibm_role": "Automation BSS", "owner": "Chris S", "client_owner": "Michael Switzer",           "notes": "Planning to introduce Concert to the account" },
+        { "name": "Terraform — Infrastructure as Code",                                        "stage": "Qualify",   "value": 220000,  "close_date": "2026-12-31", "gold_play": "Infrastructure Automation & Security", "priority": "H/M/L", "ibm_role": "Automation BSS", "owner": "Alie Z",  "client_owner": "Sameer Wadhwa",             "notes": "Using community version today — upgrade path discussion underway" },
+        { "name": "Vault — Secrets Management",                                                "stage": "Engage",    "value": 180000,  "close_date": "2026-12-31", "gold_play": "Infrastructure Automation & Security", "priority": "H/M/L", "ibm_role": "Automation BSS", "owner": "Chris S", "client_owner": "Ravi Mani",                 "notes": "Initial pitch given to CISO team" },
+        { "name": "CEPH — Software Defined Storage",                                           "stage": "Engage",    "value": 0,       "close_date": null,          "gold_play": "Software Defined Storage",            "priority": "H/M/L", "ibm_role": "Storage BSS", "owner": null,       "client_owner": null,                          "notes": null }
       ],
       "competitors": [
         { "name": "TCS Consulting", "products": ["TCS data governance services"],        "scope": "AI governance — competing on Governance for AI Projects initiative" },
@@ -97,8 +123,8 @@
         { "product": "IBM Cloud Pak for Integration", "category": "Integration","version": "SaaS", "arr": 390000,  "since": "2023-01", "renewal": "2027-01-15" }
       ],
       "opportunities": [
-        { "name": "IBM Guardium — Data Security",   "stage": "Proof of Concept", "value": 480000, "close_date": "2026-08-01" },
-        { "name": "OpenPages Enterprise Risk Mgmt", "stage": "Negotiation",      "value": 310000, "close_date": "2026-09-30" }
+        { "name": "IBM Guardium — Data Security",   "stage": "Design",    "value": 480000, "close_date": "2026-08-01" },
+        { "name": "OpenPages Enterprise Risk Mgmt", "stage": "Negotiate", "value": 310000, "close_date": "2026-09-30" }
       ],
       "competitors": [
         { "name": "Crowdstrike", "products": ["Falcon XDR"],  "scope": "Endpoint security" },
@@ -151,8 +177,8 @@
         { "product": "IBM MQ",                    "category": "Integration",  "version": "SaaS", "arr": 310000,  "since": "2017-01", "renewal": "2027-01-01" }
       ],
       "opportunities": [
-        { "name": "IBM Turbonomic — Cloud Cost Optimization", "stage": "Qualification", "value": 620000, "close_date": "2026-09-30" },
-        { "name": "Sterling Order Mgmt Expansion",             "stage": "Negotiation",  "value": 480000, "close_date": "2026-08-15" }
+        { "name": "IBM Turbonomic — Cloud Cost Optimization", "stage": "Qualify",   "value": 620000, "close_date": "2026-09-30" },
+        { "name": "Sterling Order Mgmt Expansion",             "stage": "Negotiate", "value": 480000, "close_date": "2026-08-15" }
       ],
       "competitors": [
         { "name": "SAP",       "products": ["S/4HANA", "SAP Asset Intelligence"], "scope": "ERP & asset management" },
@@ -201,8 +227,8 @@
         { "product": "IBM Robotic Process Automation",        "category": "Automation", "version": "SaaS", "arr": 210000,  "since": "2023-04", "renewal": "2027-04-01" }
       ],
       "opportunities": [
-        { "name": "IBM Cognos Analytics — Portfolio Reporting", "stage": "Discovery", "value": 280000, "close_date": "2026-11-30" },
-        { "name": "IBM Garage Engagement",                      "stage": "Discovery", "value": 150000, "close_date": "2026-10-15" }
+        { "name": "IBM Cognos Analytics — Portfolio Reporting", "stage": "Engage", "value": 280000, "close_date": "2026-11-30" },
+        { "name": "IBM Garage Engagement",                      "stage": "Engage", "value": 150000, "close_date": "2026-10-15" }
       ],
       "competitors": [
         { "name": "Microsoft", "products": ["Power Automate", "Power BI"], "scope": "Process automation & reporting" },
@@ -252,8 +278,8 @@
         { "product": "IBM API Connect",               "category": "Integration",     "version": "SaaS", "arr": 220000,  "since": "2022-03", "renewal": "2027-03-01" }
       ],
       "opportunities": [
-        { "name": "Watson Assistant — Member Portal Expansion", "stage": "Negotiation",      "value": 420000, "close_date": "2026-09-01" },
-        { "name": "IBM DataStage — Claims Integration",         "stage": "Proof of Concept", "value": 290000, "close_date": "2026-11-15" }
+        { "name": "Watson Assistant — Member Portal Expansion", "stage": "Negotiate", "value": 420000, "close_date": "2026-09-01" },
+        { "name": "IBM DataStage — Claims Integration",         "stage": "Design",    "value": 290000, "close_date": "2026-11-15" }
       ],
       "competitors": [
         { "name": "AWS",    "products": ["Amazon Connect", "Lex"], "scope": "Contact center AI" },
@@ -301,7 +327,7 @@
         { "product": "IBM InfoSphere",   "category": "Data Mgmt","version": "SaaS", "arr": 270000, "since": "2019-06", "renewal": "2026-10-15" }
       ],
       "opportunities": [
-        { "name": "Db2 Renewal — Multi-year Commit", "stage": "Negotiation", "value": 420000, "close_date": "2026-07-14" }
+        { "name": "Db2 Renewal — Multi-year Commit", "stage": "Negotiate", "value": 420000, "close_date": "2026-07-14" }
       ],
       "competitors": [
         { "name": "Snowflake", "products": ["Snowflake Data Cloud"], "scope": "Cloud data warehouse — active eval" },
@@ -350,8 +376,8 @@
         { "product": "IBM Guardium",              "category": "Security", "version": "SaaS", "arr": 310000, "since": "2022-11", "renewal": "2027-02-01" }
       ],
       "opportunities": [
-        { "name": "IBM Verify — Zero-Trust Identity", "stage": "Qualification",    "value": 380000, "close_date": "2026-10-01" },
-        { "name": "QRadar SOAR Add-on",               "stage": "Proof of Concept", "value": 220000, "close_date": "2026-11-01" }
+        { "name": "IBM Verify — Zero-Trust Identity", "stage": "Qualify", "value": 380000, "close_date": "2026-10-01" },
+        { "name": "QRadar SOAR Add-on",               "stage": "Design",  "value": 220000, "close_date": "2026-11-01" }
       ],
       "competitors": [
         { "name": "Palo Alto",  "products": ["Prisma Cloud", "Cortex XSOAR"], "scope": "Security orchestration" },
@@ -400,8 +426,8 @@
         { "product": "IBM Datacap",                           "category": "Content Mgmt", "version": "SaaS", "arr": 290000, "since": "2019-04", "renewal": "2026-10-01" }
       ],
       "opportunities": [
-        { "name": "watsonx Orchestrate — Workflow Automation", "stage": "Qualification", "value": 520000, "close_date": "2026-10-30" },
-        { "name": "FileNet to Content Services Platform",       "stage": "Negotiation",  "value": 380000, "close_date": "2026-08-30" }
+        { "name": "watsonx Orchestrate — Workflow Automation", "stage": "Qualify",   "value": 520000, "close_date": "2026-10-30" },
+        { "name": "FileNet to Content Services Platform",       "stage": "Negotiate", "value": 380000, "close_date": "2026-08-30" }
       ],
       "competitors": [
         { "name": "OpenText",  "products": ["Content Suite"],     "scope": "Legacy ECM footprint" },
@@ -448,8 +474,8 @@
         { "product": "IBM Safer Payments", "category": "Security", "version": "SaaS", "arr": 195000, "since": "2022-07", "renewal": "2027-01-01" }
       ],
       "opportunities": [
-        { "name": "IBM Safer Payments — Fraud Detection", "stage": "Discovery", "value": 180000, "close_date": "2026-11-30" },
-        { "name": "IBM Consulting — CFPB Compliance",     "stage": "Discovery", "value": 120000, "close_date": "2026-12-15" }
+        { "name": "IBM Safer Payments — Fraud Detection", "stage": "Engage", "value": 180000, "close_date": "2026-11-30" },
+        { "name": "IBM Consulting — CFPB Compliance",     "stage": "Engage", "value": 120000, "close_date": "2026-12-15" }
       ],
       "competitors": [
         { "name": "Wolters Kluwer", "products": ["OneSumX GRC"],  "scope": "Regulatory compliance" },

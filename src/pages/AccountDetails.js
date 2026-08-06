@@ -4,36 +4,55 @@ import React, { useState } from 'react';
 const ACCOUNT_DATA = {
   'acc-001': {
     name: 'QUEST DIAGNOSTICS', industry: 'Healthcare / Diagnostics', region: 'Northeast US',
-    arr: '$5.7M', arTrend: '+11.4% YoY', health: 72, healthNote: 'watsonx.data renewal Sep 15 · Governed Data Foundation in scope',
+    arr: '$7.8M', arTrend: '+11.4% YoY', health: 72, healthNote: 'DataPower & Sterling renewals Q4 · watsonx.governance POC in progress',
     products: [
-      { name: 'IBM Cloud Pak for Data',        version: '4.8',  renewal: 'Jan 20, 2027', arr: '$1,850,000' },
-      { name: 'IBM watsonx.data',              version: 'SaaS', renewal: 'Sep 15, 2026', arr: '$1,420,000' },
-      { name: 'IBM Turbonomic',                version: 'SaaS', renewal: 'Dec 31, 2026', arr: '$870,000'   },
-      { name: 'IBM Cloud Pak for Integration', version: 'SaaS', renewal: 'Dec 31, 2026', arr: '$500,050'   },
-      { name: 'IBM watsonx.governance',        version: 'SaaS', renewal: 'Feb 15, 2027', arr: '$580,000'   },
-      { name: 'IBM Knowledge Catalog',         version: 'SaaS', renewal: 'Jan 20, 2027', arr: '$480,000'   },
+      // Automation / Integration
+      { name: 'IBM MQ',                                    version: 'SaaS',          renewal: 'Jan 1, 2027',  arr: '$620,000'  },
+      { name: 'IBM ACE (App Connect Enterprise)',          version: 'SaaS',          renewal: 'Jan 1, 2027',  arr: '$480,000'  },
+      { name: 'IBM API Connect',                           version: 'SaaS',          renewal: 'Jan 1, 2027',  arr: '$310,000'  },
+      { name: 'IBM Sterling B2B Integrator',               version: 'SaaS',          renewal: 'Dec 1, 2026',  arr: '$540,000'  },
+      { name: 'IBM Sterling ITX Healthcare',               version: 'SaaS',          renewal: 'Dec 1, 2026',  arr: '$195,000'  },
+      { name: 'IBM Sterling ITX Supply Chain',             version: 'SaaS',          renewal: 'Dec 1, 2026',  arr: '$195,000'  },
+      { name: 'IBM DataPower Gateway',                     version: 'Physical+CP4I', renewal: 'Sep 15, 2026', arr: '$420,000'  },
+      { name: 'IBM WebSphere Application Server',         version: 'Traditional',   renewal: 'Mar 1, 2027',  arr: '$890,000'  },
+      // Data
+      { name: 'IBM Master Data Management',               version: 'SaaS',          renewal: 'Jan 15, 2027', arr: '$730,000'  },
+      { name: 'IBM Cognos Analytics',                      version: '12.0',          renewal: 'Jan 15, 2027', arr: '$560,000'  },
+      { name: 'IBM watsonx.governance',                    version: 'SaaS',          renewal: 'Feb 15, 2027', arr: '$580,000'  },
+      { name: 'IBM DataStage',                             version: 'SaaS',          renewal: 'Nov 1, 2026',  arr: '$640,000'  },
+      { name: 'IBM ODM (Operational Decision Manager)',   version: 'SaaS',          renewal: 'Jan 15, 2027', arr: '$310,000'  },
+      // Infrastructure
+      { name: 'IBM Tape / Disk Storage',                   version: 'Hardware',      renewal: 'Oct 1, 2026',  arr: '$480,000'  },
+      { name: 'IBM AIX (Power Systems)',                   version: '7.3',           renewal: 'Jun 1, 2027',  arr: '$390,000'  },
+      { name: 'IBM z16 (Mainframe)',                       version: 'z16',           renewal: 'Mar 1, 2027',  arr: '$1,200,000'},
     ],
     competitors: [
-      { name: 'TCS Consulting', products: ['TCS data governance services'], scope: 'AI governance — competing on Governance for AI Projects initiative' },
-      { name: 'Google',         products: ['Looker / BigQuery'],            scope: 'BI Consolidation — displacing incumbent analytics' },
-      { name: 'Wipro',          products: ['Wipro data platform services'], scope: 'Governed Data Foundation — strategic partner risk' },
+      { name: 'Webmethods (Software AG)', products: ['webMethods Integration'],    scope: 'Integration platform — being displaced by IBM Webmethods Gold Play' },
+      { name: 'Google',                   products: ['Looker / BigQuery'],          scope: 'BI — Cognos Analytics upgrade competing with Looker' },
+      { name: 'Nutanix',                  products: ['Nutanix HCI'],               scope: 'Hybrid cloud — OpenShift/Fusion play vs. Nutanix replacement' },
     ],
     opportunities: [
-      { name: 'Governance for AI Projects (watsonx.gov + Guardium AI Security)', stage: 'Proposal',      value: '$960,325',   closeDate: 'Sep 30, 2026' },
-      { name: 'Create a Governed Data Foundation (watsonx.data + KC + Optim)',   stage: 'Qualification', value: '$1,191,132', closeDate: 'Oct 31, 2026' },
-      { name: 'BI Consolidation — IBM Cognos Analytics',                         stage: 'Discovery',     value: '$467,000',   closeDate: 'Nov 15, 2026' },
-      { name: 'Integration Platform Consolidation (CP4I / API Connect)',         stage: 'Negotiation',   value: '$500,050',   closeDate: 'Aug 31, 2026' },
-      { name: 'Mainframe In-House Migration & Modernization (zTPS)',             stage: 'Discovery',     value: '$0',         closeDate: 'TBD'          },
-      { name: '#VMWARE — Hybrid Cloud Modernization (OpenShift)',                stage: 'Discovery',     value: '$0',         closeDate: 'TBD'          },
+      { name: 'watsonx Orchestrate — AI Agent Automation (Client Zero)',  stage: 'Propose',    value: '$850,000',  closeDate: 'Sep 30, 2026', goldPlay: 'Client Zero',                        priority: 'H', owner: 'Sonja G',    clientOwner: 'Tom Walsh',                    notes: 'Quest has engaged IBM on watsonx Orchestrate' },
+      { name: 'watsonx Governance — EL Services Expansion',               stage: 'Propose',    value: '$960,000',  closeDate: 'Sep 30, 2026', goldPlay: 'Client Zero',                        priority: 'H', owner: 'Sonja G',    clientOwner: 'Tom Walsh',                    notes: 'Additional EL services to accelerate use cases' },
+      { name: 'Apptio — Technology Business Management',                  stage: 'Qualify',    value: '$420,000',  closeDate: 'Oct 31, 2026', goldPlay: 'Orchestrate & Govern Agents & TBM',  priority: 'M', owner: 'Alie Z',     clientOwner: 'Andy Barnett / Kevin Barnes',  notes: 'Plan to pitch Apptio to the account' },
+      { name: 'Turbonomic — Cloud Cost Optimization POC',                 stage: 'Design',     value: '$520,000',  closeDate: 'Oct 31, 2026', goldPlay: 'Orchestrate & Govern Agents & TBM',  priority: 'M', owner: 'Alie Z',     clientOwner: 'Michael Switzer / Prasanna Nippali', notes: 'Turbonomic POC in flight — cover Azure environment' },
+      { name: 'Webmethods — Hybrid Integration Platform',                 stage: 'Qualify',    value: '$680,000',  closeDate: 'Nov 30, 2026', goldPlay: 'Hybrid IPaaS & Hybrid Cloud',         priority: 'H', owner: 'Chris S',    clientOwner: 'Sharad Ballapu',              notes: 'Quest has decided on the platform — finalizing scope' },
+      { name: 'OpenShift / Fusion — Hybrid Cloud Modernization',         stage: 'Engage',     value: '$0',        closeDate: 'TBD',          goldPlay: 'Hybrid IPaaS & Hybrid Cloud',         priority: 'L', owner: 'Chris S',    clientOwner: '—',                           notes: 'Red Hat team working — then replace to Nutanix' },
+      { name: 'watsonx.data — AI-Ready Data Platform',                    stage: 'Engage',     value: '$0',        closeDate: 'TBD',          goldPlay: 'Deliver AI Ready Data',               priority: 'L', owner: 'Chris/Sonja',clientOwner: 'Ryan Donnally',               notes: 'Looking for opportunities to leverage AI data platform' },
+      { name: 'watsonx.data Intelligence — Data Governance Platform',    stage: 'Engage',     value: '$0',        closeDate: 'TBD',          goldPlay: 'Protect & Govern Data',               priority: 'M', owner: 'Chris S',    clientOwner: 'Ryan Donnally',               notes: 'Positioning as intelligence platform' },
+      { name: 'Concert — Infrastructure Automation & Observability',     stage: 'Qualify',    value: '$310,000',  closeDate: 'Dec 31, 2026', goldPlay: 'Infrastructure Automation & Security', priority: 'H/M/L', owner: 'Chris S', clientOwner: 'Michael Switzer',           notes: 'Planning to introduce Concert' },
+      { name: 'Terraform — Infrastructure as Code',                       stage: 'Qualify',    value: '$220,000',  closeDate: 'Dec 31, 2026', goldPlay: 'Infrastructure Automation & Security', priority: 'H/M/L', owner: 'Alie Z',  clientOwner: 'Sameer Wadhwa',             notes: 'Using community version today' },
+      { name: 'Vault — Secrets Management',                               stage: 'Engage',     value: '$180,000',  closeDate: 'Dec 31, 2026', goldPlay: 'Infrastructure Automation & Security', priority: 'H/M/L', owner: 'Chris S', clientOwner: 'Ravi Mani',                 notes: 'Initial pitch given to CISO team' },
+      { name: 'CEPH — Software Defined Storage',                          stage: 'Engage',     value: '$0',        closeDate: 'TBD',          goldPlay: 'Software Defined Storage',            priority: 'H/M/L', owner: '—',       clientOwner: '—',                          notes: null },
     ],
     contacts: [
       { name: 'Ryan Donnally',      title: 'VP Data Architecture',       role: 'Champion',                  strength: '★★★★☆' },
       { name: 'Tom Walsh',          title: 'Director, AI & Governance',   role: 'Technical Decision Maker',  strength: '★★★★☆' },
-      { name: 'Mark Clare',         title: 'Head of BI & Analytics',      role: 'Technical Decision Maker',  strength: '★★★☆☆' },
-      { name: 'Ravi Nekkalapu',     title: 'VP Integration Engineering',  role: 'Champion',                  strength: '★★★★☆' },
+      { name: 'Sharad Ballapu',     title: 'Integration Lead (Quest)',    role: 'Technical Decision Maker',  strength: '★★★★☆' },
       { name: 'Mark Ballard',       title: 'VP Infrastructure & Cloud',   role: 'Economic Buyer',            strength: '★★★☆☆' },
       { name: 'Paddy Sundararajan', title: 'Director, Mainframe Ops',     role: 'Technical Decision Maker',  strength: '★★★☆☆' },
       { name: 'Tony Barton',        title: 'VP IT Finance & FinOps',      role: 'Economic Buyer',            strength: '★★★★☆' },
+      { name: 'Michael Switzer',    title: 'Director, Cloud & FinOps',    role: 'Technical Decision Maker',  strength: '★★★☆☆' },
       { name: 'Anubha Gaur',        title: 'Director, DevOps & Infra',    role: 'Technical Decision Maker',  strength: '★★★☆☆' },
     ],
     revenue: [
@@ -55,8 +74,8 @@ const ACCOUNT_DATA = {
       { name: 'ServiceNow',   products: ['GRC Module'],             scope: 'Risk & compliance workflows' },
     ],
     opportunities: [
-      { name: 'IBM Guardium — Data Security',   stage: 'Proof of Concept', value: '$480,000', closeDate: 'Aug 1, 2026' },
-      { name: 'OpenPages Enterprise Risk Mgmt', stage: 'Negotiation',      value: '$310,000', closeDate: 'Sep 30, 2026' },
+      { name: 'IBM Guardium — Data Security',   stage: 'Design',    value: '$480,000', closeDate: 'Aug 1, 2026' },
+      { name: 'OpenPages Enterprise Risk Mgmt', stage: 'Negotiate', value: '$310,000', closeDate: 'Sep 30, 2026' },
     ],
     contacts: [
       { name: 'Sandra Osei', title: 'Director of Infrastructure', role: 'Technical Decision Maker', strength: '★★★★☆' },
@@ -82,8 +101,8 @@ const ACCOUNT_DATA = {
       { name: 'Microsoft',   products: ['Azure IoT Hub', 'Dynamics 365'],     scope: 'IoT & field service' },
     ],
     opportunities: [
-      { name: 'IBM Turbonomic — Cloud Cost Optimization', stage: 'Qualification', value: '$620,000', closeDate: 'Sep 30, 2026' },
-      { name: 'Sterling Order Mgmt Expansion',             stage: 'Negotiation',  value: '$480,000', closeDate: 'Aug 15, 2026' },
+      { name: 'IBM Turbonomic — Cloud Cost Optimization', stage: 'Qualify',   value: '$620,000', closeDate: 'Sep 30, 2026' },
+      { name: 'Sterling Order Mgmt Expansion',             stage: 'Negotiate', value: '$480,000', closeDate: 'Aug 15, 2026' },
     ],
     contacts: [
       { name: 'Annika Brandt', title: 'Global IT Director',  role: 'Champion',                  strength: '★★★★★' },
@@ -107,8 +126,8 @@ const ACCOUNT_DATA = {
       { name: 'UiPath',      products: ['RPA Platform'],               scope: 'Robotic process automation' },
     ],
     opportunities: [
-      { name: 'IBM Cognos Analytics — Portfolio Reporting', stage: 'Discovery', value: '$280,000', closeDate: 'Nov 30, 2026' },
-      { name: 'IBM Garage Engagement',                      stage: 'Discovery', value: '$150,000', closeDate: 'Oct 15, 2026' },
+      { name: 'IBM Cognos Analytics — Portfolio Reporting', stage: 'Engage', value: '$280,000', closeDate: 'Nov 30, 2026' },
+      { name: 'IBM Garage Engagement',                      stage: 'Engage', value: '$150,000', closeDate: 'Oct 15, 2026' },
     ],
     contacts: [
       { name: 'Carol Simmons', title: 'VP Technology', role: 'Economic Buyer', strength: '★★★☆☆' },
@@ -132,8 +151,8 @@ const ACCOUNT_DATA = {
       { name: 'Nuance',  products: ['Dragon Medical'],        scope: 'Clinical NLP' },
     ],
     opportunities: [
-      { name: 'Watson Assistant — Member Portal Expansion', stage: 'Negotiation',      value: '$420,000', closeDate: 'Sep 1, 2026' },
-      { name: 'IBM DataStage — Claims Integration',         stage: 'Proof of Concept', value: '$290,000', closeDate: 'Nov 15, 2026' },
+      { name: 'Watson Assistant — Member Portal Expansion', stage: 'Negotiate', value: '$420,000', closeDate: 'Sep 1, 2026' },
+      { name: 'IBM DataStage — Claims Integration',         stage: 'Design',    value: '$290,000', closeDate: 'Nov 15, 2026' },
     ],
     contacts: [
       { name: 'James Nguyen', title: 'Chief Digital Officer',   role: 'Economic Buyer', strength: '★★★★☆' },
@@ -157,7 +176,7 @@ const ACCOUNT_DATA = {
       { name: 'AWS',       products: ['Aurora PostgreSQL'],    scope: 'Proposed Db2 replacement' },
     ],
     opportunities: [
-      { name: 'Db2 Renewal — Multi-year Commit', stage: 'Negotiation', value: '$420,000', closeDate: 'Jul 14, 2026' },
+      { name: 'Db2 Renewal — Multi-year Commit', stage: 'Negotiate', value: '$420,000', closeDate: 'Jul 14, 2026' },
     ],
     contacts: [
       { name: 'Michael Rath', title: 'CTO', role: 'Blocker', strength: '★☆☆☆☆' },
@@ -181,8 +200,8 @@ const ACCOUNT_DATA = {
       { name: 'Microsoft',  products: ['Defender for Cloud'],            scope: 'Cloud workload protection' },
     ],
     opportunities: [
-      { name: 'IBM Verify — Zero-Trust Identity', stage: 'Qualification',    value: '$380,000', closeDate: 'Oct 1, 2026' },
-      { name: 'QRadar SOAR Add-on',               stage: 'Proof of Concept', value: '$220,000', closeDate: 'Nov 1, 2026' },
+      { name: 'IBM Verify — Zero-Trust Identity', stage: 'Qualify', value: '$380,000', closeDate: 'Oct 1, 2026' },
+      { name: 'QRadar SOAR Add-on',               stage: 'Design',  value: '$220,000', closeDate: 'Nov 1, 2026' },
     ],
     contacts: [
       { name: 'Lisa Trombetta', title: 'VP Security Operations', role: 'Technical Decision Maker', strength: '★★★☆☆' },
@@ -206,8 +225,8 @@ const ACCOUNT_DATA = {
       { name: 'Microsoft',   products: ['SharePoint Online'],       scope: 'Unstructured content collaboration' },
     ],
     opportunities: [
-      { name: 'watsonx Orchestrate — Workflow Automation', stage: 'Qualification', value: '$520,000', closeDate: 'Oct 30, 2026' },
-      { name: 'FileNet to Content Services Platform',       stage: 'Negotiation',  value: '$380,000', closeDate: 'Aug 30, 2026' },
+      { name: 'watsonx Orchestrate — Workflow Automation', stage: 'Qualify',   value: '$520,000', closeDate: 'Oct 30, 2026' },
+      { name: 'FileNet to Content Services Platform',       stage: 'Negotiate', value: '$380,000', closeDate: 'Aug 30, 2026' },
     ],
     contacts: [
       { name: 'David Okafor', title: 'CIO', role: 'Economic Buyer', strength: '★★★★☆' },
@@ -230,8 +249,8 @@ const ACCOUNT_DATA = {
       { name: 'MetricStream',   products: ['GRC Platform'],          scope: 'Risk management evaluation' },
     ],
     opportunities: [
-      { name: 'IBM Safer Payments — Fraud Detection', stage: 'Discovery', value: '$180,000', closeDate: 'Nov 30, 2026' },
-      { name: 'IBM Consulting — CFPB Compliance',     stage: 'Discovery', value: '$120,000', closeDate: 'Dec 15, 2026' },
+      { name: 'IBM Safer Payments — Fraud Detection', stage: 'Engage', value: '$180,000', closeDate: 'Nov 30, 2026' },
+      { name: 'IBM Consulting — CFPB Compliance',     stage: 'Engage', value: '$120,000', closeDate: 'Dec 15, 2026' },
     ],
     contacts: [
       { name: 'Amy Chen', title: 'Head of Compliance IT', role: 'Champion', strength: '★★★☆☆' },
@@ -257,7 +276,15 @@ const ACCOUNTS_LIST = [
   { id: 'acc-009', name: 'SAGENT M&C LLC' },
 ];
 
-const STAGE_COLOR = { 'Proof of Concept': 'tag--blue', 'Negotiation': 'tag--green', 'Qualification': 'tag--yellow', 'Discovery': 'tag--gray' };
+const STAGE_COLOR = {
+  'Engage':   'tag--gray',
+  'Qualify':  'tag--yellow',
+  'Design':   'tag--blue',
+  'Propose':  'tag--blue',
+  'Negotiate':'tag--green',
+  'Closing':  'tag--green',
+  'Closed':   'tag--gray',
+};
 
 export default function AccountDetails() {
   const [selectedId, setSelectedId] = useState('acc-001');
@@ -332,14 +359,23 @@ export default function AccountDetails() {
           <div className="card__header"><div className="card__title">Active Opportunities</div></div>
           {d.opportunities.map(o => (
             <div key={o.name} style={{ padding: 'var(--space-4)', borderBottom: '1px solid var(--color-border)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-2)' }}>
-                <span style={{ fontWeight: 500, fontSize: 'var(--font-size-sm)' }}>{o.name}</span>
-                <span style={{ fontWeight: 600, color: 'var(--color-interactive)' }}>{o.value}</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--space-2)', gap: 'var(--space-3)' }}>
+                <span style={{ fontWeight: 500, fontSize: 'var(--font-size-sm)', flex: 1 }}>{o.name}</span>
+                <span style={{ fontWeight: 600, color: 'var(--color-interactive)', whiteSpace: 'nowrap' }}>{o.value}</span>
               </div>
-              <div style={{ display: 'flex', gap: 'var(--space-3)', alignItems: 'center' }}>
+              <div style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap', alignItems: 'center', marginBottom: o.notes ? 4 : 0 }}>
                 <span className={`tag ${STAGE_COLOR[o.stage] || 'tag--gray'}`}>{o.stage}</span>
+                {o.goldPlay && <span className="tag tag--blue">{o.goldPlay}</span>}
+                {o.priority && o.priority !== 'H/M/L' && (
+                  <span className={`tag ${o.priority === 'H' ? 'tag--red' : o.priority === 'M' ? 'tag--yellow' : 'tag--gray'}`}>
+                    {o.priority === 'H' ? 'High' : o.priority === 'M' ? 'Medium' : 'Low'}
+                  </span>
+                )}
                 <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)' }}>Close: {o.closeDate}</span>
+                {o.owner && <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)' }}>Owner: {o.owner}</span>}
+                {o.clientOwner && o.clientOwner !== '—' && <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)' }}>Client: {o.clientOwner}</span>}
               </div>
+              {o.notes && <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)', fontStyle: 'italic', marginTop: 2 }}>{o.notes}</div>}
             </div>
           ))}
         </div>
