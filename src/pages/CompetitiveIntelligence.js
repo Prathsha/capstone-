@@ -4,10 +4,11 @@ import { formatRelativeDate } from '../components/Helpers';
 import { useTaskContext } from '../context/TaskContext';
 
 const COMPETITORS = [
-  'Microsoft', 'AWS', 'Google Cloud', 'OpenAI', 'Anthropic',
+  'Microsoft', 'Google Cloud',
   'Oracle', 'Salesforce', 'ServiceNow', 'Snowflake', 'Databricks',
   'SAP', 'Dell Technologies', 'HPE', 'VMware', 'Palo Alto Networks',
   'CrowdStrike', 'Splunk', 'Datadog', 'Cisco', 'Accenture',
+  'AWS', 'OpenAI', 'Anthropic',
 ];
 
 const BATTLECARDS = [
@@ -20,36 +21,12 @@ const BATTLECARDS = [
     url: 'https://azure.microsoft.com/en-us/',
   },
   {
-    competitor: 'Amazon Web Services',
-    category: 'Cloud & AI',
-    differentiator: 'IBM hybrid-by-design architecture vs. AWS cloud-first lock-in',
-    strengths: ['Largest global cloud footprint & ecosystem', 'Aggressive startup credits and marketplace incentives', 'Mature managed services: RDS, EKS, Lambda, SageMaker'],
-    ibmAdvantages: ['OpenShift runs on ANY cloud — true multi-cloud portability', 'IBM Consulting accelerates time-to-value vs. DIY AWS builds', 'IBM zSystems for regulated, mission-critical workloads AWS cannot host', 'Watsonx AI governance not available on SageMaker'],
-    url: 'https://aws.amazon.com/',
-  },
-  {
     competitor: 'Google Cloud',
     category: 'Cloud & AI',
     differentiator: 'IBM enterprise trust and hybrid reach vs. Google\'s cloud-native focus',
-    strengths: ['Vertex AI and Gemini are cutting-edge AI platforms', 'BigQuery dominant for cloud data warehousing', 'Strong data analytics and ML tooling'],
-    ibmAdvantages: ['IBM\'s 30-year enterprise relationships and regulated-industry expertise', 'Watsonx governance framework for explainability compliance', 'IBM Consulting provides outcome-based delivery Google Professional Services cannot match'],
+    strengths: ['Vertex AI and Gemini are cutting-edge AI platforms', 'BigQuery dominant for cloud data warehousing — actively competing for Cognos Analytics displacement', 'Strong data analytics and ML tooling', 'Looker BI suite targeting Quest\'s BI consolidation initiative'],
+    ibmAdvantages: ['IBM\'s 30-year enterprise relationships and regulated-industry expertise', 'Cognos Analytics 12.1.1 SaaS + BI Assistant roadmap outpaces Looker for governed enterprise reporting', 'Watsonx governance framework for explainability compliance', 'IBM Consulting provides outcome-based delivery Google Professional Services cannot match'],
     url: 'https://cloud.google.com/',
-  },
-  {
-    competitor: 'OpenAI',
-    category: 'AI Platforms',
-    differentiator: 'IBM\'s governed, auditable AI vs. OpenAI\'s general-purpose models',
-    strengths: ['GPT-4o is the industry benchmark for LLM capability', 'Rapid enterprise adoption and developer mindshare', 'ChatGPT Enterprise growing quickly in financial services'],
-    ibmAdvantages: ['Watsonx.governance provides full audit trail required for FINRA, HIPAA, SOX', 'IBM trains models on curated enterprise data — not scraped public data', 'On-premises and hybrid deployment IBM watsonx; OpenAI is cloud-only'],
-    url: 'https://openai.com/enterprise',
-  },
-  {
-    competitor: 'Anthropic',
-    category: 'AI Platforms',
-    differentiator: 'IBM\'s enterprise deployment flexibility vs. Anthropic\'s API-first approach',
-    strengths: ['Claude 3.5 Sonnet is best-in-class for complex reasoning', 'Strong safety and constitutional AI positioning', 'Growing enterprise partnership with AWS'],
-    ibmAdvantages: ['IBM watsonx can be deployed fully on-premises — Anthropic requires API calls', 'Watsonx governance layer not available in Anthropic offering', 'IBM Consulting wraps watsonx with implementation, Anthropic is self-service'],
-    url: 'https://www.anthropic.com/',
   },
   {
     competitor: 'Salesforce',
@@ -170,6 +147,30 @@ const BATTLECARDS = [
     strengths: ['Accenture SynOps is a leading AI-driven managed operations platform', 'Global scale and industry depth across all verticals', 'Strong Google Cloud and Salesforce partnership ecosystem'],
     ibmAdvantages: ['IBM uniquely owns the underlying AI platform (watsonx) AND delivers consulting — Accenture cannot', 'IBM Consulting has proven watsonx implementation credentials in production at scale', 'IBM\'s outcome-based contracts with proprietary IP create stickier engagements than Accenture T&M'],
     url: 'https://www.accenture.com/us-en/services/ai-data',
+  },
+  {
+    competitor: 'Amazon Web Services',
+    category: 'Cloud & AI',
+    differentiator: 'IBM hybrid-by-design architecture vs. AWS cloud-first lock-in',
+    strengths: ['Largest global cloud footprint & ecosystem', 'Aggressive startup credits and marketplace incentives', 'Mature managed services: RDS, EKS, Lambda, SageMaker'],
+    ibmAdvantages: ['OpenShift runs on ANY cloud — true multi-cloud portability', 'IBM Consulting accelerates time-to-value vs. DIY AWS builds', 'IBM zSystems for regulated, mission-critical workloads AWS cannot host', 'Watsonx AI governance not available on SageMaker'],
+    url: 'https://aws.amazon.com/',
+  },
+  {
+    competitor: 'OpenAI',
+    category: 'AI Platforms',
+    differentiator: 'IBM\'s governed, auditable AI vs. OpenAI\'s general-purpose models',
+    strengths: ['GPT-4o is the industry benchmark for LLM capability', 'Rapid enterprise adoption and developer mindshare', 'ChatGPT Enterprise growing quickly in financial services'],
+    ibmAdvantages: ['Watsonx.governance provides full audit trail required for FINRA, HIPAA, SOX', 'IBM trains models on curated enterprise data — not scraped public data', 'On-premises and hybrid deployment IBM watsonx; OpenAI is cloud-only'],
+    url: 'https://openai.com/enterprise',
+  },
+  {
+    competitor: 'Anthropic',
+    category: 'AI Platforms',
+    differentiator: 'IBM\'s enterprise deployment flexibility vs. Anthropic\'s API-first approach',
+    strengths: ['Claude 3.5 Sonnet is best-in-class for complex reasoning', 'Strong safety and constitutional AI positioning', 'Growing enterprise partnership with AWS'],
+    ibmAdvantages: ['IBM watsonx can be deployed fully on-premises — Anthropic requires API calls', 'Watsonx governance layer not available in Anthropic offering', 'IBM Consulting wraps watsonx with implementation, Anthropic is self-service'],
+    url: 'https://www.anthropic.com/',
   },
 ];
 

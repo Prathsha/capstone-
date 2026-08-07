@@ -113,7 +113,7 @@ async def get_competitive_news(
                     "url": a["url"],
                     "published_at": a["publishedAt"],
                     "image_url": a.get("urlToImage"),
-                    "relevance": "Threat",  # default; UI can override
+                    "relevance": "Threat",
                 }
                 for a in raw.get("articles", [])
                 if a.get("title") and "[Removed]" not in a.get("title", "")
@@ -123,8 +123,25 @@ async def get_competitive_news(
 
     results = await asyncio.gather(*[_fetch_one(c) for c in targets])
     articles = [item for sublist in results for item in sublist]
-    articles.sort(key=lambda x: x.get("published_at", ""), reverse=True)
 
+    # If the live API returned nothing (free-tier server-side block), fall back to mock
+    if not articles:
+        now = datetime.utcnow()
+        articles = [
+            {
+                "competitor": comp,
+                "source": "Google News",
+                "title": f"{comp} — Latest Enterprise Technology News",
+                "description": f"Recent coverage of {comp} products, partnerships, and enterprise strategy.",
+                "url": _gnews_url(f'"{comp}" enterprise technology 2026'),
+                "published_at": (now - timedelta(days=2)).isoformat() + "Z",
+                "relevance": "Threat",
+            }
+            for comp in targets
+        ]
+        return {"articles": articles, "source": "mock"}
+
+    articles.sort(key=lambda x: x.get("published_at", ""), reverse=True)
     return {"articles": articles, "source": "newsapi"}
 
 
@@ -134,7 +151,8 @@ async def get_competitive_news(
 async def get_news(account_id: str, days_back: int = Query(30, ge=1, le=90)):
     """
     Fetch recent news articles for an account from NewsAPI.
-    Falls back to mock data when NEWS_API_KEY is not set.
+    Falls back to mock data when NEWS_API_KEY is not set or the API call fails
+    (e.g. free-tier plans that block server-side requests).
     """
     account = find_account(account_id)
     if not account:
@@ -155,27 +173,35 @@ async def get_news(account_id: str, days_back: int = Query(30, ge=1, le=90)):
         "apiKey": settings.NEWS_API_KEY,
     }
 
-    async with httpx.AsyncClient(timeout=15.0) as client:
-        resp = await client.get("https://newsapi.org/v2/everything", params=params)
+    try:
+        async with httpx.AsyncClient(timeout=15.0) as client:
+            resp = await client.get("https://newsapi.org/v2/everything", params=params)
 
-    if resp.status_code != 200:
-        raise HTTPException(status_code=502, detail=f"NewsAPI error: {resp.text}")
+        if resp.status_code != 200:
+            return {"articles": mock_news(account["name"]), "source": "mock"}
 
-    raw = resp.json()
-    articles = [
-        {
-            "source": a["source"]["name"],
-            "title": a["title"],
-            "description": a["description"],
-            "url": a["url"],
-            "published_at": a["publishedAt"],
-            "image_url": a.get("urlToImage"),
-        }
-        for a in raw.get("articles", [])
-        if a.get("title") and "[Removed]" not in a.get("title", "")
-    ]
+        raw = resp.json()
+        articles = [
+            {
+                "source": a["source"]["name"],
+                "title": a["title"],
+                "description": a["description"],
+                "url": a["url"],
+                "published_at": a["publishedAt"],
+                "image_url": a.get("urlToImage"),
+            }
+            for a in raw.get("articles", [])
+            if a.get("title") and "[Removed]" not in a.get("title", "")
+        ]
 
-    return {"articles": articles, "source": "newsapi", "query_used": query}
+        # If the API returned nothing (e.g. plan restriction), fall back to mock
+        if not articles:
+            return {"articles": mock_news(account["name"]), "source": "mock"}
+
+        return {"articles": articles, "source": "newsapi", "query_used": query}
+
+    except Exception:
+        return {"articles": mock_news(account["name"]), "source": "mock"}
 
 
 # ── Finnhub ──────────────────────────────────────────────────────────────────
