@@ -51,14 +51,15 @@ export const TEAM_MEMBERS = [
 // ── Initial task seed data ────────────────────────────────────────────────────
 const SEED_TASKS = [
   { id: 1,  title: 'Deliver final SOW redline for MAS 8.11 expansion to Siemens legal',     account: 'SIEMENS',                priority: 'High',   dueDate: '2026-07-14', status: 'In Progress', assignedTo: 'pratham', done: false, source: 'system' },
-  { id: 2,  title: 'Send CP4D Enterprise renewal contract draft to Quest Diagnostics',       account: 'QUEST DIAGNOSTICS',      priority: 'High',   dueDate: '2026-07-16', status: 'In Progress', assignedTo: 'ian',     done: false, source: 'system' },
+  { id: 2,  title: 'Secure long-term watsonx.gov purchase commitment with Tom Walsh before Expert Labs POC closes end of quarter — Phase 3 ELA accelerators in scope', account: 'QUEST DIAGNOSTICS', priority: 'Critical', dueDate: '2026-08-15', status: 'In Progress', assignedTo: 'ian', done: false, source: 'system' },
   { id: 3,  title: 'Follow up with Kevin Marsh on Guardium security certification receipt',  account: 'LINCOLN NATIONAL',       priority: 'High',   dueDate: '2026-07-08', status: 'Done',        assignedTo: 'pratham', done: true,  source: 'system' },
   { id: 4,  title: 'Prepare multi-year Db2 commit pricing with IBM Financing options',       account: 'SUNGARD DATA',           priority: 'High',   dueDate: '2026-07-13', status: 'Done',        assignedTo: 'sadaf',   done: true,  source: 'system' },
   { id: 5,  title: 'Provide Watson Assistant renewal pricing with 3-year option',            account: 'INDEPENDENCE BLUECROSS', priority: 'Medium', dueDate: '2026-07-15', status: 'Todo',        assignedTo: 'ian',     done: false, source: 'system' },
   { id: 6,  title: 'Finalize 12 HIPAA QRadar SOAR playbooks before scoping meeting',        account: 'SELECT MEDICAL CORP',    priority: 'Medium', dueDate: '2026-07-17', status: 'In Progress', assignedTo: 'pratham', done: false, source: 'system' },
   { id: 7,  title: 'Send Select Medical healthcare SOAR reference (UPMC or BJC)',            account: 'SELECT MEDICAL CORP',    priority: 'Medium', dueDate: '2026-07-14', status: 'Todo',        assignedTo: 'ian',     done: false, source: 'system' },
   { id: 8,  title: 'Prepare OpenPages Enterprise Risk Mgmt expansion EBR deck',              account: 'LINCOLN NATIONAL',       priority: 'Low',    dueDate: '2026-07-18', status: 'Todo',        assignedTo: 'sadaf',   done: false, source: 'system' },
-  { id: 9,  title: 'Confirm Aug 14 TRIRIGA scoping kick-off agenda with Brian Torres team', account: 'QUEST DIAGNOSTICS',      priority: 'Low',    dueDate: '2026-07-15', status: 'Todo',        assignedTo: 'ian',     done: false, source: 'system' },
+  { id: 9,  title: 'Advance watsonx Orchestrate AgentOps proposal with Tom Walsh — confirm PM roadmap and demo capabilities before Sep 30 close', account: 'QUEST DIAGNOSTICS', priority: 'High', dueDate: '2026-08-22', status: 'Todo', assignedTo: 'ian', done: false, source: 'system' },
+  { id: 11, title: 'DataPower Gateway renewal Sep 15 (ISOA Group): finalize CP4I Hybrid Control Plane migration scope with Sharad Ballapu — Quest decided on CP4I, deploying on AKS', account: 'QUEST DIAGNOSTICS', priority: 'High', dueDate: '2026-09-01', status: 'Todo', assignedTo: 'pratham', done: false, source: 'system' },
   { id: 10, title: 'Schedule IBM Cognos re-engagement with Carol Simmons',                   account: 'SEI INVESTMENTS',        priority: 'Low',    dueDate: '2026-07-20', status: 'Todo',        assignedTo: 'sadaf',   done: false, source: 'system' },
 ];
 
