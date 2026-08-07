@@ -149,7 +149,7 @@ const BATTLECARDS = [
     url: 'https://www.accenture.com/us-en/services/ai-data',
   },
   {
-    competitor: 'Amazon Web Services',
+    competitor: 'Amazon Web Services (AWS)',
     category: 'Cloud & AI',
     differentiator: 'IBM hybrid-by-design architecture vs. AWS cloud-first lock-in',
     strengths: ['Largest global cloud footprint & ecosystem', 'Aggressive startup credits and marketplace incentives', 'Mature managed services: RDS, EKS, Lambda, SageMaker'],
