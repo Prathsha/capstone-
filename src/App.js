@@ -16,14 +16,6 @@ import TeamManagement from './pages/TeamManagement';
 import { Spinner, ErrorBlock } from './components/Helpers';
 import { TaskProvider } from './context/TaskContext';
 
-const SELLER_PROFILE = {
-  title: 'Technology Sales Leader',
-  location: 'New York',
-  region: 'Northeast',
-  team: ['Pratham Shah', 'Ian Slater', 'Sadaf Sobhani'],
-  bio: 'Technology Sales Leader with 12+ years at IBM, specializing in hybrid cloud, AI, and security solutions for enterprise clients in financial services and healthcare.',
-};
-
 // ── Account Selector Bar ──────────────────────────────────────────────────────
 function AccountSelectorBar({ accounts, selectedIds, onChange }) {
   const handleChange = (e) => {
@@ -95,7 +87,7 @@ function AppInner() {
     fetchAccounts()
       .then(data => {
         setAccounts(data.accounts);
-        setSeller({ ...data.seller, ...SELLER_PROFILE });
+        setSeller(data.seller);
       })
       .catch(e => setError(`Cannot reach backend. Is the FastAPI server running? (${e.message})`))
       .finally(() => setLoading(false));

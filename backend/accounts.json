@@ -509,15 +509,15 @@
     }
   ],
   "seller": {
-    "name": "Arvind Krishna",
+    "name": "John Doe",
     "title": "Technical Sales Leader",
     "territory": "Territory 13",
-    "email": "arvind.krishna@ibm.com",
+    "email": "john.doe@ibm.com",
     "phone": "+1 (215) 555-0142",
-    "location": "Philadelphia, PA",
-    "region": "Mid-Atlantic & Northeast US",
-    "team": ["Jordan Reeves (ATL)", "Maya Patel (CSE)", "Derek Okafor (BSS)"],
+    "location": "One Madison Ave, New York, NY 10010",
+    "region": "US Northeast",
+    "team": ["Chris Saulino (ATL)", "Pratham Shah (CSE)", "Ian Slater (CSE)", "Sadaf Sobhani (BSS)"],
     "accounts_count": 9,
-    "bio": "Technical Sales Leader with 12+ years at IBM, specializing in hybrid cloud, AI, and security solutions for enterprise clients in financial services and healthcare."
+    "bio": "Technical Sales Leader with 20+ years of experience directing strategic sales initiatives across large corporations and small tech startups, specializing in mapping IBM technology capabilities to real business solutions for horizon clients in financial services and healthcare."
   }
 }
